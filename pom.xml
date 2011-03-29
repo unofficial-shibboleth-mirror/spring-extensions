@@ -5,7 +5,7 @@
 
     <groupId>net.shibboleth.ext</groupId>
     <artifactId>spring-extensions</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Spring Framework Extension</name>
     <description>
@@ -15,9 +15,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <target.java.version>1.6</target.java.version>
     </properties>
-    
+
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
@@ -33,7 +32,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Provided dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -41,19 +40,23 @@
             <version>3.0.5.RELEASE</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Runtime dependencies -->
-        
+
         <!-- Test dependencies -->
     </dependencies>
-    
+
     <distributionManagement>
         <repository>
-            <id>release-repo</id>
-            <url>${dist.release.url}</url>
+            <id>release</id>
+            <url>https://shibboleth.net/nexus/content/repositories/releases</url>
         </repository>
+        <snapshotRepository>
+            <id>snapshot</id>
+            <url>https://shibboleth.net/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
-        
+
     <build>
         <plugins>
             <plugin>
@@ -61,36 +64,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>${target.java.version}</source>
-                    <target>${target.java.version}</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2.1</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/bin.xml</descriptor>
-                    </descriptors>
-                    <tarLongFileMode>gnu</tarLongFileMode>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.1.2</version>
                 <executions>
@@ -102,9 +81,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>release</id>
@@ -127,11 +119,11 @@
             </build>
         </profile>
     </profiles>
-    
-    <!-- Project Metadata -->
-    <url>http://opensaml.org/</url>
 
-    <inceptionYear>2006</inceptionYear>
+    <!-- Project Metadata -->
+    <url>http://shibboleth.net/</url>
+
+    <inceptionYear>2011</inceptionYear>
 
     <licenses>
         <license>
@@ -153,13 +145,13 @@
 
     <mailingLists>
         <mailingList>
-            <name>OpenSAML Users</name>
-            <subscribe>https://spaces.internet2.edu/display/OpenSAML/MailingList</subscribe>
-            <unsubscribe>https://spaces.internet2.edu/display/OpenSAML/MailingList</unsubscribe>
-            <post>mace-opensaml-users@internet2.edu</post>
-            <archive>https://mail.internet2.edu/wws/arc/mace-opensaml-users</archive>
+            <name>Shibboleth Development</name>
+            <subscribe>http://shibboleth.internet2.edu/lists.html</subscribe>
+            <unsubscribe>http://shibboleth.internet2.edu/lists.html</unsubscribe>
+            <post>shibboleth-dev@internet2.edu</post>
+            <archive>http://groups.google.com/group/shibboleth-dev/topics</archive>
             <otherArchives>
-                <otherArchive>http://groups.google.com/group/opensaml-users</otherArchive>
+                <otherArchive>http://marc.info/?l=shibboleth-dev</otherArchive>
             </otherArchives>
         </mailingList>
     </mailingLists>
@@ -170,7 +162,7 @@
         <tag>HEAD</tag>
         <url>http://svn.shibboleth.net/view/utilities/spring-extensions</url>
     </scm>
-    
+
     <developers>
         <developer>
             <id>lajoie</id>
@@ -184,5 +176,5 @@
             <timezone>-5</timezone>
         </developer>
     </developers>
-    
+
 </project>

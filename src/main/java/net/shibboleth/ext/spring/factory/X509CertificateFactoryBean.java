@@ -37,6 +37,9 @@ public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> 
     /** Certificate chain file. */
     private File certFile;
 
+    /** The singleton instance of the certificate produced by this factory. */
+    private X509Certificate certificate;
+
     /**
      * Sets the certificate chain file.
      * 
@@ -48,8 +51,12 @@ public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> 
 
     /** {@inheritDoc} */
     public X509Certificate getObject() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
-        return (X509Certificate) CryptReader.readCertificate(new FileInputStream(certFile));
+        if (certificate == null) {
+            Security.addProvider(new BouncyCastleProvider());
+            certificate = (X509Certificate) CryptReader.readCertificate(new FileInputStream(certFile));
+        }
+
+        return certificate;
     }
 
     /** {@inheritDoc} */

@@ -40,6 +40,9 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     /** Password for the private key. */
     private String keyPass;
 
+    /** The singleton instance of the private key produced by this factory. */
+    private PrivateKey key;
+
     /**
      * Sets the file containing the private key.
      * 
@@ -60,12 +63,16 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
 
     /** {@inheritDoc} */
     public PrivateKey getObject() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
-        if (keyPass == null) {
-            return CryptReader.readPrivateKey(new FileInputStream(keyFile));
-        } else {
-            return CryptReader.readPrivateKey(new FileInputStream(keyFile), keyPass.toCharArray());
+        if (key == null) {
+            Security.addProvider(new BouncyCastleProvider());
+            if (keyPass == null) {
+                key = CryptReader.readPrivateKey(new FileInputStream(keyFile));
+            } else {
+                key = CryptReader.readPrivateKey(new FileInputStream(keyFile), keyPass.toCharArray());
+            }
         }
+
+        return key;
     }
 
     /** {@inheritDoc} */

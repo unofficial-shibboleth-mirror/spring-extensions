@@ -37,6 +37,9 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     /** Public key file. */
     private File keyFile;
 
+    /** The singleton instance of the public key produced by this factory. */
+    private PublicKey key;
+
     /**
      * Sets the public key file.
      * 
@@ -48,8 +51,12 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
 
     /** {@inheritDoc} */
     public PublicKey getObject() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
-        return CryptReader.readPublicKey(new FileInputStream(keyFile));
+        if (key == null) {
+            Security.addProvider(new BouncyCastleProvider());
+            key = CryptReader.readPublicKey(new FileInputStream(keyFile));
+        }
+
+        return key;
     }
 
     /** {@inheritDoc} */

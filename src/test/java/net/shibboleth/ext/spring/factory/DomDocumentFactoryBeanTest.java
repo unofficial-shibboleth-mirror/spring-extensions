@@ -17,9 +17,10 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import org.opensaml.util.resource.ClasspathResource;
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.resource.ClasspathResource;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -37,6 +38,7 @@ public class DomDocumentFactoryBeanTest {
     public void getObject() throws Exception {
         DomDocumentFactoryBean factory = new DomDocumentFactoryBean();
         Resource resource = new ClasspathResource("data/document.xml");
+        resource.initialize();
         BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         factory.setDocumentResource(resource);

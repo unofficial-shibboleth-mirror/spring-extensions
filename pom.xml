@@ -57,9 +57,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-util</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <groupId>net.shibboleth.utilities</groupId>
+            <artifactId>java-support</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <!-- Required for the DomDocumentFactoryBean class -->
             <optional>true</optional>
         </dependency>

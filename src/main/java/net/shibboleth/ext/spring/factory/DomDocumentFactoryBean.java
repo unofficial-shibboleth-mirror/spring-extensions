@@ -17,8 +17,9 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import org.opensaml.util.resource.Resource;
-import org.opensaml.util.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.resource.Resource;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.w3c.dom.Document;
 

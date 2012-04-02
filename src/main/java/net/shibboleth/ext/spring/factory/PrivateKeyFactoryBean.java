@@ -25,7 +25,7 @@ import java.security.Security;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -56,7 +56,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * @param file private key file, never null
      */
     public void setPrivateKeyFile(@Nonnull final File file) {
-        keyFile = Assert.isNotNull(file, "Private key file can not be null");
+        keyFile = Constraint.isNotNull(file, "Private key file can not be null");
     }
 
     /**

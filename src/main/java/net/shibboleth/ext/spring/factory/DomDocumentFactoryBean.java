@@ -19,7 +19,7 @@ package net.shibboleth.ext.spring.factory;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
@@ -45,7 +45,7 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      * @param resource resource, never null
      */
     public void setDocumentResource(@Nonnull final Resource resource) {
-        documentResource = Assert.isNull(resource, "XML Resource can not be null");
+        documentResource = Constraint.isNull(resource, "XML Resource can not be null");
     }
 
     /**

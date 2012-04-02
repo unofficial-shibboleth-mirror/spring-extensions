@@ -24,7 +24,7 @@ import java.security.Security;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.BeanCreationException;
@@ -51,7 +51,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
      * @param file public key file
      */
     public void setPublicKeyFile(@Nonnull final File file) {
-        keyFile = Assert.isNotNull(file, "Public key file can not be null");
+        keyFile = Constraint.isNotNull(file, "Public key file can not be null");
     }
 
     /** {@inheritDoc} */

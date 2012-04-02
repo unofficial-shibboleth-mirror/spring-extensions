@@ -24,7 +24,7 @@ import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.BeanCreationException;
@@ -51,7 +51,7 @@ public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> 
      * @param file certificate chain file
      */
     public void setCertificateFile(@Nonnull final File file) {
-        certFile = Assert.isNotNull(file, "Certificate file can not be null");
+        certFile = Constraint.isNotNull(file, "Certificate file can not be null");
     }
 
     /** {@inheritDoc} */

@@ -22,7 +22,14 @@ import java.io.FileInputStream;
 import java.security.PrivateKey;
 import java.security.Security;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
 
 import edu.vt.middleware.crypt.util.CryptReader;
@@ -48,8 +55,8 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * 
      * @param file private key file, never null
      */
-    public void setPrivateKeyFile(final File file) {
-        keyFile = file;
+    public void setPrivateKeyFile(@Nonnull final File file) {
+        keyFile = Assert.isNotNull(file, "Private key file can not be null");
     }
 
     /**
@@ -57,13 +64,17 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * 
      * @param password password for the private key, may be null if the key is not encrypted
      */
-    public void setPrivateKeyPassword(final String password) {
-        keyPass = password;
+    public void setPrivateKeyPassword(@Nullable final String password) {
+        keyPass = StringSupport.trimOrNull(password);
     }
 
     /** {@inheritDoc} */
     public PrivateKey getObject() throws Exception {
         if (key == null) {
+            if (keyFile == null) {
+                throw new BeanCreationException("Private key file must be provided in order to use this factory.");
+            }
+
             Security.addProvider(new BouncyCastleProvider());
             if (keyPass == null) {
                 key = CryptReader.readPrivateKey(new FileInputStream(keyFile));
@@ -76,7 +87,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     }
 
     /** {@inheritDoc} */
-    public Class<?> getObjectType() {
+    @Nonnull public Class<?> getObjectType() {
         return PrivateKey.class;
     }
 

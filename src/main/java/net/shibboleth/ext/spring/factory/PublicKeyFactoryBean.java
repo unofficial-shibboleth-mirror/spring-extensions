@@ -22,7 +22,12 @@ import java.io.FileInputStream;
 import java.security.PublicKey;
 import java.security.Security;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.logic.Assert;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
 
 import edu.vt.middleware.crypt.util.CryptReader;
@@ -43,15 +48,19 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     /**
      * Sets the public key file.
      * 
-     * @param file public key file, never null
+     * @param file public key file
      */
-    public void setPublicKeyFile(final File file) {
-        keyFile = file;
+    public void setPublicKeyFile(@Nonnull final File file) {
+        keyFile = Assert.isNotNull(file, "Public key file can not be null");
     }
 
     /** {@inheritDoc} */
     public PublicKey getObject() throws Exception {
         if (key == null) {
+            if (keyFile == null) {
+                throw new BeanCreationException("Public key file must be provided in order to use this factory.");
+            }
+
             Security.addProvider(new BouncyCastleProvider());
             key = CryptReader.readPublicKey(new FileInputStream(keyFile));
         }
@@ -60,7 +69,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     }
 
     /** {@inheritDoc} */
-    public Class<?> getObjectType() {
+    @Nonnull public Class<?> getObjectType() {
         return PublicKey.class;
     }
 

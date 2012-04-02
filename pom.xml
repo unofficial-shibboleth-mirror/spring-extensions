@@ -59,8 +59,6 @@
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <!-- Required for the DomDocumentFactoryBean class -->
-            <optional>true</optional>
         </dependency>
 
         <!-- Provided dependencies -->

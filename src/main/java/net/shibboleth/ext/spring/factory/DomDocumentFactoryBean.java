@@ -17,15 +17,17 @@
 
 package net.shibboleth.ext.spring.factory;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.w3c.dom.Document;
 
-/**
- * Spring bean factory for producing a {@link Document} from a resource.
- */
+/** Spring bean factory for producing a {@link Document} from a resource. */
 public class DomDocumentFactoryBean implements FactoryBean<Document> {
 
     /** Resource to load the document from. */
@@ -42,8 +44,8 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      *
      * @param resource resource, never null
      */
-    public void setDocumentResource(final Resource resource) {
-        documentResource = resource;
+    public void setDocumentResource(@Nonnull final Resource resource) {
+        documentResource = Assert.isNull(resource, "XML Resource can not be null");
     }
 
     /**
@@ -51,20 +53,29 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      *
      * @param pool parser pool, never null.
      */
-    public void setParserPool(final BasicParserPool pool) {
+    public void setParserPool(@Nonnull final BasicParserPool pool) {
         parserPool = pool;
     }
 
     /** {@inheritDoc} */
-    public Document getObject() throws Exception {
+    @Nonnull public synchronized Document getObject() throws Exception {
         if (document == null) {
+            if(documentResource == null){
+                throw new BeanCreationException("Document resource must be provided in order to use this factory.");
+            }
+            
+            if(parserPool == null){
+                throw new BeanCreationException("Parser pool must be provided in order to use this factory.");
+            }
+            
             document = parserPool.parse(documentResource.getInputStream());
         }
+        
         return document;
     }
 
     /** {@inheritDoc} */
-    public Class<?> getObjectType() {
+    @Nonnull public Class<?> getObjectType() {
         return Document.class;
     }
 

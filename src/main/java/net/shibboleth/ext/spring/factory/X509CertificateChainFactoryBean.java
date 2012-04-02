@@ -22,7 +22,12 @@ import java.io.FileInputStream;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.logic.Assert;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
 
 import edu.vt.middleware.crypt.util.CryptReader;
@@ -43,15 +48,20 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
     /**
      * Sets the certificate chain file.
      * 
-     * @param file certificate chain file, never null
+     * @param file certificate chain file
      */
-    public void setCertificateChainFile(final File file) {
-        certChainFile = file;
+    public void setCertificateChainFile(@Nonnull final File file) {
+        certChainFile = Assert.isNotNull(file, "Certificate chain file can not be null");
     }
 
     /** {@inheritDoc} */
     public X509Certificate[] getObject() throws Exception {
         if (certificates == null) {
+            if (certChainFile == null) {
+                throw new BeanCreationException(
+                        "Certificate chanin file must be provided in order to use this factory.");
+            }
+
             Security.addProvider(new BouncyCastleProvider());
             certificates = (X509Certificate[]) CryptReader.readCertificateChain(new FileInputStream(certChainFile));
         }
@@ -60,7 +70,7 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
     }
 
     /** {@inheritDoc} */
-    public Class<?> getObjectType() {
+    @Nonnull public Class<?> getObjectType() {
         return X509Certificate.class;
     }
 

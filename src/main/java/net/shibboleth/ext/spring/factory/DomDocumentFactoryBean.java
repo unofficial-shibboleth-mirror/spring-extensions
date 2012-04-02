@@ -45,7 +45,7 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      * @param resource resource, never null
      */
     public void setDocumentResource(@Nonnull final Resource resource) {
-        documentResource = Constraint.isNull(resource, "XML Resource can not be null");
+        documentResource = Constraint.isNotNull(resource, "XML Resource can not be null");
     }
 
     /**

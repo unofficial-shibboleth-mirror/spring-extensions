@@ -21,11 +21,11 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** The collection of transitions supported by this action. */
+/** The collection of events potentially returned by a Webflow action. */
 @Documented
 @Target(ElementType.TYPE)
-public @interface Transitions {
+public @interface Events {
 
     /** Collection of transitions supported by this class. */
-    Transition[] transitions();
+    Event[] value();
 }

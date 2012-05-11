@@ -21,23 +21,17 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** An annotation used to document that transitions supported by custom actions. */
+/** An annotation used to document an event returned by a custom Webflow action. */
 @Documented
 @Target(ElementType.TYPE)
-public @interface Transition {
+public @interface Event {
     
-    /** ID of the transition. */
+    /** ID of the event. */
     String id();
-    
-    /** Type of exception meant to trigger the transition. */
-    Class<? extends Exception> exception();
-    
-    /** A coarse classification of the transition.  Usually just "success" or "error". */
-    String classification() default "success";
     
     /** A description of the transition. */
     String description() default "";
     
     /** Name of event attributes available during the transition. */
-    String[] attributes();
+    String[] attributes() default {};
 }

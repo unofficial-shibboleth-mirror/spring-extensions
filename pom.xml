@@ -52,6 +52,7 @@
         <dependency>
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
+            <version>${shibboleth.java-support.version}</version>
             <!-- Required for the DomDocumentFactoryBean and Duration conversion classes. -->
             <optional>true</optional>
         </dependency>

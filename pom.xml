@@ -44,6 +44,10 @@
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
             <groupId>edu.vt.middleware</groupId>
             <artifactId>vt-crypt</artifactId>
             <!-- Required for any classes that deals with cryptographic artifacts (keys, certs, algorithms, etc.) -->
@@ -57,18 +61,24 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-core</artifactId>
+            <!--  Required for Duration conversion classes. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-beans</artifactId>
+            <!-- Required for factory classes. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
             <optional>true</optional>
         </dependency>
 
         <!-- Provided dependencies -->
-        <dependency>
-            <groupId>${spring.groupId}</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Runtime dependencies -->
 

@@ -17,10 +17,10 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -37,8 +37,7 @@ public class DomDocumentFactoryBeanTest {
     @Test
     public void getObject() throws Exception {
         DomDocumentFactoryBean factory = new DomDocumentFactoryBean();
-        Resource resource = new ClasspathResource("data/document.xml");
-        resource.initialize();
+        Resource resource = new ClassPathResource("data/document.xml");
         BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         factory.setDocumentResource(resource);

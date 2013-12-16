@@ -20,11 +20,11 @@ package net.shibboleth.ext.spring.factory;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 
 /** Spring bean factory for producing a {@link Document} from a resource. */

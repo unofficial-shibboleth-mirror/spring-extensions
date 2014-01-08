@@ -17,271 +17,137 @@
 
 package net.shibboleth.ext.spring.resource;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.net.ssl.TrustManager;
 
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.tmatesoft.svn.core.SVNErrorMessage;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationProvider;
-import org.tmatesoft.svn.core.auth.ISVNProxyManager;
+import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
-import org.tmatesoft.svn.core.io.SVNRepository;
 
-/** Authentication manager for SVN resources. */
+/**
+ * Authentication manager for SVN resources based on {@link BasicAuthenticationManager). <br/>
+ * Exbeds the proxy information into individual beans to allow setting from Spring.
+ */
 @ThreadSafe
-public class SVNBasicAuthenticationManager extends AbstractIdentifiableInitializableComponent implements
-        ISVNAuthenticationManager, BeanNameAware, InitializingBean {
+public class SVNBasicAuthenticationManager extends BasicAuthenticationManager implements InitializingBean {
 
-    /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(SVNBasicAuthenticationManager.class);
+    /** Proxy Host - if needed. */
+    private String proxyHost;
 
-    /** Network connection timeout in milliseconds. */
-    private int connectionTimeout;
+    /** Proxy Port - if needed. */
+    private int proxyPort;
 
-    /** Read operation timeout in milliseconds. */
-    private int readTimeout;
+    /** Proxy User Name - if needed. */
+    private String proxyUserName;
 
-    /** The SSL trust manager. */
-    private TrustManager trustManager;
+    /** Proxy Password - if needed. */
+    private String proxyPassword;
 
-    /** User authentication mechanisms. */
-    private Map<String, SVNAuthentication> authenticationMethods;
-
-    /** HTTP proxy configuration. */
-    private final BasicProxyManager proxyManager;
+    /** This is true if any of the setters for the proxy information have been called.*/
+    private boolean proxySet;
 
     /**
-     * Constructor.
+     * Constructor. See http://svnkit.com/javadoc/org/tmatesoft/svn/core/auth/BasicAuthenticationManager.html
      * 
-     * @param authnMethods user authentication methods
+     * @param authentications authentications
      */
-    public SVNBasicAuthenticationManager(List<SVNAuthentication> authnMethods) {
-        connectionTimeout = 5000;
-        readTimeout = 10000;
-        setAuthenticationMethods(authnMethods);
-        proxyManager = null;
+    public SVNBasicAuthenticationManager(List<SVNAuthentication> authentications) {
+        super(authentications.toArray(new SVNAuthentication[authentications.size()]));
     }
 
     /**
-     * Constructor.
+     * Constructor. See http://svnkit.com/javadoc/org/tmatesoft/svn/core/auth/BasicAuthenticationManager.html
      * 
-     * @param authnMethods user authentication methods
-     * @param proxyHost host name or IP address of the proxy server
-     * @param proxyPort port of the proxy server
-     * @param proxyUser username used to connect to the proxy server
-     * @param proxyPassword password used to connect to the proxy server
+     * @param userName username
+     * @param keyFile a private key file
+     * @param passphrase  a password to the private key
+     * @param portNumber a port number over which an ssh tunnel is established
      */
-    public SVNBasicAuthenticationManager(List<SVNAuthentication> authnMethods, String proxyHost, int proxyPort,
-            String proxyUser, String proxyPassword) {
-        connectionTimeout = 5000;
-        readTimeout = 10000;
-        setAuthenticationMethods(authnMethods);
-        proxyManager = new BasicProxyManager(proxyHost, proxyPort, proxyUser, proxyPassword);
-    }
-
-    /** {@inheritDoc} */
-    @Override public void acknowledgeAuthentication(boolean authnAccepted, String authnKind, String authnRealm,
-            SVNErrorMessage error, SVNAuthentication authnMethods) throws SVNException {
-        if (authnAccepted) {
-            log.trace("Successful authentication to SVN repository with {} credentials", authnKind);
-        } else {
-            log.trace("Unable to authenticate to SVN repository with {} credentials", authnKind);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override public void acknowledgeTrustManager(TrustManager manager) {
-        log.debug("HTTPS connection trusted by trust manager");
-    }
-
-    /** {@inheritDoc} */
-    @Override public int getConnectTimeout(SVNRepository repository) {
-        return connectionTimeout;
+    public SVNBasicAuthenticationManager(String userName, File keyFile, String passphrase, int portNumber) {
+        super(userName, keyFile, passphrase, portNumber);
     }
 
     /**
-     * Sets the network connection timeout in milliseconds. If a value of zero or less is given than the value
-     * {@link Integer#MAX_VALUE} will be used.
-     * 
-     * @param timeout network connection timeout in milliseconds
+     * Constructor. See http://svnkit.com/javadoc/org/tmatesoft/svn/core/auth/BasicAuthenticationManager.html
+     *
+     * @param userName a userName
+     * @param password a password
      */
-    public void setConnectionTimeout(int timeout) {
-        if (timeout <= 0) {
-            connectionTimeout = Integer.MAX_VALUE;
-        } else {
-            connectionTimeout = timeout;
+    public SVNBasicAuthenticationManager(String userName, String password) {
+        super(userName, password);
+    }
+
+    /** {@inheritDoc} */
+    @Override public void afterPropertiesSet() {
+        if (proxySet) {
+            setProxy(proxyHost, proxyPort, proxyUserName, proxyPassword);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override @Nullable public SVNAuthentication getFirstAuthentication(String authnKind, String authnRealm,
-            SVNURL repository) throws SVNException {
-        return authenticationMethods.get(authnKind);
-    }
-
-    /** {@inheritDoc} */
-    @Override @Nullable public SVNAuthentication getNextAuthentication(String authnKind, String authnRealm,
-            SVNURL respository) throws SVNException {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override @Nonnull public ISVNProxyManager getProxyManager(SVNURL repository) throws SVNException {
-        return proxyManager;
-    }
-
-    /** {@inheritDoc} */
-    @Override public int getReadTimeout(SVNRepository repository) {
-        return readTimeout;
-    }
-
-    /**
-     * Sets the read operation timeout in milliseconds. If a value of zero or less is given than the value
-     * {@link Integer#MAX_VALUE} will be used.
-     * 
-     * @param timeout network connection timeout in milliseconds
+    /** Get the proxy host.
+     * @return Returns the proxyHost.
      */
-    public void setReadTimeout(int timeout) {
-        if (timeout <= 0) {
-            readTimeout = Integer.MAX_VALUE;
-        } else {
-            readTimeout = timeout;
-        }
+    @Override
+    public String getProxyHost() {
+        return proxyHost;
     }
 
-    /** {@inheritDoc} */
-    @Override @Nullable public TrustManager getTrustManager(SVNURL respository) throws SVNException {
-        return trustManager;
-    }
-
-    /**
-     * Sets the trust manager used when negotiating SSL/TLS connections.
-     * 
-     * @param manager trust manager used when negotiating SSL/TLS connections
+    /** Set the proxy host.
+     * @param host The proxyHost to set.
      */
-    public void setTrustManager(TrustManager manager) {
-        trustManager = manager;
+    public void setProxyHost(String host) {
+        proxyHost = host;
+        proxySet = true;
     }
 
-    /** {@inheritDoc} */
-    @Override public boolean isAuthenticationForced() {
-        return false;
-    }
-
-    /** This function is not implemented. {@inheritDoc} */
-    @Override public void setAuthenticationProvider(ISVNAuthenticationProvider arg0) {
-    }
-
-    /**
-     * Sets the user authentication methods.
-     * 
-     * @param authnMethods user authentication methods
+    /** Get the proxy port.
+     * @return Returns the proxyPort.
      */
-    private void setAuthenticationMethods(List<SVNAuthentication> authnMethods) {
-        if (authnMethods == null || authnMethods.size() == 0) {
-            authenticationMethods = Collections.emptyMap();
-        } else {
-            HashMap<String, SVNAuthentication> methods = new HashMap<String, SVNAuthentication>();
-            for (SVNAuthentication method : authnMethods) {
-                if (methods.containsKey(method.getKind())) {
-                    log.warn("An authentication method of type " + method.getKind()
-                            + " has already been set, only the first will be used");
-                } else {
-                    methods.put(method.getKind(), method);
-                }
-            }
-            authenticationMethods = Collections.unmodifiableMap(methods);
-        }
+    @Override
+    public int getProxyPort() {
+        return proxyPort;
     }
 
-    /** {@inheritDoc} */
-    @Override public void afterPropertiesSet() throws Exception {
-        initialize();
+    /** Set the proxy port.
+     * @param port The proxyPort to set.
+     */
+    public void setProxyPort(int port) {
+        proxyPort = port;
+        proxySet = true;
     }
 
-    /** {@inheritDoc} */
-    @Override public void setBeanName(String name) {
-        setId(name);
+    /** Get the proxy user name.
+     * @return Returns the proxyUserName.
+     */
+    @Override
+    public String getProxyUserName() {
+        return proxyUserName;
     }
 
-    /** Basic implementation of {@link ISVNProxyManager}. */
-    private class BasicProxyManager implements ISVNProxyManager {
-
-        /** Host name or IP address of the proxy. */
-        private final String host;
-
-        /** Port of the proxy. */
-        private final int port;
-
-        /** Username used to connect to the proxy. */
-        private final String user;
-
-        /** Password used to connect to the proxy. */
-        private final String password;
-
-        /**
-         * Constructor.
-         * 
-         * @param theHost host name or IP address of the proxy server
-         * @param thePort port of the proxy server
-         * @param username username used to connect to the proxy server
-         * @param pass password used to connect to the proxy server
-         */
-        public BasicProxyManager(String theHost, int thePort, String username, String pass) {
-            this.host = StringSupport.trimOrNull(theHost);
-            if (this.host == null) {
-                throw new IllegalArgumentException("Proxy host may not be null or empty");
-            }
-
-            this.port = thePort;
-
-            this.user = StringSupport.trimOrNull(username);
-            this.password = StringSupport.trimOrNull(pass);
-        }
-
-        /** {@inheritDoc} */
-        @Override public void acknowledgeProxyContext(boolean accepted, SVNErrorMessage error) {
-            if (accepted) {
-                log.trace("Connected to HTTP proxy " + host + ":" + port);
-            }
-            log.error("Unable to connect to HTTP proxy " + host + ":" + port + " recieved error:\n"
-                    + error.getFullMessage());
-        }
-
-        /** {@inheritDoc} */
-        @Override public String getProxyHost() {
-            return host;
-        }
-
-        /** {@inheritDoc} */
-        @Override public String getProxyPassword() {
-            return password;
-        }
-
-        /** {@inheritDoc} */
-        @Override public int getProxyPort() {
-            return port;
-        }
-
-        /** {@inheritDoc} */
-        @Override public String getProxyUserName() {
-            return user;
-        }
+    /** Set the proxy user name.
+     * @param userName The proxyUserName to set.
+     */
+    public void setProxyUserName(String userName) {
+        proxyUserName = userName;
+        proxySet = true;
     }
+
+    /** Get the proxy password.
+     * @return Returns the proxyPassword.
+     */
+    @Override
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    /** Set the proxy password.
+     * @param password The proxyPassword to set.
+     */
+    public void setProxyPassword(String password) {
+        proxyPassword = password;
+        proxySet = true;
+    }
+
 }

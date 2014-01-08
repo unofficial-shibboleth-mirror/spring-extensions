@@ -23,10 +23,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
-import java.util.Collections;
+import java.util.Collection;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -37,6 +39,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 
@@ -68,7 +71,7 @@ public class SVNResourceTest {
     private File theDir;
 
     @BeforeClass public void setup() throws SVNException, IOException {
-        final ISVNAuthenticationManager authnManager = new SVNBasicAuthenticationManager(Collections.EMPTY_LIST);
+        final ISVNAuthenticationManager authnManager = new BasicAuthenticationManager(null);
         clientManager = SVNClientManager.newInstance();
         clientManager.setAuthenticationManager(authnManager);
 
@@ -152,6 +155,32 @@ public class SVNResourceTest {
 
         Assert.assertTrue(compare(comparer, resource));
 
+    }
+    
+    private Resource getBean(String fileName) {
+        final GenericApplicationContext parentContext = new GenericApplicationContext();
+        parentContext.refresh(); //THIS IS REQUIRED
+        parentContext.getBeanFactory().registerSingleton("theDir", theDir);
+        
+        final GenericApplicationContext context = new GenericApplicationContext(parentContext);
+        XmlBeanDefinitionReader beanDefinitionReader =
+                new XmlBeanDefinitionReader(context);
+
+        beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
+        beanDefinitionReader.loadBeanDefinitions(fileName);
+        context.refresh(); // Gotta have this line or the property replacement won't work.
+        
+        Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
+        Assert.assertEquals(beans.size(), 1);
+
+        return beans.iterator().next();
+    }
+    
+    @Test public void testSpringLoad() {
+        
+        Resource r = getBean("classpath:data/SVNBean.xml");
+        
+        Assert.assertTrue(r.exists());
     }
 
 

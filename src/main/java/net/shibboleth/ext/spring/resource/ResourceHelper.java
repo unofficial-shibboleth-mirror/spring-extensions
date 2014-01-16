@@ -26,14 +26,13 @@ import java.net.URL;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
 
 import org.springframework.core.io.Resource;
 
 /**
- * Bridging class between {@link Resource} and {@link net.shibboleth.utilities.java.support.resource}.
+ * Bridging class between {@link Resource} and {@link net.shibboleth.utilities.java.support.resource.Resource}.
  */
-public final class ShibbolethResourceHelper implements ShibbolethResource {
+public final class ResourceHelper implements net.shibboleth.utilities.java.support.resource.Resource {
 
     /** The cached Spring {@link Resource}. */
     private Resource springResource;
@@ -43,84 +42,84 @@ public final class ShibbolethResourceHelper implements ShibbolethResource {
      * 
      * @param theResource the spring resource;
      */
-    private ShibbolethResourceHelper(@Nonnull Resource theResource) {
+    private ResourceHelper(@Nonnull Resource theResource) {
 
         springResource = Constraint.isNotNull(theResource, "provided Spring Resource should not be null");
     }
 
     /**
-     * Return a {@link ShibbolethResource} that does all the work of the provided {@link Resource}<br/>
-     * If the input implements {@link ShibbolethResource} then it is cast to the output, other a shim class is
-     * generated.
+     * Return a {@link Resource} that does all the work of the provided {@link Resource}<br/>
+     * If the input implements {@link Resource} then it is cast to the output, other a shim class is generated.
      * 
      * @param springResource the input
-     * @return a {@link ShibbolethResource} which reflects what the Spring one does
+     * @return a {@link Resource} which reflects what the Spring one does
      */
-    public static ShibbolethResource of(Resource springResource) {
-        if (springResource instanceof ShibbolethResource) {
-            return (ShibbolethResource) springResource;
+    public static net.shibboleth.utilities.java.support.resource.Resource of(Resource springResource) {
+        if (springResource instanceof net.shibboleth.utilities.java.support.resource.Resource) {
+            return (net.shibboleth.utilities.java.support.resource.Resource) springResource;
         }
-        return new ShibbolethResourceHelper(springResource);
+        return new ResourceHelper(springResource);
     }
 
     /** {@inheritDoc} */
-    public InputStream getInputStream() throws IOException {
+    @Override public InputStream getInputStream() throws IOException {
         return springResource.getInputStream();
     }
 
     /** {@inheritDoc} */
-    public boolean exists() {
+    @Override public boolean exists() {
         return springResource.exists();
     }
 
     /** {@inheritDoc} */
-    public boolean isReadable() {
+    @Override public boolean isReadable() {
         return springResource.isReadable();
     }
 
     /** {@inheritDoc} */
-    public boolean isOpen() {
+    @Override public boolean isOpen() {
         return springResource.isOpen();
     }
 
     /** {@inheritDoc} */
-    public URL getURL() throws IOException {
+    @Override public URL getURL() throws IOException {
         return springResource.getURL();
     }
 
     /** {@inheritDoc} */
-    public URI getURI() throws IOException {
+    @Override public URI getURI() throws IOException {
         return springResource.getURI();
     }
 
     /** {@inheritDoc} */
-    public File getFile() throws IOException {
+    @Override public File getFile() throws IOException {
         return springResource.getFile();
     }
 
     /** {@inheritDoc} */
-    public long contentLength() throws IOException {
+    @Override public long contentLength() throws IOException {
         return springResource.contentLength();
     }
 
     /** {@inheritDoc} */
-    public long lastModified() throws IOException {
+    @Override public long lastModified() throws IOException {
         return springResource.lastModified();
     }
 
     /** {@inheritDoc} */
-    public ShibbolethResource createRelative(String relativePath) throws IOException {
-        
+    @Override public net.shibboleth.utilities.java.support.resource.Resource
+            createRelativeResource(String relativePath) throws IOException {
+
         return of(springResource.createRelative(relativePath));
     }
 
     /** {@inheritDoc} */
-    public String getFilename() {
+    @Override public String getFilename() {
         return springResource.getFilename();
     }
 
     /** {@inheritDoc} */
-    public String getDescription() {
+    @Override public String getDescription() {
         return springResource.getDescription();
     }
 

@@ -61,7 +61,7 @@ import org.tmatesoft.svn.core.wc.SVNStatus;
  * The behavior of multiple {@link SVNResource} operating on the same local copy are undefined.
  */
 public class SVNResource extends AbstractIdentifiableInitializableComponent implements Resource, BeanNameAware,
-        InitializingBean {
+        InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(SVNResource.class);
@@ -413,6 +413,12 @@ public class SVNResource extends AbstractIdentifiableInitializableComponent impl
 
     /** {@inheritDoc} */
     @Override public Resource createRelative(String relativePath) throws IOException {
+        throw new IOException("Cannot support relative open on SVN resources");
+    }
+
+    /** {@inheritDoc} */
+    @Override public net.shibboleth.utilities.java.support.resource.Resource
+            createRelativeResource(String relativePath) throws IOException {
         throw new IOException("Cannot support relative open on SVN resources");
     }
 

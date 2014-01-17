@@ -19,7 +19,6 @@ package net.shibboleth.ext.spring.resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -42,8 +41,6 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-
-import com.google.common.io.Closeables;
 
 /**
  * test,
@@ -99,31 +96,6 @@ public class SVNResourceTest {
         theDir = null;
     }
 
-    protected boolean compare(final Resource first, final Resource second) throws IOException {
-        final InputStream firstStream = first.getInputStream();
-        final InputStream secondStream = second.getInputStream();
-
-        try {
-            while (true) {
-    
-                final int firstInt = firstStream.read();
-                final int secondInt = secondStream.read();
-    
-                if (firstInt == -1) {
-                    return secondInt == -1;
-                }
-    
-                if (firstInt != secondInt) {
-                    return false;
-                }
-            }
-        }
-        finally {
-            Closeables.close(firstStream, true);
-            Closeables.close(secondStream, true);
-        }
-    }
-
     @Test public void testRevision() throws IOException, ParseException {
         final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION, FILENAME);
         Assert.assertTrue(resource.exists());
@@ -133,10 +105,10 @@ public class SVNResourceTest {
 
         final Resource other = new ByteArrayResource(ORIGINAL_TEXT.getBytes());
 
-        Assert.assertTrue(compare(other, resource));
+        Assert.assertTrue(ResourceTestHelper.compare(other, resource));
         // Check rewind and check the compare code
-        Assert.assertFalse(compare(comparer, resource));
-        Assert.assertTrue(compare(other, resource));
+        Assert.assertFalse(ResourceTestHelper.compare(comparer, resource));
+        Assert.assertTrue(ResourceTestHelper.compare(other, resource));
     }
 
     @Test public void testNotExist() {
@@ -153,7 +125,7 @@ public class SVNResourceTest {
         long delta = resource.lastModified() - new DateTime(2013, 12, 31, 16, 59, 06, 500, DateTimeZone.UTC).getMillis();
         Assert.assertTrue(delta < 501 && delta > -501);
 
-        Assert.assertTrue(compare(comparer, resource));
+        Assert.assertTrue(ResourceTestHelper.compare(comparer, resource));
 
     }
     

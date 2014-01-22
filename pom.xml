@@ -48,13 +48,13 @@
             <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
-            <!-- Required if you're using anything in the httpclient package -->
+            <!-- Required for HTTPResource. -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- Required if you're using anything in the httpclient package -->
+            <!-- Required for HTTPResource. -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-cache</artifactId>
             <optional>true</optional>
@@ -104,6 +104,8 @@
         <dependency>
             <groupId>org.tmatesoft.svnkit</groupId>
             <artifactId>svnkit</artifactId>
+            <!-- Required for SVNResource. Constrained by licensing. -->
+            <optional>true</optional>
         </dependency>
 
         <!-- Provided dependencies -->

@@ -34,10 +34,11 @@ public class DurationToLongConverter implements Converter<String,Long>, Conditio
     public Long convert(String source) {
         if (source.startsWith("P")) {
             return DomTypeSupport.durationToLong(source);
-        } else if (source.startsWith("-")) {
+        } else if (source.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {
-            throw new IllegalArgumentException("Durations must start with 'P'");
+            // Treat as a Long.
+            return Long.valueOf(source);
         }
     }
 

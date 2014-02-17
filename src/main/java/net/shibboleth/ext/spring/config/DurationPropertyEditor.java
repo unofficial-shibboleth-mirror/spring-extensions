@@ -32,10 +32,10 @@ public class DurationPropertyEditor extends PropertyEditorSupport {
 
         if (text.startsWith("P")) {
             setValue(DomTypeSupport.getDataTypeFactory().newDuration(text));
-        } else if (text.startsWith("-")) {
+        } else if (text.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {
-            throw new IllegalArgumentException("Durations must start with 'P'");
+            setValue(DomTypeSupport.getDataTypeFactory().newDuration(Long.valueOf(text)));
         }
     }    
 }

@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -54,7 +54,7 @@ import org.springframework.core.io.Resource;
  * based in {@link org.opensaml.saml.metadata.resolver.impl.HTTPMetadataResolver} and
  * {@link org.springframework.core.io.UrlResource}.
  */
-public class HTTPResource extends AbstractIdentifiableInitializableComponent implements Resource, BeanNameAware,
+public class HTTPResource extends AbstractIdentifiedInitializableComponent implements Resource, BeanNameAware,
         InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Class logger. */

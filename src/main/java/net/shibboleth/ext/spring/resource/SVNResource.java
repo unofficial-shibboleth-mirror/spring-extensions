@@ -25,7 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.joda.time.DateTime;
@@ -60,7 +60,7 @@ import org.tmatesoft.svn.core.wc.SVNStatus;
  * 
  * The behavior of multiple {@link SVNResource} operating on the same local copy are undefined.
  */
-public class SVNResource extends AbstractIdentifiableInitializableComponent implements Resource, BeanNameAware,
+public class SVNResource extends AbstractIdentifiedInitializableComponent implements Resource, BeanNameAware,
         InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Class logger. */

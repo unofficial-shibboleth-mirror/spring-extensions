@@ -48,6 +48,10 @@
             <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <!-- Required for HTTPResource. -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

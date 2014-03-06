@@ -23,8 +23,8 @@ import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -68,8 +68,8 @@ public class HTTPResourceTest {
         final long size = child.contentLength();
         final String whenAsString = new DateTime(when).toString();
   
-        Assert.assertEquals("Expected date of " + whenAsString + " did not match)", 1205848652000L, when);
-        Assert.assertEquals("Size mismatch", 20784226L, size);
+        Assert.assertEquals(when, 1205848652000L, "Expected date of " + whenAsString + " did not match)");
+        Assert.assertEquals(size, 20784226L, "Size mismatch");
     }
     
 }

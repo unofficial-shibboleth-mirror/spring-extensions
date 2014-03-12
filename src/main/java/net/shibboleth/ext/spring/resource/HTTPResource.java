@@ -54,7 +54,7 @@ import org.springframework.core.io.Resource;
 
 /**
  * Resource for looking up HTTP URLs. Allows injection and therefore configuration of an Apache {@link HttpClient}. Code
- * based in {@link org.opensaml.saml.metadata.resolver.impl.HTTPMetadataResolver} and
+ * based on OpenSAML <code>HTTPMetadataResolver</code> and
  * {@link org.springframework.core.io.UrlResource}.
  */
 public class HTTPResource extends AbstractIdentifiedInitializableComponent implements Resource, BeanNameAware,

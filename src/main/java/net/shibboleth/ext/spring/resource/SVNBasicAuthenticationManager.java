@@ -27,7 +27,7 @@ import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
 
 /**
- * Authentication manager for SVN resources based on {@link BasicAuthenticationManager). <br/>
+ * Authentication manager for SVN resources based on {@link BasicAuthenticationManager}. <br/>
  * Exbeds the proxy information into individual beans to allow setting from Spring.
  */
 @ThreadSafe

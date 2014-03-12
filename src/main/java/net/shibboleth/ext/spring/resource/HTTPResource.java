@@ -34,14 +34,17 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -76,14 +79,13 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * Constructor.
      * 
      * @param client the client we use to connect with.
-     * @param remoteURL URL to the remote data
+     * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String remoteURL) throws IOException {
+    public HTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         final String trimmedAddress =
-                Constraint
-                        .isNotNull(StringSupport.trimOrNull(remoteURL), "Provided URL must be non empty and non null");
+                Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL must be non empty and non null");
         resourceURL = new URL(trimmedAddress);
 
     }
@@ -92,12 +94,12 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * Constructor.
      * 
      * @param client the client we use to connect with.
-     * @param remoteURL URL to the remote data
+     * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @Nonnull URL remoteURL) throws IOException {
+    public HTTPResource(@Nonnull HttpClient client, @Nonnull URL url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
-        resourceURL = Constraint.isNotNull(remoteURL, "Provided URL must be non empty and non null");
+        resourceURL = Constraint.isNotNull(url, "Provided URL must be non empty and non null");
 
     }
 
@@ -146,13 +148,11 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} */
     @Override public boolean exists() {
-        final HttpHead httpHead = new HttpHead(resourceURL.toString());
-        final HttpClientContext context = buildHttpClientContext();
-        final HttpResponse response;
 
         log.debug("Attempting to fetch metadata for resource as '{}'", resourceURL);
+        final HttpResponse response;
         try {
-            response = httpClient.execute(httpHead, context);
+            response = getResourceHeaders();
         } catch (IOException e) {
             return false;
         }
@@ -192,6 +192,36 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
 
     /**
+     * Attempts to fetch only the headers for a given resource. If HEAD requests are unsupported than a more costly GET
+     * request is performed.
+     * 
+     * @return the response from the request
+     * 
+     * @throws IOException thrown if there is a problem contacting the resource
+     */
+    private HttpResponse getResourceHeaders() throws IOException {
+        HttpUriRequest httpRequest = new HttpHead(resourceURL.toString());
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpRequest);
+            EntityUtils.consume(httpResponse.getEntity());
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            if (statusCode == HttpStatus.SC_METHOD_NOT_ALLOWED || statusCode == HttpStatus.SC_NOT_IMPLEMENTED) {
+                log.debug(resourceURL.toString() + " does not support HEAD requests, falling back to GET request");
+                httpRequest = new HttpGet(resourceURL.toString());
+                httpResponse = httpClient.execute(httpRequest);
+                EntityUtils.consume(httpResponse.getEntity());
+                statusCode = httpResponse.getStatusLine().getStatusCode();
+            }
+
+            return httpResponse;
+        } catch (IOException e) {
+            throw new IOException("Error contacting resource " + resourceURL.toString(), e);
+        }
+    }
+
+    /**
      * Send a Head to the client and interrogate the response for a particular response header.
      * 
      * @param what the repsonse header to look at
@@ -199,12 +229,10 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @throws IOException from lower levels.
      */
     @Nullable protected String getResponseHeader(String what) throws IOException {
-        final HttpHead httpHead = new HttpHead(resourceURL.toString());
-        final HttpClientContext context = buildHttpClientContext();
         final HttpResponse response;
 
         log.debug("Attempting to fetch metadata for resource as '{}'", resourceURL);
-        response = httpClient.execute(httpHead, context);
+        response = getResourceHeaders();
         int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
@@ -224,7 +252,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** {@inheritDoc} */
     @Override public long contentLength() throws IOException {
 
-        String response = getResponseHeader("Content-Length");
+        String response = getResponseHeader(HttpHeaders.CONTENT_LENGTH);
         if (null != response) {
             return Long.parseLong(response);
         }
@@ -235,7 +263,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} */
     @Override public long lastModified() throws IOException {
-        String response = getResponseHeader("Last-Modified");
+        String response = getResponseHeader(HttpHeaders.LAST_MODIFIED);
         if (null != response) {
             return DateUtils.parseDate(response).getTime();
         }

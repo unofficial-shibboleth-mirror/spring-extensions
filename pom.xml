@@ -58,8 +58,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>edu.vt.middleware</groupId>
-            <artifactId>vt-crypt</artifactId>
+            <groupId>org.cryptacular</groupId>
+            <artifactId>cryptacular</artifactId>
             <!-- Required for any classes that deals with cryptographic artifacts (keys, certs, algorithms, etc.) -->
             <optional>true</optional>
         </dependency>
@@ -84,7 +84,7 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
+            <artifactId>bcprov-jdk15on</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

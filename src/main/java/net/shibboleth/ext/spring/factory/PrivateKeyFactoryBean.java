@@ -29,10 +29,9 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.cryptacular.util.KeyPairUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
-
-import edu.vt.middleware.crypt.util.CryptReader;
 
 /**
  * Spring bean factory for producing a {@link PrivateKey} from a file.
@@ -77,9 +76,9 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
 
             Security.addProvider(new BouncyCastleProvider());
             if (keyPass == null) {
-                key = CryptReader.readPrivateKey(new FileInputStream(keyFile));
+                key = KeyPairUtil.readPrivateKey(new FileInputStream(keyFile));
             } else {
-                key = CryptReader.readPrivateKey(new FileInputStream(keyFile), keyPass.toCharArray());
+                key = KeyPairUtil.readPrivateKey(new FileInputStream(keyFile), keyPass.toCharArray());
             }
         }
 

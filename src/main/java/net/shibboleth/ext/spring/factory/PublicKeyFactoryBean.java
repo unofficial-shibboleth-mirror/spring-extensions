@@ -27,10 +27,9 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.cryptacular.util.KeyPairUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
-
-import edu.vt.middleware.crypt.util.CryptReader;
 
 /**
  * Spring bean factory for producing a {@link PublicKey} from a file.
@@ -62,7 +61,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
             }
 
             Security.addProvider(new BouncyCastleProvider());
-            key = CryptReader.readPublicKey(new FileInputStream(keyFile));
+            key = KeyPairUtil.readPublicKey(new FileInputStream(keyFile));
         }
 
         return key;

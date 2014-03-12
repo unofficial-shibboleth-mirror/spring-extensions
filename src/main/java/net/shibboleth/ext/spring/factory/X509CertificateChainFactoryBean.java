@@ -27,10 +27,9 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.cryptacular.util.CertUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
-
-import edu.vt.middleware.crypt.util.CryptReader;
 
 /**
  * Spring bean factory for producing a {@link X509Certificate} chains from a file.
@@ -63,7 +62,7 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
             }
 
             Security.addProvider(new BouncyCastleProvider());
-            certificates = (X509Certificate[]) CryptReader.readCertificateChain(new FileInputStream(certChainFile));
+            certificates = (X509Certificate[]) CertUtil.readCertificateChain(new FileInputStream(certChainFile));
         }
 
         return certificates;

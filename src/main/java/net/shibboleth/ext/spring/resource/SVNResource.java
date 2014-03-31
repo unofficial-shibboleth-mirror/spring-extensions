@@ -238,6 +238,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
             newRevision = checkoutResourceDirectory();
         } else {
             if (retrievalRevision != SVNRevision.HEAD) {
+                lastModified = getLastModificationForRevision(SVNRevision.HEAD);
                 log.debug("Working copy exists and version is pegged at {}, no need to update",
                         retrievalRevision.toString());
                 return;
@@ -435,7 +436,10 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
 
     /** {@inheritDoc} */
     @Override public void setBeanName(String name) {
-        setId(name);
+        // For some reason Spring will call this after initialization.
+        if (!isInitialized()) {
+            setId(name);
+        }
     }
 
     /** Simple {@link ISVNStatusHandler} implementation that just stores and returns the status. */

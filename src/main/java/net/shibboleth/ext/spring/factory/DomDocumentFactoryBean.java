@@ -18,9 +18,10 @@
 package net.shibboleth.ext.spring.factory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.xml.BasicParserPool;
+import net.shibboleth.utilities.java.support.xml.ParserPool;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
@@ -31,13 +32,13 @@ import org.w3c.dom.Document;
 public class DomDocumentFactoryBean implements FactoryBean<Document> {
 
     /** Resource to load the document from. */
-    private Resource documentResource;
+    @Nullable private Resource documentResource;
 
     /** Parser pool to use when parsing the document. */
-    private BasicParserPool parserPool;
+    @Nullable private ParserPool parserPool;
 
     /** Resulting {@link Document}. */
-    private Document document;
+    @Nullable private Document document;
 
     /**
      * Sets the resource containing the document to be parsed.
@@ -45,7 +46,7 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      * @param resource resource, never null
      */
     public void setDocumentResource(@Nonnull final Resource resource) {
-        documentResource = Constraint.isNotNull(resource, "XML Resource can not be null");
+        documentResource = Constraint.isNotNull(resource, "XML Resource cannot be null");
     }
 
     /**
@@ -53,19 +54,20 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
      *
      * @param pool parser pool, never null.
      */
-    public void setParserPool(@Nonnull final BasicParserPool pool) {
-        parserPool = pool;
+    public void setParserPool(@Nonnull final ParserPool pool) {
+        parserPool = Constraint.isNotNull(pool, "ParserPool cannot be null");
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public synchronized Document getObject() throws Exception {
         if (document == null) {
-            if(documentResource == null){
+            if (documentResource == null){
                 throw new BeanCreationException("Document resource must be provided in order to use this factory.");
             }
             
-            if(parserPool == null){
-                throw new BeanCreationException("Parser pool must be provided in order to use this factory.");
+            if (parserPool == null){
+                throw new BeanCreationException("ParserPool must be provided in order to use this factory.");
             }
             
             document = parserPool.parse(documentResource.getInputStream());
@@ -75,11 +77,13 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public Class<?> getObjectType() {
         return Document.class;
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isSingleton() {
         return true;
     }

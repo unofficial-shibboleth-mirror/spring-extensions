@@ -19,14 +19,12 @@ package net.shibboleth.ext.spring.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.security.Security;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.cryptacular.util.CertUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
@@ -61,7 +59,6 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
                         "Certificate chanin file must be provided in order to use this factory.");
             }
 
-            Security.addProvider(new BouncyCastleProvider());
             certificates = (X509Certificate[]) CertUtil.readCertificateChain(new FileInputStream(certChainFile));
         }
 

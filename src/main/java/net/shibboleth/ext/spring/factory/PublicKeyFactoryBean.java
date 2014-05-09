@@ -20,13 +20,11 @@ package net.shibboleth.ext.spring.factory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.PublicKey;
-import java.security.Security;
 
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.cryptacular.util.KeyPairUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
@@ -60,7 +58,6 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
                 throw new BeanCreationException("Public key file must be provided in order to use this factory.");
             }
 
-            Security.addProvider(new BouncyCastleProvider());
             key = KeyPairUtil.readPublicKey(new FileInputStream(keyFile));
         }
 

@@ -106,11 +106,6 @@
         <!-- Test dependencies -->
         <dependency>
           <groupId>${spring.groupId}</groupId>
-          <artifactId>spring-context</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>${spring.groupId}</groupId>
           <artifactId>spring-test</artifactId>
           <scope>test</scope>
         </dependency>

@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.PrivateKey;
 
 import javax.annotation.Nonnull;
@@ -72,10 +73,12 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
                 throw new BeanCreationException("Private key file must be provided in order to use this factory.");
             }
 
-            if (keyPass == null) {
-                key = KeyPairUtil.readPrivateKey(new FileInputStream(keyFile));
-            } else {
-                key = KeyPairUtil.readPrivateKey(new FileInputStream(keyFile), keyPass.toCharArray());
+            try (InputStream is = new FileInputStream(keyFile)) {
+                if (keyPass == null) {
+                    key = KeyPairUtil.readPrivateKey(is);
+                } else {
+                    key = KeyPairUtil.readPrivateKey(is, keyPass.toCharArray());
+                }
             }
         }
 

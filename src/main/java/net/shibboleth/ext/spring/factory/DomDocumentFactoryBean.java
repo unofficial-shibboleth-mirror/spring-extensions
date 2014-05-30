@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.factory;
 
+import java.io.InputStream;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,7 +72,9 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
                 throw new BeanCreationException("ParserPool must be provided in order to use this factory.");
             }
             
-            document = parserPool.parse(documentResource.getInputStream());
+            try (InputStream is = documentResource.getInputStream()) {
+                document = parserPool.parse(is);
+            }
         }
         
         return document;

@@ -1,0 +1,3 @@
+
+** Bug fixes:
+    * [JSE-2] - factory beans leave created stream open

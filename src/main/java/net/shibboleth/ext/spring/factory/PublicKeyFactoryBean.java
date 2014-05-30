@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.PublicKey;
 
 import javax.annotation.Nonnull;
@@ -58,7 +59,9 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
                 throw new BeanCreationException("Public key file must be provided in order to use this factory.");
             }
 
-            key = KeyPairUtil.readPublicKey(new FileInputStream(keyFile));
+            try (InputStream is = new FileInputStream(keyFile)) {
+                key = KeyPairUtil.readPublicKey(is);
+            }
         }
 
         return key;

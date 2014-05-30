@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
@@ -59,7 +60,9 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
                         "Certificate chanin file must be provided in order to use this factory.");
             }
 
-            certificates = (X509Certificate[]) CertUtil.readCertificateChain(new FileInputStream(certChainFile));
+            try (InputStream is = new FileInputStream(certChainFile)) {
+                certificates = (X509Certificate[]) CertUtil.readCertificateChain(is);
+            }
         }
 
         return certificates;

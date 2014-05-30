@@ -1,3 +1,5 @@
+** New features:
+    * [JSE-1] - change factory beans to operate on resources, not files
 
 ** Bug fixes:
     * [JSE-2] - factory beans leave created stream open

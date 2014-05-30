@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
 
@@ -29,38 +27,39 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import org.cryptacular.util.CertUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 
 /**
- * Spring bean factory for producing a {@link X509Certificate} chains from a file.
+ * Spring bean factory for producing a {@link X509Certificate} chain from a {@link Resource}.
  * 
- * This factory bean supports DER and PEM encoded certificate files.
+ * This factory bean supports DER and PEM encoded certificate resources.
  */
 public class X509CertificateChainFactoryBean implements FactoryBean<X509Certificate[]> {
 
-    /** Certificate chain file. */
-    private File certChainFile;
+    /** Certificate chain resource. */
+    private Resource resource;
 
     /** The singleton instance of the public certificate chain produced by this factory. */
     private X509Certificate[] certificates;
 
     /**
-     * Sets the certificate chain file.
+     * Sets the certificate chain resource.
      * 
-     * @param file certificate chain file
+     * @param res certificate chain resource
      */
-    public void setCertificateChainFile(@Nonnull final File file) {
-        certChainFile = Constraint.isNotNull(file, "Certificate chain file can not be null");
+    public void setResource(@Nonnull final Resource res) {
+        resource = Constraint.isNotNull(res, "Certificate chain resource can not be null");
     }
 
     /** {@inheritDoc} */
     public X509Certificate[] getObject() throws Exception {
         if (certificates == null) {
-            if (certChainFile == null) {
+            if (resource == null) {
                 throw new BeanCreationException(
-                        "Certificate chanin file must be provided in order to use this factory.");
+                        "Certificate chain resource must be provided in order to use this factory.");
             }
 
-            try (InputStream is = new FileInputStream(certChainFile)) {
+            try (InputStream is = resource.getInputStream()) {
                 certificates = (X509Certificate[]) CertUtil.readCertificateChain(is);
             }
         }

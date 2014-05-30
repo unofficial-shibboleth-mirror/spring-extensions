@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
 
@@ -29,37 +27,38 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import org.cryptacular.util.CertUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 
 /**
- * Spring bean factory for producing a {@link X509Certificate} from a file.
+ * Spring bean factory for producing a {@link X509Certificate} from a {@link Resource}.
  * 
- * This factory bean supports DER and PEM encoded certificate files.
+ * This factory bean supports DER and PEM encoded certificate resources.
  */
 public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> {
 
-    /** Certificate chain file. */
-    private File certFile;
+    /** Certificate chain resource. */
+    private Resource resource;
 
     /** The singleton instance of the certificate produced by this factory. */
     private X509Certificate certificate;
 
     /**
-     * Sets the certificate chain file.
+     * Sets the certificate resource.
      * 
-     * @param file certificate chain file
+     * @param res certificate resource
      */
-    public void setCertificateFile(@Nonnull final File file) {
-        certFile = Constraint.isNotNull(file, "Certificate file can not be null");
+    public void setResource(@Nonnull final Resource res) {
+        resource = Constraint.isNotNull(res, "Certificate resource can not be null");
     }
 
     /** {@inheritDoc} */
     public X509Certificate getObject() throws Exception {
         if (certificate == null) {
-            if (certFile == null) {
-                throw new BeanCreationException("Certificate file must be provided in order to use this factory.");
+            if (resource == null) {
+                throw new BeanCreationException("Certificate resource must be provided in order to use this factory.");
             }
 
-            try (InputStream is = new FileInputStream(certFile)) {
+            try (InputStream is = resource.getInputStream()) {
                 certificate = (X509Certificate) CertUtil.readCertificate(is);
             }
         }

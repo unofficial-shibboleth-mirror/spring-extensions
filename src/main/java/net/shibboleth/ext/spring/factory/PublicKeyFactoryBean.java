@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.PublicKey;
 
@@ -29,37 +27,38 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import org.cryptacular.util.KeyPairUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 
 /**
- * Spring bean factory for producing a {@link PublicKey} from a file.
+ * Spring bean factory for producing a {@link PublicKey} from a {@link Resource}.
  * 
- * This factory bean supports DER and PEM encoded public key files.
+ * This factory bean supports DER and PEM encoded public key resources.
  */
 public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
 
-    /** Public key file. */
-    private File keyFile;
+    /** Public key resource. */
+    private Resource resource;
 
     /** The singleton instance of the public key produced by this factory. */
     private PublicKey key;
 
     /**
-     * Sets the public key file.
+     * Sets the public key resource.
      * 
-     * @param file public key file
+     * @param res public key resource
      */
-    public void setPublicKeyFile(@Nonnull final File file) {
-        keyFile = Constraint.isNotNull(file, "Public key file can not be null");
+    public void setResource(@Nonnull final Resource res) {
+        resource = Constraint.isNotNull(res, "Public key resource can not be null");
     }
 
     /** {@inheritDoc} */
     public PublicKey getObject() throws Exception {
         if (key == null) {
-            if (keyFile == null) {
-                throw new BeanCreationException("Public key file must be provided in order to use this factory.");
+            if (resource == null) {
+                throw new BeanCreationException("Public key resource must be provided in order to use this factory.");
             }
 
-            try (InputStream is = new FileInputStream(keyFile)) {
+            try (InputStream is = resource.getInputStream()) {
                 key = KeyPairUtil.readPublicKey(is);
             }
         }

@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.PrivateKey;
 
@@ -31,16 +29,17 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import org.cryptacular.util.KeyPairUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.io.Resource;
 
 /**
- * Spring bean factory for producing a {@link PrivateKey} from a file.
+ * Spring bean factory for producing a {@link PrivateKey} from a {@link Resource}.
  * 
- * This factory bean supports encrypted and non-encrypted PKCS8, DER, or PEM private key encoded files.
+ * This factory bean supports encrypted and non-encrypted PKCS8, DER, or PEM private key encoded resources.
  */
 public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
 
-    /** Private key file. */
-    private File keyFile;
+    /** Private key resource. */
+    private Resource resource;
 
     /** Password for the private key. */
     private String keyPass;
@@ -49,12 +48,12 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     private PrivateKey key;
 
     /**
-     * Sets the file containing the private key.
+     * Sets the resource containing the private key.
      * 
-     * @param file private key file, never null
+     * @param res private key resource, never <code>null</code>
      */
-    public void setPrivateKeyFile(@Nonnull final File file) {
-        keyFile = Constraint.isNotNull(file, "Private key file can not be null");
+    public void setResource(@Nonnull final Resource res) {
+        resource = Constraint.isNotNull(res, "Private key resource can not be null");
     }
 
     /**
@@ -69,11 +68,11 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     /** {@inheritDoc} */
     public PrivateKey getObject() throws Exception {
         if (key == null) {
-            if (keyFile == null) {
-                throw new BeanCreationException("Private key file must be provided in order to use this factory.");
+            if (resource == null) {
+                throw new BeanCreationException("Private key resource must be provided in order to use this factory.");
             }
 
-            try (InputStream is = new FileInputStream(keyFile)) {
+            try (InputStream is = resource.getInputStream()) {
                 if (keyPass == null) {
                     key = KeyPairUtil.readPrivateKey(is);
                 } else {

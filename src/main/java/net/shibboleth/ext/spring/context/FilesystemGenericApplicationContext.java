@@ -65,14 +65,18 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
     /**
      * {@inheritDoc}
      * 
-     * Overrides the standard behavior of path-only resources and treats them as file paths.
-     * 
-     * <p>Note that this differs from the ordinary Spring contexts that default to file paths because
+     * <p>Overrides the standard behavior of path-only resources and treats them as file paths if the path
+     * exists. Note that this differs from the ordinary Spring contexts that default to file paths because
      * paths are treated as absolute if they are in fact absolute.</p>
      */
     @Override
     protected Resource getResourceByPath(String path) {
-        return new FileSystemResource(path);
+        final Resource r = new FileSystemResource(path);
+        if (r.exists()) {
+            return r;
+        }
+        
+        return super.getResourceByPath(path);
     }
 
 }

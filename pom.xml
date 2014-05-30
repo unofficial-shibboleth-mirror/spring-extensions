@@ -72,6 +72,12 @@
         </dependency>
         <dependency>
             <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-context</artifactId>
+            <!-- Required for ApplicationContext classes. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
             <artifactId>spring-core</artifactId>
             <!-- Required for Duration conversion classes. -->
             <optional>true</optional>

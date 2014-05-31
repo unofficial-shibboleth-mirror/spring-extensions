@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -76,12 +77,14 @@ public final class SpringSupport {
      * 
      * @param name name of the application context
      * @param configurationResources configuration resources
+     * @param postProcessors post processors to inject
      * @param parentContext parent context, or null if there is no parent
      * 
      * @return the created context
      */
     @Nonnull public static GenericApplicationContext newContext(@Nonnull @NotEmpty final String name,
             @Nonnull @NonnullElements final List<Resource> configurationResources,
+            @Nonnull @NonnullElements final List<BeanPostProcessor> postProcessors,
             @Nullable final ApplicationContext parentContext) {
         GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + name);
@@ -91,6 +94,9 @@ public final class SpringSupport {
         service.afterPropertiesSet();
 
         context.getBeanFactory().setConversionService(service.getObject());
+        for (final BeanPostProcessor bpp : postProcessors) {
+            context.getBeanFactory().addBeanPostProcessor(bpp);
+        }
 
         SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);

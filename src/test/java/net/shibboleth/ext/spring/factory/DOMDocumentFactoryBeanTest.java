@@ -26,8 +26,8 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/** {@link DomDocumentFactoryBean} unit tests. */
-public class DomDocumentFactoryBeanTest {
+/** {@link DOMDocumentFactoryBean} unit tests. */
+public class DOMDocumentFactoryBeanTest {
 
     /**
      * Test normal use of the factory.
@@ -36,11 +36,11 @@ public class DomDocumentFactoryBeanTest {
      */
     @Test
     public void getObject() throws Exception {
-        DomDocumentFactoryBean factory = new DomDocumentFactoryBean();
+        DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
         Resource resource = new ClassPathResource("data/document.xml");
         BasicParserPool pool = new BasicParserPool();
         pool.initialize();
-        factory.setDocumentResource(resource);
+        factory.setResource(resource);
         factory.setParserPool(pool);
         Document doc = factory.getObject();
 
@@ -59,7 +59,7 @@ public class DomDocumentFactoryBeanTest {
      */
     @Test
     public void getObjectType() {
-        DomDocumentFactoryBean factory = new DomDocumentFactoryBean();
+        DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
         Assert.assertEquals(factory.getObjectType(), Document.class, "object type");
     }
 

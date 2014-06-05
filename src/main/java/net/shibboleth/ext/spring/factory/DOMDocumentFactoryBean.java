@@ -31,10 +31,10 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 
 /** Spring bean factory for producing a {@link Document} from a resource. */
-public class DomDocumentFactoryBean implements FactoryBean<Document> {
+public class DOMDocumentFactoryBean implements FactoryBean<Document> {
 
     /** Resource to load the document from. */
-    @Nullable private Resource documentResource;
+    @Nullable private Resource resource;
 
     /** Parser pool to use when parsing the document. */
     @Nullable private ParserPool parserPool;
@@ -45,10 +45,10 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
     /**
      * Sets the resource containing the document to be parsed.
      *
-     * @param resource resource, never null
+     * @param domResource resource, never null
      */
-    public void setDocumentResource(@Nonnull final Resource resource) {
-        documentResource = Constraint.isNotNull(resource, "XML Resource cannot be null");
+    public void setResource(@Nonnull final Resource domResource) {
+        resource = Constraint.isNotNull(domResource, "resource cannot be null");
     }
 
     /**
@@ -64,7 +64,7 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
     @Override
     @Nonnull public synchronized Document getObject() throws Exception {
         if (document == null) {
-            if (documentResource == null){
+            if (resource == null){
                 throw new BeanCreationException("Document resource must be provided in order to use this factory.");
             }
             
@@ -72,7 +72,7 @@ public class DomDocumentFactoryBean implements FactoryBean<Document> {
                 throw new BeanCreationException("ParserPool must be provided in order to use this factory.");
             }
             
-            try (InputStream is = documentResource.getInputStream()) {
+            try (InputStream is = resource.getInputStream()) {
                 document = parserPool.parse(is);
             }
         }

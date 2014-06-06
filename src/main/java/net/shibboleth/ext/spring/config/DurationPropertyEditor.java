@@ -19,7 +19,7 @@ package net.shibboleth.ext.spring.config;
 
 import java.beans.PropertyEditorSupport;
 
-import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
 
 /**
@@ -31,11 +31,11 @@ public class DurationPropertyEditor extends PropertyEditorSupport {
     public void setAsText(String text) {
 
         if (text.startsWith("P")) {
-            setValue(DomTypeSupport.getDataTypeFactory().newDuration(text));
+            setValue(DOMTypeSupport.getDataTypeFactory().newDuration(text));
         } else if (text.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {
-            setValue(DomTypeSupport.getDataTypeFactory().newDuration(Long.valueOf(text)));
+            setValue(DOMTypeSupport.getDataTypeFactory().newDuration(Long.valueOf(text)));
         }
     }    
 }

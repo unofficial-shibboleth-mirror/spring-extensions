@@ -17,7 +17,7 @@
 
 package net.shibboleth.ext.spring.util;
 
-import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
@@ -53,8 +53,8 @@ public class SchemaTypeAwareBeanDefinitionParserDelegate extends BeanDefinitionP
     /** {@inheritDoc} */
     public BeanDefinition parseCustomElement(Element element, BeanDefinition containingBd) {
         String namespaceUri = element.getNamespaceURI();
-        if (DomTypeSupport.hasXSIType(element)) {
-            namespaceUri = DomTypeSupport.getXSIType(element).getNamespaceURI();
+        if (DOMTypeSupport.hasXSIType(element)) {
+            namespaceUri = DOMTypeSupport.getXSIType(element).getNamespaceURI();
         }
 
         NamespaceHandler handler = getReaderContext().getNamespaceHandlerResolver().resolve(namespaceUri);

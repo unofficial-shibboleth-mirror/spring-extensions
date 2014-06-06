@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 import org.slf4j.Logger;
@@ -107,7 +107,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
         QName parserId;
         BeanDefinitionParser parser = null;
 
-        parserId = DomTypeSupport.getXSIType(element);
+        parserId = DOMTypeSupport.getXSIType(element);
         if (parserId != null) {
             log.trace("Attempting to find parser for element of type: {}", parserId);
             parser = parsers.get(parserId);
@@ -139,7 +139,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
         BeanDefinitionDecorator decorator = null;
 
         if (node instanceof Element) {
-            decorator = decorators.get(DomTypeSupport.getXSIType((Element) node));
+            decorator = decorators.get(DOMTypeSupport.getXSIType((Element) node));
             if (decorator == null) {
                 decorator = decorators.get(QNameSupport.getNodeQName(node));
             }

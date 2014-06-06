@@ -33,7 +33,7 @@ import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-import net.shibboleth.utilities.java.support.xml.XmlConstants;
+import net.shibboleth.utilities.java.support.xml.XMLConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,18 +158,18 @@ public final class SpringSupport {
     @Nonnull public static BeanFactory createBeanFactory(@Nonnull final Element springBeans) {
 
         // Pull in the closest xsi:schemaLocation attribute we can find.
-        if (!springBeans.hasAttributeNS(XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
-                XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart())) {
+        if (!springBeans.hasAttributeNS(XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
+                XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart())) {
             Node parent = springBeans.getParentNode();
             while (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
                 final String schemaLoc =
                         ((Element) parent).getAttributeNS(
-                                XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
-                                XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart());
+                                XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
+                                XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart());
                 if (!Strings.isNullOrEmpty(schemaLoc)) {
-                    springBeans.setAttributeNS(XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
-                            XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getPrefix() + ':'
-                                    + XmlConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart(), schemaLoc);
+                    springBeans.setAttributeNS(XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getNamespaceURI(),
+                            XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getPrefix() + ':'
+                                    + XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart(), schemaLoc);
                     break;
                 } else {
                     parent = parent.getParentNode();

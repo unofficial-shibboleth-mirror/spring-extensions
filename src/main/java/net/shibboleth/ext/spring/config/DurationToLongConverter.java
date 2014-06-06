@@ -22,7 +22,7 @@ import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
 
 import net.shibboleth.utilities.java.support.annotation.Duration;
-import net.shibboleth.utilities.java.support.xml.DomTypeSupport;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
 
 /**
@@ -33,7 +33,7 @@ public class DurationToLongConverter implements Converter<String,Long>, Conditio
     /** {@inheritDoc} */
     public Long convert(String source) {
         if (source.startsWith("P")) {
-            return DomTypeSupport.durationToLong(source);
+            return DOMTypeSupport.durationToLong(source);
         } else if (source.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {

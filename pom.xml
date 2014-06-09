@@ -89,6 +89,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <!-- Required for error handling classes. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
@@ -100,6 +106,13 @@
         </dependency>
 
         <!-- Provided dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+            <!-- Required for error handling classes. -->
+            <optional>true</optional>
+        </dependency>
 
         <!-- Runtime dependencies -->
 

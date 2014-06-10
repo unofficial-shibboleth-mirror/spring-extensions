@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import net.shibboleth.utilities.java.support.codec.HTMLEncoder;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
@@ -42,7 +44,10 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
 
     /** Model attribute carrying {@link HttpServletRequest}. */
     @Nonnull private static final String MODEL_ATTR_REQUEST = "request";
-    
+
+    /** Model attribute carrying {@link WebApplicationContext}. */
+    @Nonnull private static final String MODEL_ATTR_SPRINGCONTEXT = "springContext";
+
     /** Model attribute carrying the {@link HTMLEncoder} class. */
     @Nonnull private static final String MODEL_ATTR_ENCODER = "encoder";
     
@@ -70,6 +75,12 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
         final ModelAndView view = super.getModelAndView(viewName, ex, request);
         view.addObject(MODEL_ATTR_REQUEST, request);
         view.addObject(MODEL_ATTR_ENCODER, HTMLEncoder.class);
+        
+        final WebApplicationContext context =
+                WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+        if (context != null) {
+            view.addObject(MODEL_ATTR_SPRINGCONTEXT, context);
+        }
         
         if (viewModelExtenderFunction != null) {
             final Map<String,Object> exts = viewModelExtenderFunction.apply(request);

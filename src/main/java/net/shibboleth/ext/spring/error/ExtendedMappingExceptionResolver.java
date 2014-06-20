@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.shibboleth.utilities.java.support.codec.HTMLEncoder;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -71,7 +72,9 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
     /** {@inheritDoc} */
     @Override
     protected ModelAndView getModelAndView(String viewName, Exception ex, HttpServletRequest request) {
-        // TODO Auto-generated method stub
+        
+        LoggerFactory.getLogger(ex.getClass()).error("", ex);
+        
         final ModelAndView view = super.getModelAndView(viewName, ex, request);
         view.addObject(MODEL_ATTR_REQUEST, request);
         view.addObject(MODEL_ATTR_ENCODER, HTMLEncoder.class);

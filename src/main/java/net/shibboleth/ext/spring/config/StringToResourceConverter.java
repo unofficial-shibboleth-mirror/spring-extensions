@@ -23,9 +23,13 @@ import net.shibboleth.utilities.java.support.resource.Resource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 
 /**
- * Allows setting {@link Resource} properties using a string representing a Spring resource.
+ * Allows setting {@link Resource} properties using a string representing a Spring resource. The Spring resource is
+ * retrieved by the application context. If the application context is null, then a {@link DefaultResourceLoader} is
+ * used instead to get the resource.
  */
 public class StringToResourceConverter implements Converter<String, Resource>, ApplicationContextAware {
 
@@ -34,7 +38,8 @@ public class StringToResourceConverter implements Converter<String, Resource>, A
 
     /** {@inheritDoc} */
     public Resource convert(String source) {
-        return ResourceHelper.of(applicationContext.getResource(source));
+        final ResourceLoader loader = applicationContext == null ? new DefaultResourceLoader() : applicationContext;
+        return ResourceHelper.of(loader.getResource(source));
     }
 
     /** {@inheritDoc} */

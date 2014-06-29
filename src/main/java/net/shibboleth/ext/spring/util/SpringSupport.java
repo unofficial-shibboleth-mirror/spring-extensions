@@ -32,6 +32,7 @@ import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLConstants;
 
@@ -49,6 +50,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -203,5 +205,20 @@ public final class SpringSupport {
         }
         return bean;
     }
+    
+    /**
+     * Gets the value of a list-type attribute as a {@link ManagedList}.
+     * 
+     * @param attribute attribute whose value will be turned into a list
+     * 
+     * @return list of values, never null
+     */
+    @Nonnull public static ManagedList<String> getAttributeValueAsManagedList(@Nullable final Attr attribute) {
+        List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
+        final ManagedList<String> managedList = new ManagedList<>(valuesAsList .size());
+        managedList.addAll(valuesAsList );
+        return managedList; 
+    }
+
     
 }

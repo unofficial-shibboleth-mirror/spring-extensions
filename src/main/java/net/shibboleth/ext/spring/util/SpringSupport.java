@@ -32,6 +32,7 @@ import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLConstants;
@@ -64,15 +65,15 @@ import com.google.common.collect.Sets;
 public final class SpringSupport {
 
     /** Spring beans element name. */
-    @Nonnull public static final QName SPRING_BEANS_ELEMENT_NAME =
-            new QName("http://www.springframework.org/schema/beans", "beans");
+    @Nonnull public static final QName SPRING_BEANS_ELEMENT_NAME = new QName(
+            "http://www.springframework.org/schema/beans", "beans");
 
     /** Logger. */
     @Nonnull static final Logger LOG = LoggerFactory.getLogger(SpringSupport.class);
 
     /** Constructor. */
     private SpringSupport() {
-        
+
     }
 
     /**
@@ -91,7 +92,7 @@ public final class SpringSupport {
             @Nullable final ApplicationContext parentContext) {
         GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + name);
-        
+
         ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
         service.setConverters(Sets.newHashSet(new DurationToLongConverter(), new StringToIPRangeConverter(),
                 new BooleanToPredicateConverter()));
@@ -136,11 +137,12 @@ public final class SpringSupport {
 
     /**
      * Parse the provided Element into the provided registry.
+     * 
      * @param springBeans the element to parse
      * @param registry the registry to populate
      */
-    public static void parseNativeElement(@Nonnull final Element springBeans, 
-            @Nullable BeanDefinitionRegistry registry) {
+    public static void
+            parseNativeElement(@Nonnull final Element springBeans, @Nullable BeanDefinitionRegistry registry) {
         final XmlBeanDefinitionReader definitionReader = new XmlBeanDefinitionReader(registry);
         definitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         definitionReader.setNamespaceAware(true);
@@ -205,7 +207,7 @@ public final class SpringSupport {
         }
         return bean;
     }
-    
+
     /**
      * Gets the value of a list-type attribute as a {@link ManagedList}.
      * 
@@ -215,10 +217,34 @@ public final class SpringSupport {
      */
     @Nonnull public static ManagedList<String> getAttributeValueAsManagedList(@Nullable final Attr attribute) {
         List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
-        final ManagedList<String> managedList = new ManagedList<>(valuesAsList .size());
-        managedList.addAll(valuesAsList );
-        return managedList; 
+        final ManagedList<String> managedList = new ManagedList<>(valuesAsList.size());
+        managedList.addAll(valuesAsList);
+        return managedList;
     }
 
-    
+    /**
+     * Gets the text content of a list of {@link Element}s as a {@link ManagedList}.
+     * 
+     * @param elements the elements whose values will be turned into a list
+     * 
+     * @return list of values, never null
+     */
+    @Nonnull public static ManagedList<String> getElementTextContentAsManagedList(
+            @Nullable final Collection<Element> elements) {
+        
+        if (null == elements || elements.isEmpty()) {
+            return new ManagedList<>(0);
+        }
+        
+        final ManagedList<String> result = new ManagedList<>(elements.size());
+        
+        for (Element audienceElement : elements) {
+            final String audience = StringSupport.trimOrNull(audienceElement.getTextContent());
+            if (null != audience) {
+                result.add(audience);
+            }
+        }
+        return result;
+    }
+
 }

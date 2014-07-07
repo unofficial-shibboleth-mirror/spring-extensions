@@ -238,10 +238,10 @@ public final class SpringSupport {
         
         final ManagedList<String> result = new ManagedList<>(elements.size());
         
-        for (Element audienceElement : elements) {
-            final String audience = StringSupport.trimOrNull(audienceElement.getTextContent());
-            if (null != audience) {
-                result.add(audience);
+        for (final Element element : elements) {
+            final String textContent = StringSupport.trimOrNull(element.getTextContent());
+            if (null != textContent) {
+                result.add(textContent);
             }
         }
         return result;

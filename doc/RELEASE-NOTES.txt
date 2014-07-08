@@ -1,5 +1,14 @@
-** New features:
-    * [JSE-1] - change factory beans to operate on resources, not files
+Changes in Release 1.2.0
+===============================
+[JSE-6] - move IdentifiableBeanPostProcessor from IdP to Spring Extensions
+[JSE-4] - DomDocumentFactoryBean should be renamed
 
-** Bug fixes:
-    * [JSE-2] - factory beans leave created stream open
+Changes in Release 1.1.0
+===============================
+[JSE-3] - release process for spring-extensions v.next
+[JSE-5] - Retrofit some of the Newer (but deleted) HTPPResource code to the SpringSuport HTTPResource
+
+Changes in Release 1.0.0
+===============================
+[JSE-1] - change factory beans to operate on resources, not files
+[JSE-2] - factory beans leave created stream open

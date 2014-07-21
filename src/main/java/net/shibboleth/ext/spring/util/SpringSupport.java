@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.ext.spring.config.BooleanToPredicateConverter;
+import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.DurationToLongConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
@@ -95,7 +95,7 @@ public final class SpringSupport {
 
         ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
         service.setConverters(Sets.newHashSet(new DurationToLongConverter(), new StringToIPRangeConverter(),
-                new BooleanToPredicateConverter()));
+                new StringBooleanToPredicateConverter()));
         service.afterPropertiesSet();
 
         context.getBeanFactory().setConversionService(service.getObject());

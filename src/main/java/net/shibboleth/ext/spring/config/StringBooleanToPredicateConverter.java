@@ -23,13 +23,13 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
- * Allows setting of fixed {@link Predicate} properties using a boolean value.
+ * Allows setting of fixed {@link Predicate} properties using a boolean string.
  */
-public class BooleanToPredicateConverter implements Converter<Boolean,Predicate> {
+public class StringBooleanToPredicateConverter implements Converter<String,Predicate> {
 
     /** {@inheritDoc} */
-    public Predicate convert(Boolean source) {
-        return source ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
+    public Predicate convert(String source) {
+        return Boolean.valueOf(source) ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
     }
     
 }

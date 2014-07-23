@@ -48,6 +48,7 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
@@ -82,6 +83,7 @@ public final class SpringSupport {
      * @param name name of the application context
      * @param configurationResources configuration resources
      * @param postProcessors post processors to inject
+     * @param initializers application context initializers
      * @param parentContext parent context, or null if there is no parent
      * 
      * @return the created context
@@ -89,6 +91,7 @@ public final class SpringSupport {
     @Nonnull public static GenericApplicationContext newContext(@Nonnull @NotEmpty final String name,
             @Nonnull @NonnullElements final List<Resource> configurationResources,
             @Nonnull @NonnullElements final List<BeanPostProcessor> postProcessors,
+            @Nonnull @NonnullElements final List<ApplicationContextInitializer> initializers,
             @Nullable final ApplicationContext parentContext) {
         GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + name);
@@ -107,6 +110,13 @@ public final class SpringSupport {
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.loadBeanDefinitions(configurationResources.toArray(new Resource[] {}));
+
+        if (initializers != null) {
+            for (ApplicationContextInitializer initializer : initializers) {
+                initializer.initialize(context);
+            }
+        }
+
         context.refresh();
         return context;
     }

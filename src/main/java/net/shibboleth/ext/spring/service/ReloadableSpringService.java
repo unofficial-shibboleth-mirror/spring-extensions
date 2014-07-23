@@ -42,6 +42,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.Lifecycle;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
@@ -296,7 +297,8 @@ public class ReloadableSpringService<T> extends AbstractReloadableService implem
         final GenericApplicationContext appContext;
         try {
             appContext =
-                    SpringSupport.newContext(getId(), getServiceConfigurations(), postProcessors, getParentContext());
+                    SpringSupport.newContext(getId(), getServiceConfigurations(), postProcessors,
+                            Collections.<ApplicationContextInitializer> emptyList(), getParentContext());
         } catch (FatalBeanException e) {
             throw new ServiceException(e);
         }

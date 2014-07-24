@@ -1,5 +1,14 @@
 Spring Extensions Release Notes 
-https://issues.shibboleth.net/jira/browse/JSE
+
+Release notes for all versions may be found at
+https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10010
+
+Changes in version 2.0.0 - 2014-07-24
+=====================================
+[IDP-436] - Add initializers as a parameter to creation of new contexts in SpringSupport.
+[JSPT-46] - Move services from the IdP.
+[IDP-379] - Add a helper function to SpringSupport to convert a list of elements to a ManagedList<String>.
+r632 - Support both string and boolean to Predicate conversions.
 
 Changes in version 1.2.0 - 2014-06-25
 =====================================

@@ -22,7 +22,7 @@
 
     <properties>
         <svn.relative.location>utilities/spring-extensions</svn.relative.location>
-        <java-support.version>4.0-SNAPSHOT</java-support.version>
+        <java-support.version>5.0-SNAPSHOT</java-support.version>
     </properties>
 
     <repositories>

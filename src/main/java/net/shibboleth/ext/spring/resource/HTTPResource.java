@@ -199,7 +199,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * 
      * @throws IOException thrown if there is a problem contacting the resource
      */
-    private HttpResponse getResourceHeaders() throws IOException {
+    protected HttpResponse getResourceHeaders() throws IOException {
         HttpUriRequest httpRequest = new HttpHead(resourceURL.toString());
 
         try {

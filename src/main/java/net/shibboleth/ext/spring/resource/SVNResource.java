@@ -163,7 +163,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * @return the directory path (from svn) pus the file.
      */
     protected String getFullPath() {
-        StringBuffer buffer = new StringBuffer(remoteRepository.getPath().length() + 1 + getFilename().length());
+        final StringBuffer buffer = new StringBuffer(remoteRepository.getPath().length() + 1 + getFilename().length());
         buffer.append(remoteRepository.getPath()).append('/').append(getFilename());
         return buffer.toString();
     }
@@ -174,7 +174,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * @return 'svn+'protocol
      */
     protected String getProtocol() {
-        StringBuffer buffer = new StringBuffer(4 + remoteRepository.getProtocol().length());
+        final StringBuffer buffer = new StringBuffer(4 + remoteRepository.getProtocol().length());
         buffer.append("svn+").append(remoteRepository.getProtocol());
         return buffer.toString();
     }
@@ -188,36 +188,38 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     protected void checkWorkingCopyDirectory(File directory) throws IOException {
         if (directory == null) {
-            log.error("SVN working copy directory may not be null");
-            throw new IOException("SVN working copy directory may not be null");
+            log.error("SVN working copy directory cannot be null");
+            throw new IOException("SVN working copy directory cannot be null");
         }
 
         if (!directory.exists()) {
             boolean created = directory.mkdirs();
             if (!created) {
-                log.error("SVN working copy direction " + directory.getAbsolutePath()
-                        + " does not exist and could not be created");
-                throw new IOException("SVN working copy direction " + directory.getAbsolutePath()
-                        + " does not exist and could not be created");
+                final String msg = "SVN working copy directory " + directory.getAbsolutePath()
+                        + " does not exist and could not be created"; 
+                log.error(msg);
+                throw new IOException(msg);
             }
         }
 
         if (!directory.isDirectory()) {
-            log.error("SVN working copy location " + directory.getAbsolutePath() + " is not a directory");
-            throw new IOException("SVN working copy location " + directory.getAbsolutePath() + " is not a directory");
+            final String msg = "SVN working copy location " + directory.getAbsolutePath() + " is not a directory"; 
+            log.error(msg);
+            throw new IOException(msg);
         }
 
         if (!directory.canRead()) {
-            log.error("SVN working copy directory " + directory.getAbsolutePath() + " can not be read by this process");
-            throw new IOException("SVN working copy directory " + directory.getAbsolutePath()
-                    + " can not be read by this process");
+            final String msg = "SVN working copy directory " + directory.getAbsolutePath()
+                    + " cannot be read by this process"; 
+            log.error(msg);
+            throw new IOException(msg);
         }
 
         if (!directory.canWrite()) {
-            log.error("SVN working copy directory " + directory.getAbsolutePath()
-                    + " can not be written to by this process");
-            throw new IOException("SVN working copy directory " + directory.getAbsolutePath()
-                    + " can not be written to by this process");
+            final String msg = "SVN working copy directory " + directory.getAbsolutePath()
+                    + " cannot be written to by this process"; 
+            log.error(msg);
+            throw new IOException(msg);
         }
     }
 
@@ -234,7 +236,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         SVNRevision newRevision;
 
         if (!workingCopyDirectoryExists()) {
-            log.debug("working copy does not yet exist, checking it out to {}", workingCopyDirectory.getAbsolutePath());
+            log.debug("Working copy does not yet exist, checking it out to {}", workingCopyDirectory.getAbsolutePath());
             newRevision = checkoutResourceDirectory();
         } else {
             if (retrievalRevision != SVNRevision.HEAD) {
@@ -259,7 +261,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * @return true if the working copy directory exists, false otherwise
      */
     private boolean workingCopyDirectoryExists() {
-        File svnMetadataDir = new File(workingCopyDirectory, ".svn");
+        final File svnMetadataDir = new File(workingCopyDirectory, ".svn");
         return svnMetadataDir.exists();
     }
 
@@ -272,7 +274,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     private SVNRevision checkoutResourceDirectory() throws IOException {
         try {
-            long newRevision =
+            final long newRevision =
                     clientManager.getUpdateClient().doCheckout(remoteRepository, workingCopyDirectory,
                             retrievalRevision, retrievalRevision, SVNDepth.INFINITY, true);
             log.debug(
@@ -280,8 +282,8 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
                     new Object[] {newRevision, remoteRepository.toDecodedString(),
                             workingCopyDirectory.getAbsolutePath(),});
             return SVNRevision.create(newRevision);
-        } catch (SVNException e) {
-            String errMsg =
+        } catch (final SVNException e) {
+            final String errMsg =
                     "Unable to check out revsion " + retrievalRevision.toString() + " from remote repository "
                             + remoteRepository.toDecodedString() + " to local working directory "
                             + workingCopyDirectory.getAbsolutePath();
@@ -301,15 +303,15 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     private DateTime getLastModificationForRevision(SVNRevision revision) throws IOException {
         try {
-            SVNStatusHandler handler = new SVNStatusHandler();
+            final SVNStatusHandler handler = new SVNStatusHandler();
             clientManager.getStatusClient().doStatus(getFile(), revision, SVNDepth.INFINITY, true, true, false, false,
                     handler, null);
-            SVNStatus status = handler.getStatus();
+            final SVNStatus status = handler.getStatus();
 
             // We want the date when this was committed
             return new DateTime(status.getCommittedDate());
-        } catch (SVNException e) {
-            String errMsg =
+        } catch (final SVNException e) {
+            final String errMsg =
                     "Unable to check status of resource " + resourceFileName + " within working directory "
                             + workingCopyDirectory.getAbsolutePath();
             log.error(errMsg, e);
@@ -326,14 +328,14 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     private SVNRevision updateResourceDirectory() throws IOException {
         try {
-            long newRevision =
+            final long newRevision =
                     clientManager.getUpdateClient().doUpdate(workingCopyDirectory, retrievalRevision,
                             SVNDepth.INFINITY, true, true);
             log.debug("Updated local working directory {} to revision {} from remote repository {}", new Object[] {
                     workingCopyDirectory.getAbsolutePath(), newRevision, remoteRepository.toDecodedString(),});
             return SVNRevision.create(newRevision);
-        } catch (SVNException e) {
-            String errMsg =
+        } catch (final SVNException e) {
+            final String errMsg =
                     "Unable to update working copy of resoure " + remoteRepository.toDecodedString()
                             + " in working copy " + workingCopyDirectory.getAbsolutePath() + " to revsion "
                             + retrievalRevision.toString();
@@ -347,11 +349,9 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         checkoutOrUpdateResource();
         try {
             return new FileInputStream(getFile());
-        } catch (IOException e) {
-            String erroMsg =
-                    "Unable to read resource file " + resourceFileName + " from local working copy "
-                            + workingCopyDirectory.getAbsolutePath();
-            log.error(erroMsg, e);
+        } catch (final IOException e) {
+            log.error("Unable to read resource file {} from local working copy {}", resourceFileName,
+                    workingCopyDirectory.getAbsolutePath(), e);
             throw e;
         }
     }

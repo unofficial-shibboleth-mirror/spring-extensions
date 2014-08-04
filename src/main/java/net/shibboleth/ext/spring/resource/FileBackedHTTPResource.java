@@ -102,7 +102,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         } catch (IOException e) {
             // try to tidy up
             backingResource.getFile().delete();
-            log.error("{}: Copy failed: {}", getDescription(), e);
+            log.error("{}: Copy failed", getDescription(), e);
             throw e;
         }
         return new FileInputStream(backingResource.getFile());
@@ -119,7 +119,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             try {
                 return new FileInputStream(backingResource.getFile());
             } catch (IOException e) {
-                log.error("FileBackedHTTPResource {}: Could not read backing file: {}", getDescription(), e);
+                log.error("FileBackedHTTPResource {}: Could not read backing file", getDescription(), e);
                 throw e;
             }
         }
@@ -133,7 +133,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         try {
             response = getResourceHeaders();
         } catch (IOException e) {
-            log.info("{}: Could not reach URL:{}, trying file", getDescription(), e);
+            log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.exists();
         }
         int httpStatusCode = response.getStatusLine().getStatusCode();
@@ -150,7 +150,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         try {
             return super.contentLength();
         } catch (IOException e) {
-            log.info("{}: Could not reach URL:{}, trying file", getDescription(), e);
+            log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.contentLength();
         }
     }
@@ -160,7 +160,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         try {
             return super.lastModified();
         } catch (IOException e) {
-            log.info("{}: Could not reach URL:{}, trying file", getDescription(), e);
+            log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.lastModified();
         }
     }

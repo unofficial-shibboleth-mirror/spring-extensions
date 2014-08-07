@@ -43,7 +43,8 @@ public class IdentifiableBeanPostProcessor implements BeanPostProcessor {
                 if (component.getId().equals(beanName)) {
                     log.debug("The 'id' property is redundant for bean with 'id' attribute '{}'", beanName);
                 } else {
-                    log.debug("The 'id' property is not the same as the 'id' attribute for bean '{}'", beanName);
+                    log.debug("The 'id' property is not the same as the 'id' attribute for bean '{}'!='{}'",
+                            component.getId(), beanName);
                 }
             }
         }

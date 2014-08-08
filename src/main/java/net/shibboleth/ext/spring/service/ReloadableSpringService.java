@@ -65,7 +65,7 @@ import com.google.common.collect.Lists;
  * @param <T> The precise service being implemented.
  */
 @ThreadSafe
-public class ReloadableSpringService<T> extends AbstractReloadableService implements ApplicationContextAware,
+public class ReloadableSpringService<T> extends AbstractReloadableService<T> implements ApplicationContextAware,
         BeanNameAware, Lifecycle {
 
     /** Class logger. */

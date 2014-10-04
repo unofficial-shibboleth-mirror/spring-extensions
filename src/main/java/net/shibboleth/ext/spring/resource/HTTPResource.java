@@ -38,10 +38,10 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.cache.CacheResponseStatus;
+import org.apache.http.client.cache.HttpCacheContext;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
@@ -54,8 +54,7 @@ import org.springframework.core.io.Resource;
 
 /**
  * Resource for looking up HTTP URLs. Allows injection and therefore configuration of an Apache {@link HttpClient}. Code
- * based on OpenSAML <code>HTTPMetadataResolver</code> and
- * {@link org.springframework.core.io.UrlResource}.
+ * based on OpenSAML <code>HTTPMetadataResolver</code> and {@link org.springframework.core.io.UrlResource}.
  */
 public class HTTPResource extends AbstractIdentifiedInitializableComponent implements Resource, BeanNameAware,
         InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
@@ -104,26 +103,58 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
 
     /**
-     * Build the {@link HttpClientContext} instance which will be used to invoke the {@link HttpClient} request.
+     * Build the {@link HttpCacheContext} instance which will be used to invoke the {@link HttpClient} request.
      * 
-     * @return a new instance of {@link HttpClientContext}
+     * @return a new instance of {@link HttpCacheContext}
      */
-    protected HttpClientContext buildHttpClientContext() {
-        HttpClientContext context = HttpClientContext.create();
+    protected HttpCacheContext buildHttpClientContext() {
+        HttpCacheContext context = HttpCacheContext.create();
         if (credentialsProvider != null) {
             context.setCredentialsProvider(credentialsProvider);
         }
         return context;
     }
 
+    /**
+     * Print out to the log whether we hit the apache cache or not.
+     * http://hc.apache.org/httpcomponents-client-ga/tutorial/html/caching.html
+     * @param context the context of the request
+     */
+    protected void reportCachingStatus(HttpCacheContext context) {
+        CacheResponseStatus responseStatus = context.getCacheResponseStatus();
+        if (null == responseStatus) {
+            log.info("Non caching client provided");
+            return;
+        }
+        switch (responseStatus) {
+            case CACHE_HIT:
+                log.debug("A response was generated from the cache with no requests sent upstream");
+                break;
+            case CACHE_MODULE_RESPONSE:
+                log.debug("The response was generated directly by the caching module");
+                break;
+            case CACHE_MISS:
+                log.debug("The response came from an upstream server");
+                break;
+            case VALIDATED:
+                log.debug("The response was generated from the cache "
+                        + "after validating the entry with the origin server");
+                break;
+            default:
+                log.info("Unknown status back {}", responseStatus.toString());
+                break;
+        }
+    }
+
     /** {@inheritDoc} */
     @Override public InputStream getInputStream() throws IOException {
         final HttpGet httpGet = new HttpGet(resourceURL.toExternalForm());
-        final HttpClientContext context = buildHttpClientContext();
+        final HttpCacheContext context = buildHttpClientContext();
         HttpResponse response = null;
 
         log.debug("Attempting to get data from '{}'", resourceURL);
         response = httpClient.execute(httpGet, context);
+        reportCachingStatus(context);
         int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
@@ -200,21 +231,13 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @throws IOException thrown if there is a problem contacting the resource
      */
     protected HttpResponse getResourceHeaders() throws IOException {
-        HttpUriRequest httpRequest = new HttpHead(resourceURL.toString());
+        HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
 
         try {
-            HttpResponse httpResponse = httpClient.execute(httpRequest);
+            final HttpCacheContext context = buildHttpClientContext();
+            HttpResponse httpResponse = httpClient.execute(httpRequest, context);
+            reportCachingStatus(context);
             EntityUtils.consume(httpResponse.getEntity());
-            int statusCode = httpResponse.getStatusLine().getStatusCode();
-
-            if (statusCode == HttpStatus.SC_METHOD_NOT_ALLOWED || statusCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-                log.debug(resourceURL.toString() + " does not support HEAD requests, falling back to GET request");
-                httpRequest = new HttpGet(resourceURL.toString());
-                httpResponse = httpClient.execute(httpRequest);
-                EntityUtils.consume(httpResponse.getEntity());
-                statusCode = httpResponse.getStatusLine().getStatusCode();
-            }
-
             return httpResponse;
         } catch (IOException e) {
             throw new IOException("Error contacting resource " + resourceURL.toString(), e);

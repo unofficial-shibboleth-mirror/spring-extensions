@@ -128,7 +128,7 @@ public class FileBackedHTTPResource extends HTTPResource {
     /** {@inheritDoc} */
     @Override public boolean exists() {
 
-        log.debug("{}: Attempting to fetch metadata", getDescription());
+        log.debug("{}: Attempting to fetch HTTP resource", getDescription());
         final HttpResponse response;
         try {
             response = getResourceHeaders();

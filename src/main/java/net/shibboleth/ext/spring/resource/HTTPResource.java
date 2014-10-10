@@ -141,7 +141,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
                         + "after validating the entry with the origin server");
                 break;
             default:
-                log.info("Unknown status back {}", responseStatus.toString());
+                log.info("Unknown status {}", responseStatus.toString());
                 break;
         }
     }
@@ -152,14 +152,14 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         final HttpCacheContext context = buildHttpClientContext();
         HttpResponse response = null;
 
-        log.debug("Attempting to get data from '{}'", resourceURL);
+        log.debug("Attempting to get data from remote resource '{}'", resourceURL);
         response = httpClient.execute(httpGet, context);
         reportCachingStatus(context);
         int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             String errMsg =
-                    "Non-ok status code " + httpStatusCode + " returned from remote source " + resourceURL;
+                    "Non-ok status code " + httpStatusCode + " returned from remote resource " + resourceURL;
             log.error(errMsg);
             throw new IOException(errMsg);
         }
@@ -180,7 +180,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** {@inheritDoc} */
     @Override public boolean exists() {
 
-        log.debug("Attempting to fetch resource as '{}'", resourceURL);
+        log.debug("Attempting to fetch remote resource as '{}'", resourceURL);
         final HttpResponse response;
         try {
             response = getResourceHeaders();
@@ -240,7 +240,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
             EntityUtils.consume(httpResponse.getEntity());
             return httpResponse;
         } catch (IOException e) {
-            throw new IOException("Error contacting resource " + resourceURL.toString(), e);
+            throw new IOException("Error contacting remote resource " + resourceURL.toString(), e);
         }
     }
 
@@ -254,13 +254,13 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     @Nullable protected String getResponseHeader(String what) throws IOException {
         final HttpResponse response;
 
-        log.debug("Attempting to fetch resource as '{}'", resourceURL);
+        log.debug("Attempting to fetch remote resource as '{}'", resourceURL);
         response = getResourceHeaders();
         int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             final String errMsg =
-                    "Non-ok status code " + httpStatusCode + " returned from remote source " + resourceURL;
+                    "Non-ok status code " + httpStatusCode + " returned from remote resource " + resourceURL;
             log.error(errMsg);
             throw new IOException(errMsg);
         }
@@ -279,7 +279,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         if (null != response) {
             return Long.parseLong(response);
         }
-        final String errMsg = "Response from " + resourceURL.toString() + " did not contain a Content-Length header";
+        final String errMsg = "Response from remote resource " + resourceURL.toString() + 
+                " did not contain a Content-Length header";
         log.error(errMsg);
         throw new IOException(errMsg);
     }
@@ -290,7 +291,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         if (null != response) {
             return DateUtils.parseDate(response).getTime();
         }
-        final String errMsg = "Response from " + resourceURL.toString() + " did not contain a Last-Modified header";
+        final String errMsg = "Response from remote resource " + resourceURL.toString() + 
+                " did not contain a Last-Modified header";
         log.error(errMsg);
         throw new IOException(errMsg);
     }

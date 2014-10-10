@@ -62,7 +62,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(HTTPResource.class);
 
-    /** HTTP Client used to pull the metadata. */
+    /** HTTP Client used to pull the resource. */
     private final HttpClient httpClient;
 
     /** URI to the Resource. */
@@ -159,7 +159,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             String errMsg =
-                    "Non-ok status code " + httpStatusCode + " returned from remote metadata source " + resourceURL;
+                    "Non-ok status code " + httpStatusCode + " returned from remote source " + resourceURL;
             log.error(errMsg);
             throw new IOException(errMsg);
         }
@@ -180,7 +180,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** {@inheritDoc} */
     @Override public boolean exists() {
 
-        log.debug("Attempting to fetch metadata for resource as '{}'", resourceURL);
+        log.debug("Attempting to fetch resource as '{}'", resourceURL);
         final HttpResponse response;
         try {
             response = getResourceHeaders();
@@ -254,13 +254,13 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     @Nullable protected String getResponseHeader(String what) throws IOException {
         final HttpResponse response;
 
-        log.debug("Attempting to fetch metadata for resource as '{}'", resourceURL);
+        log.debug("Attempting to fetch resource as '{}'", resourceURL);
         response = getResourceHeaders();
         int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             final String errMsg =
-                    "Non-ok status code " + httpStatusCode + " returned from remote metadata source " + resourceURL;
+                    "Non-ok status code " + httpStatusCode + " returned from remote source " + resourceURL;
             log.error(errMsg);
             throw new IOException(errMsg);
         }

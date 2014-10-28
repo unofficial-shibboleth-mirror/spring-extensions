@@ -1,7 +1,11 @@
 Spring Extensions Release Notes 
 
 Release notes for all versions may be found at
-https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10010
+https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10060
+
+Changes in version 3.0.0 - 2014-10-28
+=====================================
+[JSE-9] - Improve log messages.
 
 Changes in version 2.0.0 - 2014-07-24
 =====================================

@@ -190,6 +190,16 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             resourceLastModifiedTimes = null;
         }
     }
+    
+    /** Sets the strategy by which the Service cna locate the resources it needs to know about.
+     * <br/> Not implemented
+     * @param strategy the way to get the resources.  Precise details are tbd.
+     */
+    public void setServiceConfiguationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throw new UnsupportedOperationException("This UnsupportedOperationException method has not been implemented");
+    }
 
     /**
      * Set the list of bean post processors for this service.

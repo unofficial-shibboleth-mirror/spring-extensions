@@ -123,7 +123,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     protected void reportCachingStatus(HttpCacheContext context) {
         CacheResponseStatus responseStatus = context.getCacheResponseStatus();
         if (null == responseStatus) {
-            log.info("Non caching client provided");
+            log.debug("Non caching client provided");
             return;
         }
         switch (responseStatus) {

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.ManagedList;
@@ -77,11 +78,13 @@ public final class SpringSupport {
 
     }
 
+// Checkstyle: ParameterNumber OFF
     /**
      * Creates a new, started, application context from the given configuration resources.
      * 
      * @param name name of the application context
      * @param configurationResources configuration resources
+     * @param factoryPostProcessors post processors to inject
      * @param postProcessors post processors to inject
      * @param initializers application context initializers
      * @param parentContext parent context, or null if there is no parent
@@ -90,23 +93,29 @@ public final class SpringSupport {
      */
     @Nonnull public static GenericApplicationContext newContext(@Nonnull @NotEmpty final String name,
             @Nonnull @NonnullElements final List<Resource> configurationResources,
+            @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> factoryPostProcessors,
             @Nonnull @NonnullElements final List<BeanPostProcessor> postProcessors,
             @Nonnull @NonnullElements final List<ApplicationContextInitializer> initializers,
             @Nullable final ApplicationContext parentContext) {
-        GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
+        
+        final GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + name);
 
-        ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
+        final ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
         service.setConverters(Sets.newHashSet(new DurationToLongConverter(), new StringToIPRangeConverter(),
                 new StringBooleanToPredicateConverter()));
         service.afterPropertiesSet();
+
+        for (final BeanFactoryPostProcessor bfpp : factoryPostProcessors) {
+            context.addBeanFactoryPostProcessor(bfpp);
+        }
 
         context.getBeanFactory().setConversionService(service.getObject());
         for (final BeanPostProcessor bpp : postProcessors) {
             context.getBeanFactory().addBeanPostProcessor(bpp);
         }
 
-        SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
+        final SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.loadBeanDefinitions(configurationResources.toArray(new Resource[] {}));
@@ -120,6 +129,8 @@ public final class SpringSupport {
         context.refresh();
         return context;
     }
+// Checkstyle: ParameterNumber ON
+
 
     /**
      * Parse list of elements into bean definitions.

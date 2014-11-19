@@ -27,6 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.ext.spring.util.SpringSupport;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -69,13 +71,16 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         BeanNameAware, Lifecycle {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(ReloadableSpringService.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(ReloadableSpringService.class);
 
     /** List of configuration resources for this service. */
-    private List<Resource> serviceConfigurations;
+    @Nullable @NonnullElements private List<Resource> serviceConfigurations;
+
+    /** List of bean factory post processors for this service's content. */
+    @Nonnull @NonnullElements private List<BeanFactoryPostProcessor> factoryPostProcessors;
 
     /** List of bean post processors for this service's content. */
-    private List<BeanPostProcessor> postProcessors;
+    @Nonnull @NonnullElements private List<BeanPostProcessor> postProcessors;
 
     /** The class we are looking for. */
     @Nonnull private final Class<T> theClaz;
@@ -84,13 +89,13 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     @Nonnull private final Function<GenericApplicationContext, ServiceableComponent> serviceStrategy;
 
     /** Application context owning this engine. */
-    private ApplicationContext parentContext;
+    @Nullable private ApplicationContext parentContext;
 
     /** The bean name. */
-    private String beanName;
+    @Nullable private String beanName;
 
     /** The last known good component. */
-    private ServiceableComponent<T> cachedComponent;
+    @Nullable private ServiceableComponent<T> cachedComponent;
 
     /** Did the last load fail? An optimization only. */
     private boolean lastLoadFailed = true;
@@ -99,7 +104,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * Time, in milliseconds, when the service configuration for the given index was last observed to have changed. -1
      * indicates the configuration resource did not exist.
      */
-    private long[] resourceLastModifiedTimes;
+    @Nullable private long[] resourceLastModifiedTimes;
 
     /**
      * Constructor.
@@ -120,6 +125,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             @Nonnull Function<GenericApplicationContext, ServiceableComponent> strategy) {
         theClaz = Constraint.isNotNull(claz, "Class cannot be null");
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
+        factoryPostProcessors = Collections.emptyList();
         postProcessors = Collections.emptyList();
     }
 
@@ -202,6 +208,19 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /**
+     * Set the list of bean factory post processors for this service.
+     * 
+     * @param processors bean factory post processors to apply
+     */
+    public void setBeanFactoryPostProcessors(
+            @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+
+        factoryPostProcessors = Lists.newArrayList(Collections2.filter(processors, Predicates.notNull()));
+    }
+
+    /**
      * Set the list of bean post processors for this service.
      * 
      * @param processors bean post processors to apply
@@ -212,7 +231,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
 
         postProcessors = Lists.newArrayList(Collections2.filter(processors, Predicates.notNull()));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final void start() {
@@ -307,7 +326,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         final GenericApplicationContext appContext;
         try {
             appContext =
-                    SpringSupport.newContext(getId(), getServiceConfigurations(), postProcessors,
+                    SpringSupport.newContext(getId(), getServiceConfigurations(), factoryPostProcessors, postProcessors,
                             Collections.<ApplicationContextInitializer> emptyList(), getParentContext());
         } catch (FatalBeanException e) {
             throw new ServiceException(e);
@@ -394,7 +413,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /** {@inheritDoc} */
-    @Override public void setBeanName(String name) {
+    @Override public void setBeanName(@Nonnull @NotEmpty final String name) {
         beanName = name;
     }
 

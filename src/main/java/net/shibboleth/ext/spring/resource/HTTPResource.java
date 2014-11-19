@@ -40,6 +40,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.cache.CacheResponseStatus;
 import org.apache.http.client.cache.HttpCacheContext;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.DateUtils;
@@ -164,7 +165,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
             throw new IOException(errMsg);
         }
 
-        return response.getEntity().getContent();
+        return new ConnectionClosingInputStream(response);
     }
 
     /** {@inheritDoc} */
@@ -233,14 +234,23 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     protected HttpResponse getResourceHeaders() throws IOException {
         HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
 
+        HttpResponse httpResponse = null;
         try {
             final HttpCacheContext context = buildHttpClientContext();
-            HttpResponse httpResponse = httpClient.execute(httpRequest, context);
+            httpResponse = httpClient.execute(httpRequest, context);
             reportCachingStatus(context);
             EntityUtils.consume(httpResponse.getEntity());
             return httpResponse;
         } catch (IOException e) {
             throw new IOException("Error contacting remote resource " + resourceURL.toString(), e);
+        } finally {
+            try {
+                if (httpResponse != null && httpResponse instanceof CloseableHttpResponse) {
+                    ((CloseableHttpResponse)httpResponse).close();
+                }
+            } catch (final IOException e) {
+                log.error("Error closing HTTP response from {}", resourceURL.toExternalForm(), e);
+            }
         }
     }
 
@@ -330,6 +340,78 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         final StringBuilder builder = new StringBuilder("HTTPResource [").append(resourceURL.toString()).append(']');
         return builder.toString();
 
+    }
+    
+    /**
+     * A wrapper around the entity content {@link InputStream} represented by an {@link HttpResponse}
+     * that closes the stream and the HttpResponse when {@link #close()} is invoked.
+     */
+    private static class ConnectionClosingInputStream extends InputStream {
+
+        /** HTTP response that is being wrapped. */
+        private final HttpResponse response;
+
+        /** Stream owned by the given HTTP response. */
+        private final InputStream stream;
+
+        /**
+         * Constructor.
+         *
+         * @param httpResponse HTTP method that was invoked
+         * @throws IOException if there is a problem getting the entity content input stream from the response
+         */
+        public ConnectionClosingInputStream(HttpResponse httpResponse) throws IOException {
+            response = httpResponse;
+            stream = response.getEntity().getContent();
+        }
+
+        /** {@inheritDoc} */
+        public int available() throws IOException {
+            return stream.available();
+        }
+
+        /** {@inheritDoc} */
+        public void close() throws IOException {
+            stream.close();
+            if (response instanceof CloseableHttpResponse) {
+               ((CloseableHttpResponse)response).close();
+            }
+        }
+
+        /** {@inheritDoc} */
+        public void mark(int readLimit) {
+            stream.mark(readLimit);
+        }
+
+        /** {@inheritDoc} */
+        public boolean markSupported() {
+            return stream.markSupported();
+        }
+
+        /** {@inheritDoc} */
+        public int read() throws IOException {
+            return stream.read();
+        }
+
+        /** {@inheritDoc} */
+        public int read(byte[] b) throws IOException {
+            return stream.read(b);
+        }
+
+        /** {@inheritDoc} */
+        public int read(byte[] b, int off, int len) throws IOException {
+            return stream.read(b, off, len);
+        }
+
+        /** {@inheritDoc} */
+        public synchronized void reset() throws IOException {
+            stream.reset();
+        }
+
+        /** {@inheritDoc} */
+        public long skip(long n) throws IOException {
+            return stream.skip(n);
+        }
     }
 
 }

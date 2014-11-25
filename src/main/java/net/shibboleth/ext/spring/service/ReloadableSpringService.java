@@ -197,14 +197,14 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         }
     }
     
-    /** Sets the strategy by which the Service cna locate the resources it needs to know about.
+    /** Set the strategy by which the Service can locate the resources it needs to know about.
      * <br/> Not implemented
      * @param strategy the way to get the resources.  Precise details are tbd.
      */
-    public void setServiceConfiguationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
+    public void setServiceConfigurationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        throw new UnsupportedOperationException("This UnsupportedOperationException method has not been implemented");
+        throw new UnsupportedOperationException("This method has not been implemented");
     }
 
     /**

@@ -2,29 +2,3 @@ Spring Extensions Release Notes
 
 Release notes for all versions may be found at
 https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10060
-
-Changes in version 3.0.0 - 2014-10-28
-=====================================
-[JSE-9] - Improve log messages.
-
-Changes in version 2.0.0 - 2014-07-24
-=====================================
-[IDP-436] - Add initializers as a parameter to creation of new contexts in SpringSupport.
-[JSPT-46] - Move services from the IdP.
-[IDP-379] - Add a helper function to SpringSupport to convert a list of elements to a ManagedList<String>.
-r632 - Support both string and boolean to Predicate conversions.
-
-Changes in version 1.2.0 - 2014-06-25
-=====================================
-[JSE-6] - move IdentifiableBeanPostProcessor from IdP to Spring Extensions
-[JSE-4] - DomDocumentFactoryBean should be renamed
-
-Changes in version 1.1.0 - 2013-11-03
-=====================================
-[JSE-3] - release process for spring-extensions v.next
-[JSE-5] - Retrofit some of the Newer (but deleted) HTPPResource code to the SpringSuport HTTPResource
-
-Changes in version 1.0.0 - 2012-04-02
-=====================================
-[JSE-1] - change factory beans to operate on resources, not files
-[JSE-2] - factory beans leave created stream open

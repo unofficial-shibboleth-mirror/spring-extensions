@@ -186,7 +186,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
                     } else {
                         resourceLastModifiedTimes[i] = -1;
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     log.info("{} Configuration resource '" + serviceConfig.getDescription()
                             + "' last modification date could not be determined", getLogPrefix(), e);
                     resourceLastModifiedTimes[i] = -1;
@@ -204,7 +204,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     public void setServiceConfigurationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
-        throw new UnsupportedOperationException("This method has not been implemented");
+        throw new UnsupportedOperationException("This UnsupportedOperationException method has not been implemented");
     }
 
     /**
@@ -305,7 +305,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
                         resourceLastModifiedTimes[i] = serviceConfigLastModified;
                     }
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.info("{} Configuration resource '{}' last modification date could not be determined",
                         getLogPrefix(), serviceConfig.getDescription(), e);
                 configResourceChanged = true;
@@ -328,25 +328,23 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             appContext =
                     SpringSupport.newContext(getId(), getServiceConfigurations(), factoryPostProcessors, postProcessors,
                             Collections.<ApplicationContextInitializer> emptyList(), getParentContext());
-        } catch (FatalBeanException e) {
+        } catch (final FatalBeanException e) {
             throw new ServiceException(e);
         }
 
-        log.trace("{} New Application Context created.", getLogPrefix());
+        log.debug("{} New Application Context created for service '{}'", getLogPrefix(), getId());
 
         final ServiceableComponent<T> service;
         try {
             service = serviceStrategy.apply(appContext);
-        } catch (ServiceException e) {
+        } catch (final ServiceException e) {
             appContext.close();
             throw new ServiceException("Failed to load " + getServiceConfigurations(), e);
         }
 
         service.pinComponent();
 
-        //
         // Now check it's the right type before we continue.
-        //
         final T theComponent = service.getComponent();
 
         log.debug("{} Testing that {} is a superclass of {}", getLogPrefix(), theComponent.getClass(), theClaz);
@@ -360,7 +358,6 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             throw new ServiceException("Class was not the same or a superclass of configured class");
         }
 
-        //
         // Otherwise we are ready to swap in the new component; so only
         // now do we grab the lock.
         //
@@ -375,7 +372,11 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             cachedComponent = service;
             service.unpinComponent();
         }
+        
+        log.info("{} Completed reload and swapped in latest configuration for service '{}'", getLogPrefix(), getId());
+        
         if (null != oldComponent) {
+            log.debug("{} Unloading previous configuration for service '{}'", getLogPrefix(), getId());
             oldComponent.unloadComponent();
         }
         lastLoadFailed = false;
@@ -424,4 +425,5 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         }
         super.doInitialize();
     }
+    
 }

@@ -24,7 +24,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.beans.factory.xml.NamespaceHandler;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.beans.factory.xml.XmlReaderContext;
-import org.springframework.core.env.Environment;
 import org.w3c.dom.Element;
 
 /**
@@ -39,18 +38,19 @@ public class SchemaTypeAwareBeanDefinitionParserDelegate extends BeanDefinitionP
      * Constructor.
      * 
      * @param readerContext current XML reader context
-     * @param environment current environment
      */
-    public SchemaTypeAwareBeanDefinitionParserDelegate(XmlReaderContext readerContext, Environment environment) {
-        super(readerContext, environment);
+    public SchemaTypeAwareBeanDefinitionParserDelegate(XmlReaderContext readerContext) {
+        super(readerContext);
     }
 
     /** {@inheritDoc} */
+    @Override
     public BeanDefinition parseCustomElement(Element element) {
         return parseCustomElement(element, null);
     }
 
     /** {@inheritDoc} */
+    @Override
     public BeanDefinition parseCustomElement(Element element, BeanDefinition containingBd) {
         String namespaceUri = element.getNamespaceURI();
         if (DOMTypeSupport.hasXSIType(element)) {

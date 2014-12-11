@@ -37,7 +37,6 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-//TODO incomplete port from v2
 /**
  * A base class for {@link NamespaceHandler} implementations.
  * 
@@ -78,6 +77,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the decorated bean definition
      */
+    @Override
     public BeanDefinitionHolder decorate(Node node, BeanDefinitionHolder definition, ParserContext parserContext) {
         return findDecoratorForNode(node).decorate(node, definition, parserContext);
     }
@@ -91,6 +91,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the bean definition created from the given element
      */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         return findParserForElement(element).parse(element, parserContext);
     }

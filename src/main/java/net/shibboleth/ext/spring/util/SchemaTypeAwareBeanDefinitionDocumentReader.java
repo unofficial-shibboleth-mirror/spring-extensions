@@ -20,7 +20,6 @@ package net.shibboleth.ext.spring.util;
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader;
 import org.springframework.beans.factory.xml.XmlReaderContext;
-import org.springframework.core.env.StandardEnvironment;
 import org.w3c.dom.Element;
 
 /**
@@ -34,7 +33,7 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
     protected BeanDefinitionParserDelegate createDelegate(XmlReaderContext readerContext, Element root,
             BeanDefinitionParserDelegate parentDelegate) {
         BeanDefinitionParserDelegate delegate =
-                new SchemaTypeAwareBeanDefinitionParserDelegate(readerContext, new StandardEnvironment());
+                new SchemaTypeAwareBeanDefinitionParserDelegate(readerContext);
         delegate.initDefaults(root, parentDelegate);
         return delegate;
     }

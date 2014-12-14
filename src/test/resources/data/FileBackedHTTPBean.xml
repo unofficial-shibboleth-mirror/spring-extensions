@@ -8,7 +8,7 @@
 		class="net.shibboleth.utilities.java.support.httpclient.FileCachingHttpClientBuilder"
 		p:maxCacheEntries="3" p:cacheDirectory-ref="theDir" />
 
-	<bean id="apacheClient" factory-bean="clientBuilder"
+	<bean id="apacheClient" factory-bean="clientBuilder" init-method="initialize" destroy-method="destroy"
 		factory-method="buildClient" />
 
 	<bean id="ShibResource" class="net.shibboleth.ext.spring.resource.HTTPResource"

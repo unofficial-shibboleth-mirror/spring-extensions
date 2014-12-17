@@ -23,13 +23,12 @@ import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;
 
 /**
  * A factory bean to summon up an {@link EvaluableScript} from either inline data or from a resource.
  */
-public class EvaluableScriptFactoryBean extends AbstractFactoryBean<EvaluableScript> {
+public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBean<EvaluableScript> {
 
     /** log. */
     private final Logger log = LoggerFactory.getLogger(EvaluableScript.class);
@@ -124,7 +123,7 @@ public class EvaluableScriptFactoryBean extends AbstractFactoryBean<EvaluableScr
     }
 
     /** {@inheritDoc} */
-    @Override protected EvaluableScript createInstance() throws Exception {
+    @Override protected EvaluableScript doCreateInstance() throws Exception {
 
         if (null == script && null == resource) {
             log.error("{} A script or a resource must be supplied", sourceId);

@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.DurationToLongConverter;
+import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -147,7 +147,7 @@ public final class SpringSupport {
             return null;
         }
 
-        ManagedList<BeanDefinition> definitions = new ManagedList<BeanDefinition>(elements.size());
+        ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
         for (Element e : elements) {
             // TODO null check e
             definitions.add(parserContext.getDelegate().parseCustomElement(e));

@@ -53,19 +53,19 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Element Elements}
      * they handle.
      */
-    private Map<QName, BeanDefinitionParser> parsers = new HashMap<QName, BeanDefinitionParser>();
+    private Map<QName, BeanDefinitionParser> parsers = new HashMap<>();
 
     /**
      * Stores the {@link BeanDefinitionDecorator} implementations keyed by the local name of the {@link Element
      * Elements} they handle.
      */
-    private Map<QName, BeanDefinitionDecorator> decorators = new HashMap<QName, BeanDefinitionDecorator>();
+    private Map<QName, BeanDefinitionDecorator> decorators = new HashMap<>();
 
     /**
      * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Attr Attrs} they
      * handle.
      */
-    private Map<QName, BeanDefinitionDecorator> attributeDecorators = new HashMap<QName, BeanDefinitionDecorator>();
+    private Map<QName, BeanDefinitionDecorator> attributeDecorators = new HashMap<>();
 
     /**
      * Decorates the supplied {@link Node} by delegating to the {@link BeanDefinitionDecorator} that is registered to

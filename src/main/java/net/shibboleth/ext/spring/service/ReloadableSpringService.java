@@ -18,6 +18,7 @@
 package net.shibboleth.ext.spring.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,7 +55,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 /**
  * This class provides a reloading interface to a {@link ServiceableComponent} via Spring.
@@ -217,7 +217,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
 
-        factoryPostProcessors = Lists.newArrayList(Collections2.filter(processors, Predicates.notNull()));
+        factoryPostProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
     }
 
     /**
@@ -229,7 +229,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
 
-        postProcessors = Lists.newArrayList(Collections2.filter(processors, Predicates.notNull()));
+        postProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
     }
 
     /** {@inheritDoc} */

@@ -19,7 +19,9 @@ package net.shibboleth.ext.spring.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -59,7 +61,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
 
 /**
  * Helper class for performing some common Spring-related functions.
@@ -102,8 +103,8 @@ public final class SpringSupport {
         context.setDisplayName("ApplicationContext:" + name);
 
         final ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
-        service.setConverters(Sets.newHashSet(new DurationToLongConverter(), new StringToIPRangeConverter(),
-                new StringBooleanToPredicateConverter()));
+        service.setConverters(new HashSet<>(Arrays.asList(new DurationToLongConverter(), new StringToIPRangeConverter(),
+                new StringBooleanToPredicateConverter())));
         service.afterPropertiesSet();
 
         for (final BeanFactoryPostProcessor bfpp : factoryPostProcessors) {

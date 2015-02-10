@@ -303,6 +303,8 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
                         log.debug("{} Resource has changed: '{}'", getLogPrefix(), serviceConfig.getDescription());
                         configResourceChanged = true;
                         resourceLastModifiedTimes[i] = serviceConfigLastModified;
+                    } else {
+                        log.trace("{} Resource has not changed '{}'", getLogPrefix(), serviceConfig.getDescription());
                     }
                 }
             } catch (final IOException e) {

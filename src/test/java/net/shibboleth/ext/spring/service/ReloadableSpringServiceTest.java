@@ -26,7 +26,6 @@ import java.util.Collections;
 import net.shibboleth.ext.spring.util.SpringSupport;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -111,7 +110,6 @@ public class ReloadableSpringServiceTest {
                 new ReloadableSpringService<>(TestServiceableComponent.class);
 
         createPopulatedFile("net/shibboleth/ext/spring/service/ServiceableBean1.xml");
-        Thread.sleep(RELOAD_DELAY); // sleep to let the file arrive.
 
         service.setFailFast(true);
         service.setId("deferedReload");
@@ -123,12 +121,8 @@ public class ReloadableSpringServiceTest {
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
         TestServiceableComponent component = serviceableComponent.getComponent();
 
-        final DateTime x = service.getLastReloadAttemptInstant();
-        Assert.assertEquals(x,  service.getLastSuccessfulReloadInstant());
-        
         Assert.assertEquals(component.getTheValue(), "One");
         Assert.assertFalse(component.isDestroyed());
-        Thread.sleep(RELOAD_DELAY*3);
 
         overwriteFileWith("net/shibboleth/ext/spring/service/ServiceableBean2.xml");
 

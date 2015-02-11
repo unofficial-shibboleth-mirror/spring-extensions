@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <logger name="net.shibboleth.ext.spring" level="TRACE"/>
+    <logger name="net.shibboleth.ext.spring" level="DEBUG"/>
     <logger name="net.shibboleth.utilities" level="DEBUG"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

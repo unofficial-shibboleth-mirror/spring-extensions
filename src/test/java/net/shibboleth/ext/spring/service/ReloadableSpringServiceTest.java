@@ -27,8 +27,6 @@ import net.shibboleth.ext.spring.util.SpringSupport;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -47,8 +45,6 @@ public class ReloadableSpringServiceTest {
 
     private static final long RELOAD_DELAY = 100;
 
-    private Logger log = LoggerFactory.getLogger(ReloadableSpringServiceTest.class);
-    
     private File testFile;
 
     private void createPopulatedFile(String dataPath) throws IOException {
@@ -58,15 +54,7 @@ public class ReloadableSpringServiceTest {
     }
 
     private Resource testFileResource() {
-        return new FileSystemResource(testFile) {
-            /** {@inheritDoc} */
-            @Override
-            protected File getFileForLastModifiedCheck() throws IOException {
-                File f = super.getFileForLastModifiedCheck(); 
-                log.debug("GetFileForLastModifiedCheck file {}, ourfile {}, modified {}, outmodified {}", f, testFile, f.lastModified(), testFile.lastModified());
-                return f;
-            }
-        };
+        return new FileSystemResource(testFile);
     }
 
     private void overwriteFileWith(String newDataPath) throws IOException {
@@ -141,7 +129,6 @@ public class ReloadableSpringServiceTest {
         Assert.assertEquals(component.getTheValue(), "One");
         Assert.assertFalse(component.isDestroyed());
         Thread.sleep(RELOAD_DELAY*3);
-        Assert.assertEquals(x,  service.getLastReloadAttemptInstant());
 
         overwriteFileWith("net/shibboleth/ext/spring/service/ServiceableBean2.xml");
 

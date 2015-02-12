@@ -150,11 +150,29 @@ public final class SpringSupport {
 
         ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
         for (Element e : elements) {
-            // TODO null check e
-            definitions.add(parserContext.getDelegate().parseCustomElement(e));
+            if (e != null) {
+                definitions.add(parseCustomElement(e, parserContext));
+            }
         }
 
         return definitions;
+    }
+    
+    /**
+     * Parse an element into a bean definition.
+     * 
+     * @param element the element to parse
+     * @param parserContext current parsing context
+     * 
+     * @return the parsed bean definition
+     */
+    @Nullable public static BeanDefinition parseCustomElement(@Nullable final Element element, 
+            @Nonnull final ParserContext parserContext) {
+        if (element == null) {
+            return null;
+        }
+
+        return parserContext.getDelegate().parseCustomElement(element);
     }
 
     /**

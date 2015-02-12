@@ -105,24 +105,28 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @return the parser for the given bean element
      */
     protected BeanDefinitionParser findParserForElement(Element element) {
-        QName parserId;
         BeanDefinitionParser parser = null;
 
-        parserId = DOMTypeSupport.getXSIType(element);
-        if (parserId != null) {
-            log.trace("Attempting to find parser for element of type: {}", parserId);
-            parser = parsers.get(parserId);
+        QName typeName = DOMTypeSupport.getXSIType(element);
+        if (typeName != null) {
+            log.trace("Attempting to find parser for element of type: {}", typeName);
+            parser = parsers.get(typeName);
+        }
+
+        QName elementName = null;
+        if (parser == null) {
+            elementName = QNameSupport.getNodeQName(element);
+            log.trace("Attempting to find parser with element name: {}", elementName);
+            parser = parsers.get(elementName);
         }
 
         if (parser == null) {
-            parserId = QNameSupport.getNodeQName(element);
-            log.trace("Attempting to find parser with element name: {}", parserId);
-            parser = parsers.get(parserId);
-        }
-
-        if (parser == null) {
-            log.error("Cannot locate BeanDefinitionParser for element: " + parserId);
-            throw new IllegalArgumentException("Cannot locate BeanDefinitionParser for element: " + parserId);
+            String msg = "Can not locate BeanDefinitionParser for element: " + elementName;
+            if (typeName != null) {
+                msg = msg + ", carrying xsi:type: " + typeName;
+            }
+            log.error(msg);
+            throw new IllegalArgumentException(msg);
         }
 
         return parser;
@@ -147,12 +151,12 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
         } else if (node instanceof Attr) {
             decorator = attributeDecorators.get(node.getLocalName());
         } else {
-            throw new IllegalArgumentException("Cannot decorate based on Nodes of type [" + node.getClass().getName()
+            throw new IllegalArgumentException("Can not decorate based on Nodes of type [" + node.getClass().getName()
                     + "]");
         }
 
         if (decorator == null) {
-            throw new IllegalArgumentException("Cannot locate BeanDefinitionDecorator for " + " ["
+            throw new IllegalArgumentException("Can not locate BeanDefinitionDecorator for " + " ["
                     + node.getLocalName() + "]");
         }
 

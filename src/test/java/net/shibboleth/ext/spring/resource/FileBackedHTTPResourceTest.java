@@ -27,6 +27,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -39,13 +40,19 @@ public class FileBackedHTTPResourceTest {
     private final String nonExistsURL = "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/documxent.xml?view=co";
     private String existsFile;
    
-    
     private HttpClient client;
 
     @BeforeClass public void setupClient() throws Exception {
         client = (new HttpClientBuilder()).buildClient();
         File file = File.createTempFile("FileBackedHTTPResourceTest1", ".xml");
         existsFile = file.getAbsolutePath();
+    }
+    
+    @AfterClass public void deleteFile() {
+        File f = new File(existsFile);
+        if (f.exists()) {
+            f.delete();
+        }
     }
     
     @Test public void existsTest() throws IOException {

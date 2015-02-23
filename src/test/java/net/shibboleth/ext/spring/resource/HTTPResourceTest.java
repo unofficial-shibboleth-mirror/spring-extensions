@@ -141,6 +141,7 @@ public class HTTPResourceTest {
             }
             f.delete();
         }
+        dir.delete();
     }
 
     @Test public void springLoadFileCache() throws IOException  {

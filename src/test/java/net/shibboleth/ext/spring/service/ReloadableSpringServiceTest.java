@@ -26,6 +26,7 @@ import java.util.Collections;
 import net.shibboleth.ext.spring.util.SpringSupport;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -35,6 +36,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.ByteStreams;
@@ -49,7 +51,15 @@ public class ReloadableSpringServiceTest {
     private void createPopulatedFile(String dataPath) throws IOException {
         testFile = File.createTempFile("ReloadableSpringServiceTest", ".xml");
         overwriteFileWith(dataPath);
-        testFile.setLastModified(1);
+        testFile.setLastModified(365*24*60*60*1000);
+    }
+    
+    @AfterMethod public void  deleteFile() {
+        if (null != testFile) {
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+        }
     }
 
     private Resource testFileResource() {
@@ -120,9 +130,15 @@ public class ReloadableSpringServiceTest {
 
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
         TestServiceableComponent component = serviceableComponent.getComponent();
+        
+        final DateTime x = service.getLastReloadAttemptInstant();
+        Assert.assertEquals(x,  service.getLastSuccessfulReloadInstant());
 
         Assert.assertEquals(component.getTheValue(), "One");
         Assert.assertFalse(component.isDestroyed());
+
+        Thread.sleep(RELOAD_DELAY*3);
+        Assert.assertEquals(x,  service.getLastReloadAttemptInstant());
 
         overwriteFileWith("net/shibboleth/ext/spring/service/ServiceableBean2.xml");
 
@@ -227,7 +243,6 @@ public class ReloadableSpringServiceTest {
         Assert.assertTrue(component.isDestroyed(), "After 7 second component has still not be destroyed");
 
         testFile.delete();
-
     }
 
     @Test public void testApplicationContextAware() {

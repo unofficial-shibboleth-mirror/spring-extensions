@@ -395,6 +395,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         if (null != oldComponent) {
             oldComponent.unloadComponent();
         }
+        super.doDestroy();
     }
 
     /**

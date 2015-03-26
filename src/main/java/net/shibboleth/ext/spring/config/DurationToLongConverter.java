@@ -17,34 +17,41 @@
 
 package net.shibboleth.ext.spring.config;
 
+import net.shibboleth.utilities.java.support.annotation.Duration;
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
 
-import net.shibboleth.utilities.java.support.annotation.Duration;
-import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
-
-
 /**
  * Allows setting of Duration-valued properties using lexical string form.
  */
-public class DurationToLongConverter implements Converter<String,Long>, ConditionalConverter {
+public class DurationToLongConverter implements Converter<String, Long>, ConditionalConverter {
+
+    /** Logger. */
+    private Logger log = LoggerFactory.getLogger(DurationToLongConverter.class);
 
     /** {@inheritDoc} */
-    public Long convert(String source) {
+    @Override public Long convert(String source) {
         if (source.startsWith("P")) {
             return DOMTypeSupport.durationToLong(source);
         } else if (source.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {
-            // Treat as a Long.
-            return Long.valueOf(source);
+            // Treat as a milliseconds.  But note this
+            final long duration = Long.valueOf(source);
+            log.info("Deprecated duration of {} was specified.  Use XML duration of  {}", source,
+                    DOMTypeSupport.longToDuration(duration));
+            return duration;
         }
     }
 
     /** {@inheritDoc} */
-    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+    @Override public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
         return targetType.hasAnnotation(Duration.class);
     }
-    
+
 }

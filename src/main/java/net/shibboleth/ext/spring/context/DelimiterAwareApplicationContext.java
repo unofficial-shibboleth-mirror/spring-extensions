@@ -25,8 +25,7 @@ import org.springframework.util.StringUtils;
  * Version of {@link DeferPlaceholderFileSystemXmlWebApplicationContext} which does not necessarily assume that file
  * list are space separated.
  */
-public class DelimiterAwareDeferPlaceholderFileSystemXmlWebApplicationContext extends
-        DeferPlaceholderFileSystemXmlWebApplicationContext {
+public class DelimiterAwareApplicationContext extends DeferPlaceholderFileSystemXmlWebApplicationContext {
 
     /** {@inheritDoc} */
     @Override public void setConfigLocation(String location) {

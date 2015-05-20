@@ -17,13 +17,16 @@
 
 package net.shibboleth.ext.spring.resource;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.util.Assert;
 
 /**
- * An extension of {@link DefaultResourceLoader} that is biased in favor of the filesystem such that bare resource paths
- * are assumed to be files rather than classpath resources.
+ * An extension of {@link DefaultResourceLoader} that (1) is biased in favor of the filesystem such that bare resource
+ * paths are assumed to be files rather than classpath resources and (2) supports loading "classpath*:" resources.
  */
 public class PreferFileSystemResourceLoader extends DefaultResourceLoader {
 
@@ -43,6 +46,22 @@ public class PreferFileSystemResourceLoader extends DefaultResourceLoader {
         }
 
         return super.getResourceByPath(path);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Supports wildcard classpath locations prefixed with {@link ResourcePatternResolver#CLASSPATH_ALL_URL_PREFIX}.
+     * </p>
+     */
+    @Override public Resource getResource(String location) {
+        Assert.notNull(location, "Location must not be null");
+        if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
+            return new ClassPathResource(location.substring(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX.length()),
+                    getClassLoader());
+        }
+        return super.getResource(location);
     }
 
 }

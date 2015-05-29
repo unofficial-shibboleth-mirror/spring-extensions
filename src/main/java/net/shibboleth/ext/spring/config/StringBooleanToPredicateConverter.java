@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.config;
 
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 import org.springframework.core.convert.converter.Converter;
 
 import com.google.common.base.Predicate;
@@ -29,7 +31,7 @@ public class StringBooleanToPredicateConverter implements Converter<String,Predi
 
     /** {@inheritDoc} */
     public Predicate convert(String source) {
-        return Boolean.valueOf(source) ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
+        return Boolean.valueOf(StringSupport.trimOrNull(source)) ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
     }
     
 }

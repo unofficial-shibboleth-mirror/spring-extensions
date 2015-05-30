@@ -28,6 +28,7 @@ import net.shibboleth.utilities.java.support.net.IPRange;
 public class StringToIPRangeConverter implements Converter<String,IPRange> {
 
     /** {@inheritDoc} */
+    @Override
     public IPRange convert(String source) {
         return IPRange.parseCIDRBlock(source);
     }

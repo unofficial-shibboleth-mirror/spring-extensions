@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.config;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.annotation.Duration;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
@@ -29,21 +31,21 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * Allows setting of Duration-valued properties using lexical string form.
  */
-public class DurationToLongConverter implements Converter<String, Long>, ConditionalConverter {
+public class DurationToLongConverter implements Converter<String,Long>, ConditionalConverter {
 
     /** Logger. */
-    private Logger log = LoggerFactory.getLogger(DurationToLongConverter.class);
+    @Nonnull private Logger log = LoggerFactory.getLogger(DurationToLongConverter.class);
 
     /** {@inheritDoc} */
     @Override public Long convert(String source) {
         if (source.startsWith("P")) {
-            return DOMTypeSupport.durationToLong(source);
+            return DOMTypeSupport.durationToLong(source.trim());
         } else if (source.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {
             // Treat as a milliseconds.  But note this
             final long duration = Long.valueOf(source);
-            log.info("Deprecated duration of {} was specified.  Use XML duration of  {}", source,
+            log.info("Deprecated duration of {} was specified. Use XML duration of {}", source,
                     DOMTypeSupport.longToDuration(duration));
             return duration;
         }

@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.config;
 
+import javax.annotation.Nullable;
+
 import net.shibboleth.ext.spring.resource.ResourceHelper;
 import net.shibboleth.utilities.java.support.resource.Resource;
 
@@ -34,15 +36,17 @@ import org.springframework.core.io.ResourceLoader;
 public class StringToResourceConverter implements Converter<String, Resource>, ApplicationContextAware {
 
     /** Application context. */
-    private ApplicationContext applicationContext;
+    @Nullable private ApplicationContext applicationContext;
 
     /** {@inheritDoc} */
+    @Override
     public Resource convert(String source) {
         final ResourceLoader loader = applicationContext == null ? new DefaultResourceLoader() : applicationContext;
         return ResourceHelper.of(loader.getResource(source));
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setApplicationContext(ApplicationContext context) {
         applicationContext = context;
     }

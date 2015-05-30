@@ -28,10 +28,11 @@ import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 public class DurationPropertyEditor extends PropertyEditorSupport {
 
     /** {@inheritDoc} */
+    @Override
     public void setAsText(String text) {
 
         if (text.startsWith("P")) {
-            setValue(DOMTypeSupport.getDataTypeFactory().newDuration(text));
+            setValue(DOMTypeSupport.getDataTypeFactory().newDuration(text.trim()));
         } else if (text.startsWith("-P")) {
             throw new IllegalArgumentException("Negative durations are not supported");
         } else {

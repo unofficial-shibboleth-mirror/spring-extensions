@@ -141,6 +141,6 @@ public class QueryPassthroughFactoryBean implements FactoryBean<String> {
     /** {@inheritDoc} */
     @Override
     public boolean isSingleton() {
-        return true;
+        return false;
     }
 }

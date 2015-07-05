@@ -104,6 +104,9 @@ public class FileBackedHTTPResource extends HTTPResource {
             backingResource.getFile().delete();
             log.error("{}: Copy failed", getDescription(), e);
             throw e;
+        } finally {
+            input.close();
+            out.close();
         }
         return new FileInputStream(backingResource.getFile());
     }

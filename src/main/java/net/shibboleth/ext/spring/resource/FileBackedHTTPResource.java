@@ -117,6 +117,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             final InputStream stream = super.getInputStream();
             return saveAndClone(stream);
         } catch (IOException ex) {
+            log.debug("{} Error obtaining HTTPResource InputStream or creating backing file", getDescription(), ex);
             log.warn("{} HTTP resource was inaccessible for getInputStream(), trying backing file.", 
                     getDescription());
             try {

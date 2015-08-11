@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+                           
+    <bean id="shibboleth.NonCachingHttpClient"
+          lazy-init="true"
+          class="net.shibboleth.ext.spring.factory.HttpClientFactoryBean"
+          p:tLSSocketFactory="#{ %{idp.httpclient.useTrustEngineTLSSocketFactory:false} ? @'shibboleth.TrustEngineTLSSocketFactory' : null }"
+          p:connectionDisregardTLSCertificate="%{idp.httpclient.connectionDisregardTLSCertificate:false}"
+          p:connectionTimeout="%{idp.httpclient.connectionTimeout:-1}" />
+        
+    <bean id="urlBean" class="java.net.URL" c:_0="%{the.url}"/>
+                       
+    <bean id="namedString" class="net.shibboleth.ext.spring.resource.FileBackedHTTPResource"
+          c:client-ref="shibboleth.NonCachingHttpClient" 
+          c:url="%{the.url}"
+          c:resource="%{file.name}"/>
+
+    <bean id="namedURL" class="net.shibboleth.ext.spring.resource.FileBackedHTTPResource"
+          c:client-ref="shibboleth.NonCachingHttpClient" 
+          c:url-ref="urlBean"
+          c:resource="%{file.name}"/>
+
+    <bean id="namedFileString" class="net.shibboleth.ext.spring.resource.FileBackedHTTPResource"
+          c:client-ref="shibboleth.NonCachingHttpClient" 
+          c:url="%{the.url}"
+          c:resource="file://%{file.name}"/>
+          
+    <bean id="numberedString" class="net.shibboleth.ext.spring.resource.FileBackedHTTPResource"
+          c:_0-ref="shibboleth.NonCachingHttpClient" 
+          c:_1="%{the.url}"
+          c:_2="%{file.name}"/>
+
+    <bean id="numberedURL" class="net.shibboleth.ext.spring.resource.FileBackedHTTPResource"
+          c:_0-ref="shibboleth.NonCachingHttpClient" 
+          c:_1-ref="urlBean"
+          c:_2="%{file.name}"/>
+</beans>
+              
+              

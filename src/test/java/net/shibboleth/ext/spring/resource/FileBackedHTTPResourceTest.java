@@ -20,12 +20,20 @@ package net.shibboleth.ext.spring.resource;
 import java.io.File;
 import java.io.IOException;
 
+import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mock.env.MockPropertySource;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -68,5 +76,49 @@ public class FileBackedHTTPResourceTest {
         Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(client, existsURL, new FileSystemResource(existsFile)), new ClassPathResource("data/document.xml")));
         // With that done compare via the backup
         Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(client, nonExistsURL, new FileSystemResource(existsFile)), new ClassPathResource("data/document.xml")));
+    }
+    
+    public GenericApplicationContext getContext(String location) {
+        
+        MockPropertySource mockEnvVars = new MockPropertySource();
+        mockEnvVars.setProperty("file.name", existsFile);
+        mockEnvVars.setProperty("the.url", existsURL);
+
+        GenericApplicationContext context = new FilesystemGenericApplicationContext() ;
+        context.setDisplayName("ApplicationContext");
+
+        MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
+        propertySources.replace(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, mockEnvVars);
+
+        PropertySourcesPlaceholderConfigurer placeholderConfig = new PropertySourcesPlaceholderConfigurer();
+        placeholderConfig.setPlaceholderPrefix("%{");
+        placeholderConfig.setPlaceholderSuffix("}");
+        placeholderConfig.setPropertySources(propertySources);
+
+        context.addBeanFactoryPostProcessor(placeholderConfig);
+        
+        SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
+                new SchemaTypeAwareXMLBeanDefinitionReader(context);
+
+        beanDefinitionReader.loadBeanDefinitions(location);
+
+        beanDefinitionReader.setValidating(true);
+
+        context.refresh();
+
+        
+        return context;
+       
+    }
+    
+    @Test public void testParsing() throws IOException {
+        
+      final ApplicationContext context = getContext("data/oldStyle.xml");
+        
+        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedFileString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
     }
 }

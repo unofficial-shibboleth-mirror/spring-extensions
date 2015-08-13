@@ -17,6 +17,7 @@
 
 package net.shibboleth.ext.spring.resource;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.google.common.io.ByteStreams;
@@ -58,8 +60,27 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
-     */
-    public FileBackedHTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url, @Nonnull Resource resource)
+     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)     */
+    @Deprecated public FileBackedHTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url,
+            @Nonnull Resource resource) throws IOException {
+        super(client, url);
+        backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
+        if (null == resource.getFile()) {
+            throw new IOException("Backing resource has to be file backed");
+        }
+        log.warn("This constructor is deprecrated, use backingFile=\"/path/to/file\" instead "
+                + "of resource=\"file:///path/to/file\"");
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param client the client we use to connect with.
+     * @param url URL to the remote data
+     * @param resource the file to use as backing store
+     * @throws IOException if the URL was badly formed
+     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)     */
+    @Deprecated public FileBackedHTTPResource(@Nonnull HttpClient client, @Nonnull URL url, @Nonnull Resource resource)
             throws IOException {
         super(client, url);
         backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
@@ -71,18 +92,33 @@ public class FileBackedHTTPResource extends HTTPResource {
     /**
      * Constructor.
      * 
+     * @param backingFile the file to use as backing store
      * @param client the client we use to connect with.
      * @param url URL to the remote data
-     * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
      */
-    public FileBackedHTTPResource(@Nonnull HttpClient client, @Nonnull URL url, @Nonnull Resource resource)
+    public FileBackedHTTPResource(@Nonnull String backingFile, @Nonnull HttpClient client, 
+            @NotEmpty @Nonnull String url) throws IOException {
+        super(client, url);
+        Constraint.isNotNull(backingFile, "File Name must not be null");
+        final File file = new File(backingFile);
+        backingResource = new FileSystemResource(file);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param backingFile the file to use as backing store
+     * @param client the client we use to connect with.
+     * @param url URL to the remote data
+     * @throws IOException if the URL was badly formed
+     */
+    public FileBackedHTTPResource(@Nonnull String backingFile, @Nonnull HttpClient client, @Nonnull URL url)
             throws IOException {
         super(client, url);
-        backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
-        if (null == resource.getFile()) {
-            throw new IOException("Backing resource has to be file backed");
-        }
+        Constraint.isNotNull(backingFile, "File Name must not be null");
+        final File file = new File(backingFile);
+        backingResource = new FileSystemResource(file);
     }
 
     /**
@@ -118,8 +154,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             return saveAndClone(stream);
         } catch (IOException ex) {
             log.debug("{} Error obtaining HTTPResource InputStream or creating backing file", getDescription(), ex);
-            log.warn("{} HTTP resource was inaccessible for getInputStream(), trying backing file.", 
-                    getDescription());
+            log.warn("{} HTTP resource was inaccessible for getInputStream(), trying backing file.", getDescription());
             try {
                 return new FileInputStream(backingResource.getFile());
             } catch (IOException e) {
@@ -128,7 +163,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override public boolean exists() {
 
@@ -147,7 +182,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         }
         return backingResource.exists();
     }
-    
+
     /** {@inheritDoc} */
     @Override public long contentLength() throws IOException {
 
@@ -174,7 +209,6 @@ public class FileBackedHTTPResource extends HTTPResource {
         log.warn("{}: Relative resources are not file backed");
         return super.createRelative(relativePath);
     }
-
 
     /** {@inheritDoc} */
     @Override public String getDescription() {

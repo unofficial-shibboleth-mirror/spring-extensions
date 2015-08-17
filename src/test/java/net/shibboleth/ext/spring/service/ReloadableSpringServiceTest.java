@@ -253,10 +253,13 @@ public class ReloadableSpringServiceTest {
                 SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
                         Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
                         Collections.<ApplicationContextInitializer>emptyList(), null);
-                
-        ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
-
-        Assert.assertNotNull(service.getParentContext(), "Parent context should not be null");
+        try {
+            ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
+    
+            Assert.assertNotNull(service.getParentContext(), "Parent context should not be null");
+        } finally {
+            appCtx.close();
+        }
     }
     
     @Test public void testBeanNameAware() {
@@ -267,13 +270,17 @@ public class ReloadableSpringServiceTest {
                 SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
                         Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
                         Collections.<ApplicationContextInitializer>emptyList(), null);
-                
-        ReloadableSpringService service1 = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
-        Assert.assertEquals(service1.getId(), "testReloadableSpringService");
-        
-        ReloadableSpringService service2 = appCtx.getBean("testReloadableSpringServiceWithCustomID", ReloadableSpringService.class);
-        Assert.assertEquals(service2.getId(), "CustomID");
-        
+        try {
+            ReloadableSpringService service1 =
+                    appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
+            Assert.assertEquals(service1.getId(), "testReloadableSpringService");
+
+            ReloadableSpringService service2 =
+                    appCtx.getBean("testReloadableSpringServiceWithCustomID", ReloadableSpringService.class);
+            Assert.assertEquals(service2.getId(), "CustomID");
+        } finally {
+            appCtx.close();
+        }
     }
 
 }

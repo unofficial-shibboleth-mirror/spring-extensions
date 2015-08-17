@@ -122,38 +122,43 @@ public class SVNResourceTest {
         Assert.assertTrue(resource.exists());
 
         // CHANGE IF WE CHECKIN A NEW FILE
-        long delta = resource.lastModified() - new DateTime(2013, 12, 31, 16, 59, 06, 500, DateTimeZone.UTC).getMillis();
+        long delta =
+                resource.lastModified() - new DateTime(2013, 12, 31, 16, 59, 06, 500, DateTimeZone.UTC).getMillis();
         Assert.assertTrue(delta < 501 && delta > -501);
 
         Assert.assertTrue(ResourceTestHelper.compare(comparer, resource));
 
     }
-    
-    private Resource getBean(String fileName) {
+
+    private GenericApplicationContext getContext(String fileName) {
         final GenericApplicationContext parentContext = new GenericApplicationContext();
-        parentContext.refresh(); //THIS IS REQUIRED
+        parentContext.refresh(); // THIS IS REQUIRED
         parentContext.getBeanFactory().registerSingleton("theDir", theDir);
-        
+
         final GenericApplicationContext context = new GenericApplicationContext(parentContext);
-        XmlBeanDefinitionReader beanDefinitionReader =
-                new XmlBeanDefinitionReader(context);
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions(fileName);
-        context.refresh(); // Gotta have this line or the property replacement won't work.
-        
-        Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
-        Assert.assertEquals(beans.size(), 1);
+        context.refresh(); 
 
-        return beans.iterator().next();
+        return context;
+
     }
-    
+
     @Test public void testSpringLoad() {
-        
-        Resource r = getBean("classpath:data/SVNBean.xml");
-        
-        Assert.assertTrue(r.exists());
+
+        final GenericApplicationContext context = getContext("classpath:data/SVNBean.xml");
+        try {
+            final Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
+            Assert.assertEquals(beans.size(), 1);
+
+            final Resource r = beans.iterator().next();
+
+            Assert.assertTrue(r.exists());
+        } finally {
+            ((GenericApplicationContext)context.getParent()).close();
+            context.close();
+        }
     }
-
-
 }

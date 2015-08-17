@@ -104,36 +104,41 @@ public class HTTPResourceTest {
         Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
     }
 
-    private TestHTTPResource getBean(String fileName, File theDir) {
+    private GenericApplicationContext getContext(String fileName, File theDir) {
         final GenericApplicationContext parentContext = new GenericApplicationContext();
-        parentContext.refresh(); //THIS IS REQUIRED
+        parentContext.refresh(); // THIS IS REQUIRED
         parentContext.getBeanFactory().registerSingleton("theDir", theDir);
-        
+
         final GenericApplicationContext context = new GenericApplicationContext(parentContext);
-        XmlBeanDefinitionReader beanDefinitionReader =
-                new XmlBeanDefinitionReader(context);
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions(fileName);
-        context.refresh(); // Gotta have this line or the property replacement won't work.
-        
-        Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
-        Assert.assertEquals(beans.size(), 1);
-
-        return beans.iterator().next();
+        context.refresh();
+        return context;
     }
 
     @Test public void springLoadMemCache() throws IOException {
-        
-        final TestHTTPResource what = getBean("classpath:data/MemBackedHTTPBean.xml", null);
-        
-        Assert.assertTrue(what.exists());
-        Assert.assertNotNull(what.getLasteCacheResponseStatus());
-        Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
 
-        Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
+        final GenericApplicationContext context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
+        try {
+
+            Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
+            Assert.assertEquals(beans.size(), 1);
+
+            final TestHTTPResource what = beans.iterator().next();
+
+            Assert.assertTrue(what.exists());
+            Assert.assertNotNull(what.getLasteCacheResponseStatus());
+            Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
+
+            Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
+        } finally {
+            ((GenericApplicationContext) context.getParent()).close();
+            context.close();
+        }
     }
-    
+
     private void emptyDir(File dir) {
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
@@ -144,14 +149,18 @@ public class HTTPResourceTest {
         dir.delete();
     }
 
-    @Test public void springLoadFileCache() throws IOException  {
+    @Test public void springLoadFileCache() throws IOException {
         File theDir = null;
-        Path p = Files.createTempDirectory("HTTPResourceTest");
+        final Path p = Files.createTempDirectory("HTTPResourceTest");
+        GenericApplicationContext context = null;
         try {
             theDir = p.toFile();
-    
-            final TestHTTPResource what = getBean("classpath:data/FileBackedHTTPBean.xml", theDir);
-            
+            context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
+            Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
+            Assert.assertEquals(beans.size(), 1);
+
+            final TestHTTPResource what = beans.iterator().next();
+
             Assert.assertTrue(what.exists());
             Assert.assertNotNull(what.getLasteCacheResponseStatus());
             Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
@@ -160,6 +169,10 @@ public class HTTPResourceTest {
         } finally {
             if (null != theDir) {
                 emptyDir(theDir);
+            }
+            if (null != context) {
+                ((GenericApplicationContext) context.getParent()).close();
+                context.close();
             }
         }
     }

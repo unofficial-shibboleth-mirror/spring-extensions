@@ -25,7 +25,6 @@ import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.MutablePropertySources;
@@ -44,10 +43,14 @@ import org.testng.annotations.Test;
  */
 public class FileBackedHTTPResourceTest {
 
-    private final String existsURL = "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/document.xml?view=co";
-    private final String nonExistsURL = "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/documxent.xml?view=co";
+    private final String existsURL =
+            "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/document.xml?view=co";
+
+    private final String nonExistsURL =
+            "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/documxent.xml?view=co";
+
     private String existsFile;
-   
+
     private HttpClient client;
 
     @BeforeClass public void setupClient() throws Exception {
@@ -55,38 +58,39 @@ public class FileBackedHTTPResourceTest {
         File file = File.createTempFile("FileBackedHTTPResourceTest1", ".xml");
         existsFile = file.getAbsolutePath();
     }
-    
+
     @AfterClass public void deleteFile() {
         File f = new File(existsFile);
         if (f.exists()) {
             f.delete();
         }
     }
-    
-    @SuppressWarnings("deprecation")
-    @Test public void existsTest() throws IOException {
-       final Resource existsResource = new FileBackedHTTPResource(existsFile, client, existsURL);
-       final Resource notExistsResource = new FileBackedHTTPResource(client, nonExistsURL,  new FileSystemResource(existsFile+"ZZZ"));
-        
+
+    @SuppressWarnings("deprecation") @Test public void existsTest() throws IOException {
+        final Resource existsResource = new FileBackedHTTPResource(existsFile, client, existsURL);
+        final Resource notExistsResource =
+                new FileBackedHTTPResource(client, nonExistsURL, new FileSystemResource(existsFile + "ZZZ"));
+
         Assert.assertTrue(existsResource.exists());
         Assert.assertFalse(notExistsResource.exists());
     }
-    
-    @SuppressWarnings("deprecation")
-    @Test public void testCompare() throws IOException {
-        
-        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(client, existsURL, new FileSystemResource(existsFile)), new ClassPathResource("data/document.xml")));
+
+    @SuppressWarnings("deprecation") @Test public void testCompare() throws IOException {
+
+        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(client, existsURL,
+                new FileSystemResource(existsFile)), new ClassPathResource("data/document.xml")));
         // With that done compare via the backup
-        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(existsFile, client, nonExistsURL), new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(existsFile, client, nonExistsURL),
+                new ClassPathResource("data/document.xml")));
     }
-    
+
     public GenericApplicationContext getContext(String location) {
-        
+
         MockPropertySource mockEnvVars = new MockPropertySource();
         mockEnvVars.setProperty("file.name", existsFile);
         mockEnvVars.setProperty("the.url", existsURL);
 
-        GenericApplicationContext context = new FilesystemGenericApplicationContext() ;
+        GenericApplicationContext context = new FilesystemGenericApplicationContext();
         context.setDisplayName("ApplicationContext");
 
         MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
@@ -98,7 +102,7 @@ public class FileBackedHTTPResourceTest {
         placeholderConfig.setPropertySources(propertySources);
 
         context.addBeanFactoryPostProcessor(placeholderConfig);
-        
+
         SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
@@ -108,30 +112,50 @@ public class FileBackedHTTPResourceTest {
 
         context.refresh();
 
-        
         return context;
-       
+
     }
-    
+
     @Test public void testParsingOld() throws IOException {
-        
-      final ApplicationContext context = getContext("data/oldStyle.xml");
-        
-        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedFileString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-        Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+
+        final GenericApplicationContext context = getContext("data/oldStyle.xml");
+
+        try {
+
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedFileString",
+                    FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context
+                    .getBean("numberedString", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+
+        } finally {
+            context.close();
+        }
     }
-    
+
     @Test public void testParsingNew() throws IOException {
-        
-        final ApplicationContext context = getContext("data/newStyle.xml");
-          
-          Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-          Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-          Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedString", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-          Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class), new ClassPathResource("data/document.xml")));
-      }
+
+        final GenericApplicationContext context = getContext("data/newStyle.xml");
+        try {
+
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context
+                    .getBean("numberedString", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class),
+                    new ClassPathResource("data/document.xml")));
+        } finally {
+            context.close();
+        }
+    }
 
 }

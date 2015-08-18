@@ -68,7 +68,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         if (null == resource.getFile()) {
             throw new IOException("Backing resource has to be file backed");
         }
-        log.warn("This constructor is deprecrated, use backingFile=\"/path/to/file\" instead "
+        log.warn("This constructor is deprecated, use backingFile=\"/path/to/file\" instead "
                 + "of resource=\"file:///path/to/file\"");
     }
 

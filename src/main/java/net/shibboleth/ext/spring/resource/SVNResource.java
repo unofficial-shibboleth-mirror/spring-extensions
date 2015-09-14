@@ -250,7 +250,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         }
 
         if (getFile().exists()) {
-            log.debug("Determing last modification date of revision {}", newRevision.getNumber());
+            log.debug("Determining last modification date of revision {}", newRevision.getNumber());
             lastModified = getLastModificationForRevision(newRevision);
         }
     }

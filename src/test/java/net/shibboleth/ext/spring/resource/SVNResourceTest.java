@@ -96,7 +96,7 @@ public class SVNResourceTest {
         theDir = null;
     }
 
-    @Test public void testRevision() throws IOException, ParseException {
+    @Test(enabled=false) public void testRevision() throws IOException, ParseException {
         final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION, FILENAME);
         Assert.assertTrue(resource.exists());
 
@@ -111,13 +111,13 @@ public class SVNResourceTest {
         Assert.assertTrue(ResourceTestHelper.compare(other, resource));
     }
 
-    @Test public void testNotExist() {
+    @Test(enabled=false) public void testNotExist() {
         final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION - 50, FILENAME);
         Assert.assertFalse(resource.exists());
 
     }
 
-    @Test public void testMain() throws IOException {
+    @Test(enabled=false) public void testMain() throws IOException {
         final Resource resource = new SVNResource(clientManager, url, theDir, -1, FILENAME);
         Assert.assertTrue(resource.exists());
 
@@ -146,7 +146,7 @@ public class SVNResourceTest {
 
     }
 
-    @Test public void testSpringLoad() {
+    @Test(enabled=false) public void testSpringLoad() {
 
         final GenericApplicationContext context = getContext("classpath:data/SVNBean.xml");
         try {

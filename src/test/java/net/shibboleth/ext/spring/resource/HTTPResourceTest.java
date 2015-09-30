@@ -42,7 +42,7 @@ import org.testng.annotations.Test;
 public class HTTPResourceTest {
 
     private final String existsURL =
-            "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/document.xml?view=co";
+            "https://git.shibboleth.net/view/?p=spring-extensions.git;a=blob_plain;f=src/test/resources/data/document.xml;h=e8ec7c0d20c7a6b8193e1868398cda0c28df45ed;hb=HEAD";
 
     private final String nonExistsURL =
             "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/documxent.xml?view=co";

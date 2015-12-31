@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.factory;
 
+import java.io.InputStream;
+
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 
@@ -135,7 +137,9 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
         }
 
         if (null != resource) {
-            script = StringSupport.inputStreamToString(resource.getInputStream(), null);
+            try (InputStream is = resource.getInputStream()) {
+                script = StringSupport.inputStreamToString(is, null);
+            }
         }
         log.debug("{} Script: {}", sourceId, script);
 

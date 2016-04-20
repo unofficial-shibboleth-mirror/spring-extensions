@@ -245,13 +245,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         } catch (IOException e) {
             throw new IOException("Error contacting remote resource " + resourceURL.toString(), e);
         } finally {
-            try {
-                if (httpResponse != null && httpResponse instanceof CloseableHttpResponse) {
-                    ((CloseableHttpResponse)httpResponse).close();
-                }
-            } catch (final IOException e) {
-                log.error("Error closing HTTP response from {}", resourceURL.toExternalForm(), e);
-            }
+            closeResponse(httpResponse);
         }
     }
 
@@ -344,6 +338,21 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
     
     /**
+     * Close the HTTP response.
+     * 
+     * @param response the HTTP response
+     */
+    protected void closeResponse(@Nullable final HttpResponse response) {
+        try {
+            if (response != null && response instanceof CloseableHttpResponse) {
+                ((CloseableHttpResponse) response).close();
+            }
+        } catch (final IOException e) {
+            log.error("Error closing HTTP response from '{}'", resourceURL.toExternalForm(), e);
+        }
+    }
+    
+    /**
      * A wrapper around the entity content {@link InputStream} represented by an {@link HttpResponse}
      * that closes the stream and the HttpResponse when {@link #close()} is invoked.
      */
@@ -412,21 +421,6 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         /** {@inheritDoc} */
         public long skip(long n) throws IOException {
             return stream.skip(n);
-        }
-    }
-
-    /**
-     * Close the HTTP response.
-     * 
-     * @param response the HTTP response
-     */
-    protected void closeResponse(@Nullable final HttpResponse response) {
-        try {
-            if (response != null && response instanceof CloseableHttpResponse) {
-                ((CloseableHttpResponse) response).close();
-            }
-        } catch (final IOException e) {
-            log.error("Error closing HTTP response from '{}'", resourceURL.toExternalForm(), e);
         }
     }
 

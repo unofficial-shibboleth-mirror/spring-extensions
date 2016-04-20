@@ -162,6 +162,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
             String errMsg =
                     "Non-ok status code " + httpStatusCode + " returned from remote resource " + resourceURL;
             log.error(errMsg);
+            closeResponse(response);
             throw new IOException(errMsg);
         }
 
@@ -411,6 +412,21 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         /** {@inheritDoc} */
         public long skip(long n) throws IOException {
             return stream.skip(n);
+        }
+    }
+
+    /**
+     * Close the HTTP response.
+     * 
+     * @param response the HTTP response
+     */
+    protected void closeResponse(@Nullable final HttpResponse response) {
+        try {
+            if (response != null && response instanceof CloseableHttpResponse) {
+                ((CloseableHttpResponse) response).close();
+            }
+        } catch (final IOException e) {
+            log.error("Error closing HTTP response from '{}'", resourceURL.toExternalForm(), e);
         }
     }
 

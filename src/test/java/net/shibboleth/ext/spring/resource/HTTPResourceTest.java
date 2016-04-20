@@ -28,6 +28,7 @@ import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClien
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.cache.CacheResponseStatus;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
@@ -174,6 +175,24 @@ public class HTTPResourceTest {
                 ((GenericApplicationContext) context.getParent()).close();
                 context.close();
             }
+        }
+    }
+
+    @Test(timeOut = 2000) public void testCloseResponse() {
+        // See IDP-969. This test will timeout if the response is not closed.
+        try (final PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager()) {
+            final HTTPResource notExistsResource = new HTTPResource(client, nonExistsURL);
+            int count = 0;
+            while (count <= connMgr.getDefaultMaxPerRoute()) {
+                count++;
+                try {
+                    notExistsResource.getInputStream();
+                } catch (IOException e) {
+                    // expected because resource does not exist
+                }
+            }
+        } catch (IOException e) {
+            Assert.fail("Bad URL", e);
         }
     }
 }

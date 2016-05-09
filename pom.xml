@@ -134,8 +134,14 @@
           <artifactId>spring-test</artifactId>
           <scope>test</scope>
         </dependency>
-        
 
     </dependencies>
+
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>dav:${shibboleth.site.url}/${project.artifactId}/${project.version}/</url>
+        </site>
+    </distributionManagement>
 
 </project>

@@ -21,7 +21,6 @@
     </description>
 
     <properties>
-        <svn.relative.location>utilities/spring-extensions</svn.relative.location>
         <java-support.version>7.3.0-SNAPSHOT</java-support.version>
     </properties>
 

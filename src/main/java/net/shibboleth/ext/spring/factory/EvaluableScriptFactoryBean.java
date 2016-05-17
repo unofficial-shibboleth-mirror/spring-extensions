@@ -61,7 +61,7 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
      * 
      * @param what the resource to set.
      */
-    public void setResource(Resource what) {
+    public void setResource(final Resource what) {
         resource = what;
     }
 
@@ -79,7 +79,7 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
      * 
      * @param what the script to set.
      */
-    public void setScript(String what) {
+    public void setScript(final String what) {
         script = what;
     }
 
@@ -97,7 +97,7 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
      * 
      * @param what the Id to set.
      */
-    public void setSourceId(String what) {
+    public void setSourceId(final String what) {
         sourceId = what;
     }
 
@@ -115,7 +115,7 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
      * 
      * @param what the engine name to set.
      */
-    public void setEngineName(String what) {
+    public void setEngineName(final String what) {
         engineName = what;
     }
 

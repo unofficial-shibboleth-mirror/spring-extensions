@@ -97,7 +97,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy host.
      * @param host The proxyHost to set.
      */
-    public void setProxyHost(String host) {
+    public void setProxyHost(final String host) {
         proxyHost = host;
         proxySet = true;
     }
@@ -113,7 +113,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy port.
      * @param port The proxyPort to set.
      */
-    public void setProxyPort(int port) {
+    public void setProxyPort(final int port) {
         proxyPort = port;
         proxySet = true;
     }
@@ -129,7 +129,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy user name.
      * @param userName The proxyUserName to set.
      */
-    public void setProxyUserName(String userName) {
+    public void setProxyUserName(final String userName) {
         proxyUserName = userName;
         proxySet = true;
     }
@@ -145,7 +145,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy password.
      * @param password The proxyPassword to set.
      */
-    public void setProxyPassword(String password) {
+    public void setProxyPassword(final String password) {
         proxyPassword = password;
         proxySet = true;
     }

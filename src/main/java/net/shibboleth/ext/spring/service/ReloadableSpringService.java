@@ -412,7 +412,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /** {@inheritDoc} */
-    @Override public void setApplicationContext(ApplicationContext applicationContext) {
+    @Override public void setApplicationContext(final ApplicationContext applicationContext) {
         setParentContext(applicationContext);
     }
 

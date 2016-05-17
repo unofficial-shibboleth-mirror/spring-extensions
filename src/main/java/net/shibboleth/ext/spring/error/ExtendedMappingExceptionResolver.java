@@ -71,7 +71,8 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
     
     /** {@inheritDoc} */
     @Override
-    protected ModelAndView getModelAndView(String viewName, Exception ex, HttpServletRequest request) {
+ protected ModelAndView getModelAndView(final String viewName, final Exception ex,
+            final HttpServletRequest request) {
         
         LoggerFactory.getLogger(ex.getClass()).error("", ex);
         

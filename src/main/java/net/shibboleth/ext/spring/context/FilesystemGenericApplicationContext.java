@@ -70,7 +70,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      * paths are treated as absolute if they are in fact absolute.</p>
      */
     @Override
-    protected Resource getResourceByPath(String path) {
+    protected Resource getResourceByPath(final String path) {
         final Resource r = new FileSystemResource(path);
         if (r.exists()) {
             return r;

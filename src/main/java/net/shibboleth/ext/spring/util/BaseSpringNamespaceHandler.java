@@ -78,7 +78,8 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @return the decorated bean definition
      */
     @Override
-    public BeanDefinitionHolder decorate(Node node, BeanDefinitionHolder definition, ParserContext parserContext) {
+ public BeanDefinitionHolder decorate(final Node node, final BeanDefinitionHolder definition,
+            final ParserContext parserContext) {
         return findDecoratorForNode(node).decorate(node, definition, parserContext);
     }
 
@@ -92,7 +93,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @return the bean definition created from the given element
      */
     @Override
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    public BeanDefinition parse(final Element element, final ParserContext parserContext) {
         return findParserForElement(element).parse(element, parserContext);
     }
 
@@ -104,7 +105,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the parser for the given bean element
      */
-    protected BeanDefinitionParser findParserForElement(Element element) {
+    protected BeanDefinitionParser findParserForElement(final Element element) {
         BeanDefinitionParser parser = null;
 
         QName typeName = DOMTypeSupport.getXSIType(element);
@@ -140,7 +141,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the decorator for the given node
      */
-    protected BeanDefinitionDecorator findDecoratorForNode(Node node) {
+    protected BeanDefinitionDecorator findDecoratorForNode(final Node node) {
         BeanDefinitionDecorator decorator = null;
 
         if (node instanceof Element) {
@@ -170,7 +171,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @param elementNameOrType the element name or schema type the parser is for
      * @param parser the parser to register
      */
-    protected void registerBeanDefinitionParser(QName elementNameOrType, BeanDefinitionParser parser) {
+    protected void registerBeanDefinitionParser(final QName elementNameOrType, final BeanDefinitionParser parser) {
         parsers.put(elementNameOrType, parser);
     }
 
@@ -181,7 +182,8 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @param elementNameOrType the element name or schema type the parser is for
      * @param decorator the decorator to register
      */
-    protected void registerBeanDefinitionDecorator(QName elementNameOrType, BeanDefinitionDecorator decorator) {
+    protected void registerBeanDefinitionDecorator(final QName elementNameOrType,
+            final BeanDefinitionDecorator decorator) {
         decorators.put(elementNameOrType, decorator);
     }
 
@@ -192,7 +194,8 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * @param attributeName the name of the attribute to register the decorator for
      * @param decorator the decorator to register
      */
-    protected void registerBeanDefinitionDecoratorForAttribute(QName attributeName, BeanDefinitionDecorator decorator) {
+    protected void registerBeanDefinitionDecoratorForAttribute(final QName attributeName,
+            final BeanDefinitionDecorator decorator) {
         attributeDecorators.put(attributeName, decorator);
     }
 }

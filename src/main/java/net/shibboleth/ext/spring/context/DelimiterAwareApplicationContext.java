@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 public class DelimiterAwareApplicationContext extends DeferPlaceholderFileSystemXmlWebApplicationContext {
 
     /** {@inheritDoc} */
-    @Override public void setConfigLocation(String location) {
+    @Override public void setConfigLocation(final String location) {
         setConfigLocations(StringUtils.tokenizeToStringArray(location, getDelimiters()));
     }
 

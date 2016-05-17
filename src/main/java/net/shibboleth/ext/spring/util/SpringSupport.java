@@ -185,7 +185,7 @@ public final class SpringSupport {
      * @param registry the registry to populate
      */
     public static void
-            parseNativeElement(@Nonnull final Element springBeans, @Nullable BeanDefinitionRegistry registry) {
+            parseNativeElement(@Nonnull final Element springBeans, @Nullable final BeanDefinitionRegistry registry) {
         final XmlBeanDefinitionReader definitionReader = new XmlBeanDefinitionReader(registry);
         definitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         definitionReader.setNamespaceAware(true);

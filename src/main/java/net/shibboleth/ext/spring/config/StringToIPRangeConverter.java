@@ -29,7 +29,7 @@ public class StringToIPRangeConverter implements Converter<String,IPRange> {
 
     /** {@inheritDoc} */
     @Override
-    public IPRange convert(String source) {
+    public IPRange convert(final String source) {
         return IPRange.parseCIDRBlock(source);
     }
     

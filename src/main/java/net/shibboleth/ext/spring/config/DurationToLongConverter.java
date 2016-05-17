@@ -37,7 +37,7 @@ public class DurationToLongConverter implements Converter<String,Long>, Conditio
     @Nonnull private Logger log = LoggerFactory.getLogger(DurationToLongConverter.class);
 
     /** {@inheritDoc} */
-    @Override public Long convert(String source) {
+    @Override public Long convert(final String source) {
         if (source.startsWith("P")) {
             return DOMTypeSupport.durationToLong(source.trim());
         } else if (source.startsWith("-P")) {
@@ -52,7 +52,7 @@ public class DurationToLongConverter implements Converter<String,Long>, Conditio
     }
 
     /** {@inheritDoc} */
-    @Override public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+    @Override public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
         return targetType.hasAnnotation(Duration.class);
     }
 

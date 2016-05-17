@@ -30,7 +30,7 @@ import com.google.common.base.Predicates;
 public class StringBooleanToPredicateConverter implements Converter<String,Predicate> {
 
     /** {@inheritDoc} */
-    public Predicate convert(String source) {
+    public Predicate convert(final String source) {
         return Boolean.valueOf(StringSupport.trimOrNull(source)) ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
     }
     

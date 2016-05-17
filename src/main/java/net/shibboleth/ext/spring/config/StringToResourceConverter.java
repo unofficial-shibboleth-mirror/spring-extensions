@@ -40,14 +40,14 @@ public class StringToResourceConverter implements Converter<String, Resource>, A
 
     /** {@inheritDoc} */
     @Override
-    public Resource convert(String source) {
+    public Resource convert(final String source) {
         final ResourceLoader loader = applicationContext == null ? new DefaultResourceLoader() : applicationContext;
         return ResourceHelper.of(loader.getResource(source));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationContext(ApplicationContext context) {
+    public void setApplicationContext(final ApplicationContext context) {
         applicationContext = context;
     }
 

@@ -149,7 +149,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @param fileName the name
      */
-    public void setFilename(String fileName) {
+    public void setFilename(final String fileName) {
         resourceFileName = StringSupport.trimOrNull(fileName);
         if (resourceFileName == null) {
             log.error("SVN working copy resource file name may not be null or empty");
@@ -186,7 +186,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws IOException thrown if the file is invalid
      */
-    protected void checkWorkingCopyDirectory(File directory) throws IOException {
+    protected void checkWorkingCopyDirectory(final File directory) throws IOException {
         if (directory == null) {
             log.error("SVN working copy directory cannot be null");
             throw new IOException("SVN working copy directory cannot be null");
@@ -301,7 +301,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws IOException thrown if there is a problem getting the last modified time
      */
-    private DateTime getLastModificationForRevision(SVNRevision revision) throws IOException {
+    private DateTime getLastModificationForRevision(final SVNRevision revision) throws IOException {
         try {
             final SVNStatusHandler handler = new SVNStatusHandler();
             clientManager.getStatusClient().doStatus(getFile(), revision, SVNDepth.INFINITY, true, true, false, false,
@@ -413,13 +413,13 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
     }
 
     /** {@inheritDoc} */
-    @Override public Resource createRelative(String relativePath) throws IOException {
+    @Override public Resource createRelative(final String relativePath) throws IOException {
         throw new IOException("Cannot support relative open on SVN resources");
     }
 
     /** {@inheritDoc} */
     @Override public net.shibboleth.utilities.java.support.resource.Resource
-            createRelativeResource(String relativePath) throws IOException {
+            createRelativeResource(final String relativePath) throws IOException {
         throw new IOException("Cannot support relative open on SVN resources");
     }
 
@@ -435,7 +435,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
     }
 
     /** {@inheritDoc} */
-    @Override public void setBeanName(String name) {
+    @Override public void setBeanName(final String name) {
         // For some reason Spring will call this after initialization.
         if (!isInitialized()) {
             setId(name);
@@ -458,7 +458,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         }
 
         /** {@inheritDoc} */
-        @Override public void handleStatus(SVNStatus currentStatus) throws SVNException {
+        @Override public void handleStatus(final SVNStatus currentStatus) throws SVNException {
             status = currentStatus;
         }
     }

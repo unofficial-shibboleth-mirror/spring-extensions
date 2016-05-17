@@ -129,7 +129,7 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @throws IOException if an error happens. If the backing file might have been corrupted we delete it.
      */
 
-    protected InputStream saveAndClone(InputStream input) throws IOException {
+    protected InputStream saveAndClone(final InputStream input) throws IOException {
         FileOutputStream out = new FileOutputStream(backingResource.getFile());
         try {
             log.debug("{}: Copying file.", getDescription());

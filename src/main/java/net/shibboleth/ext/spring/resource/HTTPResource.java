@@ -121,7 +121,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * http://hc.apache.org/httpcomponents-client-ga/tutorial/html/caching.html
      * @param context the context of the request
      */
-    protected void reportCachingStatus(HttpCacheContext context) {
+    protected void reportCachingStatus(final HttpCacheContext context) {
         CacheResponseStatus responseStatus = context.getCacheResponseStatus();
         if (null == responseStatus) {
             log.debug("Non caching client provided");
@@ -252,11 +252,11 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /**
      * Send a Head to the client and interrogate the response for a particular response header.
      * 
-     * @param what the repsonse header to look at
+     * @param what the response header to look at
      * @return the value of that response, or null if things failed
      * @throws IOException from lower levels.
      */
-    @Nullable protected String getResponseHeader(String what) throws IOException {
+    @Nullable protected String getResponseHeader(final String what) throws IOException {
         final HttpResponse response;
 
         log.debug("Attempting to fetch remote resource as '{}'", resourceURL);
@@ -389,7 +389,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         }
 
         /** {@inheritDoc} */
-        public void mark(int readLimit) {
+        public void mark(final int readLimit) {
             stream.mark(readLimit);
         }
 
@@ -404,12 +404,12 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         }
 
         /** {@inheritDoc} */
-        public int read(byte[] b) throws IOException {
+        public int read(final byte[] b) throws IOException {
             return stream.read(b);
         }
 
         /** {@inheritDoc} */
-        public int read(byte[] b, int off, int len) throws IOException {
+        public int read(final byte[] b, final int off, final int len) throws IOException {
             return stream.read(b, off, len);
         }
 
@@ -419,7 +419,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         }
 
         /** {@inheritDoc} */
-        public long skip(long n) throws IOException {
+        public long skip(final long n) throws IOException {
             return stream.skip(n);
         }
     }

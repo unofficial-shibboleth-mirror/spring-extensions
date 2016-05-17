@@ -29,7 +29,7 @@ public class DurationPropertyEditor extends PropertyEditorSupport {
 
     /** {@inheritDoc} */
     @Override
-    public void setAsText(String text) {
+    public void setAsText(final String text) {
 
         if (text.startsWith("P")) {
             setValue(DOMTypeSupport.getDataTypeFactory().newDuration(text.trim()));

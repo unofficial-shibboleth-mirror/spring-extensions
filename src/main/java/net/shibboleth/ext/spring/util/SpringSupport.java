@@ -125,7 +125,7 @@ public final class SpringSupport {
         beanDefinitionReader.loadBeanDefinitions(configurationResources.toArray(new Resource[] {}));
 
         if (initializers != null) {
-            for (ApplicationContextInitializer initializer : initializers) {
+            for (final ApplicationContextInitializer initializer : initializers) {
                 initializer.initialize(context);
             }
         }
@@ -152,7 +152,7 @@ public final class SpringSupport {
         }
 
         final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
-        for (Element e : elements) {
+        for (final Element e : elements) {
             if (e != null) {
                 definitions.add(parseCustomElement(e, parserContext));
             }

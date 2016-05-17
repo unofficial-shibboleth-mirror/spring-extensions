@@ -93,7 +93,7 @@
     <module name="EqualsAvoidNull"/>
     <module name="ModifiedControlVariable"/>
     <module name="FinalParameters">
-      <property name="tokens" value="METHOD_DEF,CTOR_DEF"/>
+      <property name="tokens" value="METHOD_DEF,CTOR_DEF,LITERAL_CATCH"/>
     </module>
   </module>
   <module name="SuppressionCommentFilter">

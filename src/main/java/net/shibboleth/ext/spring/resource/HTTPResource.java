@@ -109,7 +109,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @return a new instance of {@link HttpCacheContext}
      */
     protected HttpCacheContext buildHttpClientContext() {
-        HttpCacheContext context = HttpCacheContext.create();
+        final HttpCacheContext context = HttpCacheContext.create();
         if (credentialsProvider != null) {
             context.setCredentialsProvider(credentialsProvider);
         }
@@ -122,7 +122,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param context the context of the request
      */
     protected void reportCachingStatus(final HttpCacheContext context) {
-        CacheResponseStatus responseStatus = context.getCacheResponseStatus();
+        final CacheResponseStatus responseStatus = context.getCacheResponseStatus();
         if (null == responseStatus) {
             log.debug("Non caching client provided");
             return;
@@ -156,10 +156,10 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         log.debug("Attempting to get data from remote resource '{}'", resourceURL);
         response = httpClient.execute(httpGet, context);
         reportCachingStatus(context);
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
-            String errMsg =
+            final String errMsg =
                     "Non-ok status code " + httpStatusCode + " returned from remote resource " + resourceURL;
             log.error(errMsg);
             closeResponse(response);
@@ -189,7 +189,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         } catch (final IOException e) {
             return false;
         }
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         return httpStatusCode == HttpStatus.SC_OK;
     }
@@ -233,7 +233,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @throws IOException thrown if there is a problem contacting the resource
      */
     protected HttpResponse getResourceHeaders() throws IOException {
-        HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
+        final HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
 
         HttpResponse httpResponse = null;
         try {
@@ -261,7 +261,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
         log.debug("Attempting to fetch remote resource as '{}'", resourceURL);
         response = getResourceHeaders();
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             final String errMsg =
@@ -280,7 +280,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** {@inheritDoc} */
     @Override public long contentLength() throws IOException {
 
-        String response = getResponseHeader(HttpHeaders.CONTENT_LENGTH);
+        final String response = getResponseHeader(HttpHeaders.CONTENT_LENGTH);
         if (null != response) {
             return Long.parseLong(response);
         }
@@ -292,7 +292,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} */
     @Override public long lastModified() throws IOException {
-        String response = getResponseHeader(HttpHeaders.LAST_MODIFIED);
+        final String response = getResponseHeader(HttpHeaders.LAST_MODIFIED);
         if (null != response) {
             return DateUtils.parseDate(response).getTime();
         }
@@ -304,7 +304,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} Based on {@link org.springframework.core.io.UrlResource}. */
     @Override public HTTPResource createRelative(final String relativePath) throws IOException {
-        String path;
+        final String path;
         if (relativePath.startsWith("/")) {
             path = relativePath.substring(1);
         } else {

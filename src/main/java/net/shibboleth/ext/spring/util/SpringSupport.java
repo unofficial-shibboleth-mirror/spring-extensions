@@ -151,7 +151,7 @@ public final class SpringSupport {
             return null;
         }
 
-        ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
+        final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
         for (Element e : elements) {
             if (e != null) {
                 definitions.add(parseCustomElement(e, parserContext));
@@ -259,7 +259,7 @@ public final class SpringSupport {
      * @return list of values, never null
      */
     @Nonnull public static ManagedList<String> getAttributeValueAsManagedList(@Nullable final Attr attribute) {
-        List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
+        final List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
         final ManagedList<String> managedList = new ManagedList<>(valuesAsList.size());
         managedList.addAll(valuesAsList);
         return managedList;

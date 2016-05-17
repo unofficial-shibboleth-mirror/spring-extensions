@@ -57,7 +57,7 @@ public class SchemaTypeAwareBeanDefinitionParserDelegate extends BeanDefinitionP
             namespaceUri = DOMTypeSupport.getXSIType(element).getNamespaceURI();
         }
 
-        NamespaceHandler handler = getReaderContext().getNamespaceHandlerResolver().resolve(namespaceUri);
+        final NamespaceHandler handler = getReaderContext().getNamespaceHandlerResolver().resolve(namespaceUri);
         if (handler == null) {
             error("Unable to locate NamespaceHandler for namespace [" + namespaceUri + "]", element);
             return null;

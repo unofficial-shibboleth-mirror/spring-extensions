@@ -194,7 +194,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         }
 
         if (!directory.exists()) {
-            boolean created = directory.mkdirs();
+            final boolean created = directory.mkdirs();
             if (!created) {
                 final String msg = "SVN working copy directory " + directory.getAbsolutePath()
                         + " does not exist and could not be created"; 
@@ -234,7 +234,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     protected void checkoutOrUpdateResource() throws IOException {
         log.debug("checking out or updating working copy");
-        SVNRevision newRevision;
+        final SVNRevision newRevision;
 
         if (!workingCopyDirectoryExists()) {
             log.debug("Working copy does not yet exist, checking it out to {}", workingCopyDirectory.getAbsolutePath());
@@ -426,7 +426,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
 
     /** {@inheritDoc} */
     @Override public String getDescription() {
-        StringBuffer sb = new StringBuffer("SVN Resource: ");
+        final StringBuffer sb = new StringBuffer("SVN Resource: ");
         return sb.append(getFullPath()).toString();
     }
 

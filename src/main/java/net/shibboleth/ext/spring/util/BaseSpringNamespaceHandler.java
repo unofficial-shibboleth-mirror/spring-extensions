@@ -108,7 +108,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
     protected BeanDefinitionParser findParserForElement(final Element element) {
         BeanDefinitionParser parser = null;
 
-        QName typeName = DOMTypeSupport.getXSIType(element);
+        final QName typeName = DOMTypeSupport.getXSIType(element);
         if (typeName != null) {
             log.trace("Attempting to find parser for element of type: {}", typeName);
             parser = parsers.get(typeName);

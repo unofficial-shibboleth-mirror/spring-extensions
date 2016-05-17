@@ -79,10 +79,10 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean impl
     /** {@inheritDoc} */
     @Override
     protected HttpClient doCreateInstance() throws Exception {
-        HttpClient client = super.doCreateInstance();
+        final HttpClient client = super.doCreateInstance();
         synchronized(this) {
             if (client instanceof InitializableComponent) {
-                InitializableComponent component = (InitializableComponent) client;
+                final InitializableComponent component = (InitializableComponent) client;
                 if (!component.isInitialized()) {
                    component.initialize(); 
                 }

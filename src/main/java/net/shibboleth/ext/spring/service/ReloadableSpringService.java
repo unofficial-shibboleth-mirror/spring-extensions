@@ -176,7 +176,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         if (!serviceConfigurations.isEmpty()) {
             resourceLastModifiedTimes = new long[serviceConfigurations.size()];
 
-            int numOfResources = serviceConfigurations.size();
+            final int numOfResources = serviceConfigurations.size();
             Resource serviceConfig;
             for (int i = 0; i < numOfResources; i++) {
                 serviceConfig = serviceConfigurations.get(i);
@@ -273,7 +273,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         }
 
         boolean configResourceChanged = false;
-        int numOfResources = serviceConfigurations.size();
+        final int numOfResources = serviceConfigurations.size();
 
         Resource serviceConfig;
         long serviceConfigLastModified;

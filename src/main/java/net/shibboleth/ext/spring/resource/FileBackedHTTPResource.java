@@ -132,7 +132,7 @@ public class FileBackedHTTPResource extends HTTPResource {
      */
 
     protected InputStream saveAndClone(final InputStream input) throws IOException {
-        FileOutputStream out = new FileOutputStream(backingResource.getFile());
+        final FileOutputStream out = new FileOutputStream(backingResource.getFile());
         try {
             log.debug("{}: Copying file.", getDescription());
             ByteStreams.copy(input, out);
@@ -177,7 +177,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.exists();
         }
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode == HttpStatus.SC_OK) {
             return true;

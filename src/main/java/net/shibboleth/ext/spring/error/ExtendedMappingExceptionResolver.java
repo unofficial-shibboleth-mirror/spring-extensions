@@ -65,7 +65,7 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
      *
      * @param extender function to obtain extensions to view model
      */
-    public ExtendedMappingExceptionResolver(@Nonnull Function<HttpServletRequest,Map<String,Object>> extender) {
+    public ExtendedMappingExceptionResolver(@Nonnull final Function<HttpServletRequest,Map<String,Object>> extender) {
         viewModelExtenderFunction = Constraint.isNotNull(extender, "Extender function cannot be null");
     }
     

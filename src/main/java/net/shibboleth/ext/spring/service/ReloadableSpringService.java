@@ -111,7 +111,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * 
      * @param claz The interface being implemented.
      */
-    public ReloadableSpringService(@Nonnull Class<T> claz) {
+    public ReloadableSpringService(@Nonnull final Class<T> claz) {
         this(claz, new ClassBasedServiceStrategy());
     }
 
@@ -121,8 +121,8 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param claz The interface being implemented.
      * @param strategy the strategy to use to look up servicable component to look for.
      */
-    public ReloadableSpringService(@Nonnull Class<T> claz,
-            @Nonnull Function<GenericApplicationContext, ServiceableComponent> strategy) {
+    public ReloadableSpringService(@Nonnull final Class<T> claz,
+            @Nonnull final Function<GenericApplicationContext, ServiceableComponent> strategy) {
         theClaz = Constraint.isNotNull(claz, "Class cannot be null");
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
         factoryPostProcessors = Collections.emptyList();

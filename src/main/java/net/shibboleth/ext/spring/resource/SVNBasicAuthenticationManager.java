@@ -53,7 +53,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * 
      * @param authentications authentications
      */
-    public SVNBasicAuthenticationManager(List<SVNAuthentication> authentications) {
+    public SVNBasicAuthenticationManager(final List<SVNAuthentication> authentications) {
         super(authentications.toArray(new SVNAuthentication[authentications.size()]));
     }
 
@@ -65,7 +65,8 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param passphrase  a password to the private key
      * @param portNumber a port number over which an ssh tunnel is established
      */
-    public SVNBasicAuthenticationManager(String userName, File keyFile, String passphrase, int portNumber) {
+    public SVNBasicAuthenticationManager(final String userName, final File keyFile, final String passphrase,
+            final int portNumber) {
         super(userName, keyFile, passphrase, portNumber);
     }
 
@@ -75,7 +76,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param userName a userName
      * @param password a password
      */
-    public SVNBasicAuthenticationManager(String userName, String password) {
+    public SVNBasicAuthenticationManager(final String userName, final String password) {
         super(userName, password);
     }
 

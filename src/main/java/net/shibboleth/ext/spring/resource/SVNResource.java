@@ -95,8 +95,9 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws BeanCreationException thrown if there is a problem initializing the SVN resource
      */
-    public SVNResource(SVNClientManager svnClientMgr, SVNURL repositoryUrl, File workingCopy, long workingRevision,
-            String resourceFile) {
+    public SVNResource(final SVNClientManager svnClientMgr, final SVNURL repositoryUrl, final File workingCopy,
+            final long workingRevision,
+            final String resourceFile) {
         DAVRepositoryFactory.setup();
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();

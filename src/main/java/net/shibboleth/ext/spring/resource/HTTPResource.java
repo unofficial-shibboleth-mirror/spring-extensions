@@ -82,7 +82,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url) throws IOException {
+    public HTTPResource(@Nonnull final HttpClient client, @NotEmpty @Nonnull final String url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         final String trimmedAddress =
                 Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL must be non empty and non null");
@@ -97,7 +97,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @Nonnull URL url) throws IOException {
+    public HTTPResource(@Nonnull final HttpClient client, @Nonnull final URL url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         resourceURL = Constraint.isNotNull(url, "Provided URL must be non empty and non null");
 
@@ -370,7 +370,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
          * @param httpResponse HTTP method that was invoked
          * @throws IOException if there is a problem getting the entity content input stream from the response
          */
-        public ConnectionClosingInputStream(HttpResponse httpResponse) throws IOException {
+        public ConnectionClosingInputStream(final HttpResponse httpResponse) throws IOException {
             response = httpResponse;
             stream = response.getEntity().getContent();
         }

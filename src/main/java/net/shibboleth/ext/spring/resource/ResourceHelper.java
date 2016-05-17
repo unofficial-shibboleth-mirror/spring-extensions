@@ -42,7 +42,7 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * 
      * @param theResource the spring resource;
      */
-    private ResourceHelper(@Nonnull Resource theResource) {
+    private ResourceHelper(@Nonnull final Resource theResource) {
 
         springResource = Constraint.isNotNull(theResource, "provided Spring Resource should not be null");
     }

@@ -39,7 +39,7 @@ public class SchemaTypeAwareBeanDefinitionParserDelegate extends BeanDefinitionP
      * 
      * @param readerContext current XML reader context
      */
-    public SchemaTypeAwareBeanDefinitionParserDelegate(XmlReaderContext readerContext) {
+    public SchemaTypeAwareBeanDefinitionParserDelegate(final XmlReaderContext readerContext) {
         super(readerContext);
     }
 

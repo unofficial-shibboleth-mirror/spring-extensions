@@ -97,6 +97,7 @@
     </module>
     <module name="FinalLocalVariable">
       <property name="tokens" value="PARAMETER_DEF,VARIABLE_DEF"/>
+      <property name="validateEnhancedForLoopVariable" value="true"/>
     </module>
   </module>
   <module name="SuppressionCommentFilter">

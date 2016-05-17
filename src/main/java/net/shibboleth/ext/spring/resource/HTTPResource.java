@@ -186,7 +186,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         final HttpResponse response;
         try {
             response = getResourceHeaders();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
         int httpStatusCode = response.getStatusLine().getStatusCode();
@@ -213,7 +213,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     @Override public URI getURI() throws IOException {
         try {
             return resourceURL.toURI();
-        } catch (URISyntaxException ex) {
+        } catch (final URISyntaxException ex) {
             throw new NestedIOException("Invalid URI [" + resourceURL + "]", ex);
         }
     }
@@ -242,7 +242,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
             reportCachingStatus(context);
             EntityUtils.consume(httpResponse.getEntity());
             return httpResponse;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IOException("Error contacting remote resource " + resourceURL.toString(), e);
         } finally {
             closeResponse(httpResponse);

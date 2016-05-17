@@ -115,7 +115,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             checkWorkingCopyDirectory(workingCopy);
             workingCopyDirectory = workingCopy;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new BeanCreationException(e.getMessage());
         }
 
@@ -133,7 +133,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
                 log.error("Resource file " + resourceFile + " does not exist in SVN working copy directory "
                         + workingCopy.getAbsolutePath());
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new BeanCreationException(e.getMessage());
         }
     }
@@ -362,7 +362,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             checkoutOrUpdateResource();
             return getFile().exists();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
     }
@@ -392,7 +392,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             return new URI(getProtocol(), null, remoteRepository.getHost(), remoteRepository.getPort(), getFullPath(),
                     null, null);
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IOException(e);
         }
     }

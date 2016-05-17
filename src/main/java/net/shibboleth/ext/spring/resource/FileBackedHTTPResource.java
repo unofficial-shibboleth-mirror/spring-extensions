@@ -137,7 +137,7 @@ public class FileBackedHTTPResource extends HTTPResource {
             log.debug("{}: Copying file.", getDescription());
             ByteStreams.copy(input, out);
             log.debug("{}: Copy done.", getDescription());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // try to tidy up
             backingResource.getFile().delete();
             log.error("{}: Copy failed", getDescription(), e);
@@ -154,12 +154,12 @@ public class FileBackedHTTPResource extends HTTPResource {
         try {
             final InputStream stream = super.getInputStream();
             return saveAndClone(stream);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             log.debug("{} Error obtaining HTTPResource InputStream or creating backing file", getDescription(), ex);
             log.warn("{} HTTP resource was inaccessible for getInputStream(), trying backing file.", getDescription());
             try {
                 return new FileInputStream(backingResource.getFile());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.error("FileBackedHTTPResource {}: Could not read backing file", getDescription(), e);
                 throw e;
             }
@@ -173,7 +173,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         final HttpResponse response;
         try {
             response = getResourceHeaders();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.exists();
         }
@@ -190,7 +190,7 @@ public class FileBackedHTTPResource extends HTTPResource {
 
         try {
             return super.contentLength();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.contentLength();
         }
@@ -200,7 +200,7 @@ public class FileBackedHTTPResource extends HTTPResource {
     @Override public long lastModified() throws IOException {
         try {
             return super.lastModified();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.lastModified();
         }
@@ -217,7 +217,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         String urlAsString;
         try {
             urlAsString = getURL().toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             urlAsString = "<unknown>";
         }
 

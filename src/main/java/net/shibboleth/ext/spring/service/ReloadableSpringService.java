@@ -237,7 +237,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     public final void start() {
         try {
             initialize();
-        } catch (ComponentInitializationException e) {
+        } catch (final ComponentInitializationException e) {
             throw new BeanInitializationException("Could not start service", e);
         }
     }

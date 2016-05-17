@@ -245,7 +245,7 @@ public final class SpringSupport {
         try {
             bean = beanFactory.getBean(clazz);
             LOG.debug("created spring bean {}", bean);
-        } catch (NoSuchBeanDefinitionException e) {
+        } catch (final NoSuchBeanDefinitionException e) {
             LOG.debug("no spring bean configured of type {}", clazz);
         }
         return bean;

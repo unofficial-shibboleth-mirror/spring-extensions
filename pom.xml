@@ -139,7 +139,7 @@
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>dav:${shibboleth.site.url}/${project.artifactId}/${project.version}/</url>
+            <url>dav:${shibboleth.site.url}${project.artifactId}/${project.version}/</url>
         </site>
     </distributionManagement>
 

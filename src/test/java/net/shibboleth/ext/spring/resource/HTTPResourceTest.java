@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
@@ -55,8 +56,8 @@ public class HTTPResourceTest {
     }
 
     @Test public void existsTest() throws IOException {
-        HTTPResource existsResource = new HTTPResource(client, existsURL);
-        HTTPResource notExistsResource = new HTTPResource(client, nonExistsURL);
+        final HTTPResource existsResource = new HTTPResource(client, existsURL);
+        final HTTPResource notExistsResource = new HTTPResource(client, nonExistsURL);
 
         Assert.assertTrue(existsResource.exists());
         Assert.assertFalse(notExistsResource.exists());
@@ -86,7 +87,7 @@ public class HTTPResourceTest {
 
     @Test public void testCachedNoCache() throws IOException, InterruptedException {
 
-        TestHTTPResource what = new TestHTTPResource(client, existsURL);
+        final TestHTTPResource what = new TestHTTPResource(client, existsURL);
         Assert.assertTrue(what.exists());
         Assert.assertNull(what.getLasteCacheResponseStatus());
         Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
@@ -97,7 +98,7 @@ public class HTTPResourceTest {
 
         final InMemoryCachingHttpClientBuilder builder = new InMemoryCachingHttpClientBuilder();
         builder.setMaxCacheEntries(3);
-        TestHTTPResource what = new TestHTTPResource(builder.buildClient(), existsURL);
+        final TestHTTPResource what = new TestHTTPResource(builder.buildClient(), existsURL);
         Assert.assertTrue(what.exists());
         Assert.assertNotNull(what.getLasteCacheResponseStatus());
         Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
@@ -105,13 +106,13 @@ public class HTTPResourceTest {
         Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
     }
 
-    private GenericApplicationContext getContext(String fileName, File theDir) {
+    private GenericApplicationContext getContext(final String fileName, final File theDir) {
         final GenericApplicationContext parentContext = new GenericApplicationContext();
         parentContext.refresh(); // THIS IS REQUIRED
         parentContext.getBeanFactory().registerSingleton("theDir", theDir);
 
         final GenericApplicationContext context = new GenericApplicationContext(parentContext);
-        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
+        final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions(fileName);
@@ -124,7 +125,7 @@ public class HTTPResourceTest {
         final GenericApplicationContext context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
         try {
 
-            Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
+            final Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
             Assert.assertEquals(beans.size(), 1);
 
             final TestHTTPResource what = beans.iterator().next();
@@ -140,8 +141,8 @@ public class HTTPResourceTest {
         }
     }
 
-    private void emptyDir(File dir) {
-        for (File f : dir.listFiles()) {
+    private void emptyDir(final File dir) {
+        for (final File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 emptyDir(f);
             }
@@ -157,7 +158,7 @@ public class HTTPResourceTest {
         try {
             theDir = p.toFile();
             context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
-            Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
+            final Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
             Assert.assertEquals(beans.size(), 1);
 
             final TestHTTPResource what = beans.iterator().next();
@@ -187,11 +188,11 @@ public class HTTPResourceTest {
                 count++;
                 try {
                     notExistsResource.getInputStream();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     // expected because resource does not exist
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Assert.fail("Bad URL", e);
         }
     }

@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.Collection;
 
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -77,12 +79,12 @@ public class SVNResourceTest {
     }
 
     @BeforeMethod public void makeDir() throws IOException {
-        Path p = Files.createTempDirectory("SVNResourceTest");
+        final Path p = Files.createTempDirectory("SVNResourceTest");
         theDir = p.toFile();
     }
 
-    private void emptyDir(File dir) {
-        for (File f : dir.listFiles()) {
+    private void emptyDir(final File dir) {
+        for (final File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 emptyDir(f);
             }
@@ -122,7 +124,7 @@ public class SVNResourceTest {
         Assert.assertTrue(resource.exists());
 
         // CHANGE IF WE CHECKIN A NEW FILE
-        long delta =
+        final long delta =
                 resource.lastModified() - new DateTime(2013, 12, 31, 16, 59, 06, 500, DateTimeZone.UTC).getMillis();
         Assert.assertTrue(delta < 501 && delta > -501);
 
@@ -130,13 +132,13 @@ public class SVNResourceTest {
 
     }
 
-    private GenericApplicationContext getContext(String fileName) {
+    private GenericApplicationContext getContext(final String fileName) {
         final GenericApplicationContext parentContext = new GenericApplicationContext();
         parentContext.refresh(); // THIS IS REQUIRED
         parentContext.getBeanFactory().registerSingleton("theDir", theDir);
 
         final GenericApplicationContext context = new GenericApplicationContext(parentContext);
-        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(context);
+        final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions(fileName);

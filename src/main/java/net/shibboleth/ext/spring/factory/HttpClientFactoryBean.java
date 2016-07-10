@@ -59,7 +59,7 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
      * 
      * @param timeout maximum length of time in milliseconds to wait for the connection to be established
      */
-    public void setConnectionTimeout(@Duration long timeout) {
+    @Duration public void setConnectionTimeout(@Duration final long timeout) {
         connectionTimeout = timeout;
         if (timeout > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Timeout was too large");

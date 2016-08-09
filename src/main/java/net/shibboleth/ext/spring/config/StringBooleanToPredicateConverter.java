@@ -19,6 +19,10 @@ package net.shibboleth.ext.spring.config;
 
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
 import com.google.common.base.Predicate;
@@ -29,9 +33,25 @@ import com.google.common.base.Predicates;
  */
 public class StringBooleanToPredicateConverter implements Converter<String,Predicate> {
 
+    /** Logger. */
+    @Nonnull private final Logger log = LoggerFactory.getLogger(StringBooleanToPredicateConverter.class);
+
     /** {@inheritDoc} */
     public Predicate convert(String source) {
-        return Boolean.valueOf(StringSupport.trimOrNull(source)) ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
+        
+        final String trimmed = StringSupport.trimOrNull(source);
+        if (Boolean.valueOf(trimmed)) {
+            return Predicates.alwaysTrue();
+        }
+        
+        if (trimmed != null) {
+            if ("1".equals(trimmed)) {
+                log.warn("The value '1' is not treated as 'true'; if intentional, explicitly use 'false'");
+            } else if (!"false".equalsIgnoreCase(trimmed) && !"0".equals(trimmed)) {
+                log.warn("Unrecognized value '{}' converted to false; if intentional, explicitly use 'false'", trimmed);
+            }
+        }
+        return Predicates.alwaysFalse();
     }
     
 }

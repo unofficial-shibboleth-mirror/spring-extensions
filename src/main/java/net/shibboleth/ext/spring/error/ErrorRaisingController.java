@@ -40,6 +40,7 @@ public class ErrorRaisingController {
      * @throws Throwable 
      */
     @RequestMapping
+    // Checkstyle: IllegalThrows OFF
     public void raiseError(@Nonnull final HttpServletRequest httpRequest) throws Throwable {
         
         final Object uri = httpRequest.getAttribute("javax.servlet.error.request_uri");
@@ -58,5 +59,6 @@ public class ErrorRaisingController {
             throw e;
         }
     }
+    // Checkstyle: IllegalThrows ON
     
 }

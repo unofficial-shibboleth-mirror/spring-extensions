@@ -125,7 +125,7 @@ public final class SpringSupport {
         beanDefinitionReader.loadBeanDefinitions(configurationResources.toArray(new Resource[] {}));
 
         if (initializers != null) {
-            for (ApplicationContextInitializer initializer : initializers) {
+            for (final ApplicationContextInitializer initializer : initializers) {
                 initializer.initialize(context);
             }
         }
@@ -151,8 +151,8 @@ public final class SpringSupport {
             return null;
         }
 
-        ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
-        for (Element e : elements) {
+        final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
+        for (final Element e : elements) {
             if (e != null) {
                 definitions.add(parseCustomElement(e, parserContext));
             }
@@ -185,7 +185,7 @@ public final class SpringSupport {
      * @param registry the registry to populate
      */
     public static void
-            parseNativeElement(@Nonnull final Element springBeans, @Nullable BeanDefinitionRegistry registry) {
+            parseNativeElement(@Nonnull final Element springBeans, @Nullable final BeanDefinitionRegistry registry) {
         final XmlBeanDefinitionReader definitionReader = new XmlBeanDefinitionReader(registry);
         definitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         definitionReader.setNamespaceAware(true);
@@ -245,7 +245,7 @@ public final class SpringSupport {
         try {
             bean = beanFactory.getBean(clazz);
             LOG.debug("created spring bean {}", bean);
-        } catch (NoSuchBeanDefinitionException e) {
+        } catch (final NoSuchBeanDefinitionException e) {
             LOG.debug("no spring bean configured of type {}", clazz);
         }
         return bean;
@@ -259,7 +259,7 @@ public final class SpringSupport {
      * @return list of values, never null
      */
     @Nonnull public static ManagedList<String> getAttributeValueAsManagedList(@Nullable final Attr attribute) {
-        List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
+        final List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
         final ManagedList<String> managedList = new ManagedList<>(valuesAsList.size());
         managedList.addAll(valuesAsList);
         return managedList;

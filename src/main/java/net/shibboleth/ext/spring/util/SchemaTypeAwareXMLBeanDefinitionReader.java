@@ -35,7 +35,7 @@ public class SchemaTypeAwareXMLBeanDefinitionReader extends XmlBeanDefinitionRea
      * 
      * @param beanRegistry the bean definition registry that will be populated by this reader
      */
-    public SchemaTypeAwareXMLBeanDefinitionReader(BeanDefinitionRegistry beanRegistry) {
+    public SchemaTypeAwareXMLBeanDefinitionReader(final BeanDefinitionRegistry beanRegistry) {
         super(beanRegistry);
 
         setDocumentReaderClass(SchemaTypeAwareBeanDefinitionDocumentReader.class);

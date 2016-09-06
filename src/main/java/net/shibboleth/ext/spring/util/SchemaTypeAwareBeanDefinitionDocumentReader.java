@@ -30,9 +30,9 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
 
     /** {@inheritDoc} */
     @Override
-    protected BeanDefinitionParserDelegate createDelegate(XmlReaderContext readerContext, Element root,
-            BeanDefinitionParserDelegate parentDelegate) {
-        BeanDefinitionParserDelegate delegate =
+    protected BeanDefinitionParserDelegate createDelegate(final XmlReaderContext readerContext, final Element root,
+            final BeanDefinitionParserDelegate parentDelegate) {
+        final BeanDefinitionParserDelegate delegate =
                 new SchemaTypeAwareBeanDefinitionParserDelegate(readerContext);
         delegate.initDefaults(root, parentDelegate);
         return delegate;

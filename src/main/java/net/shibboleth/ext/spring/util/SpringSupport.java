@@ -35,6 +35,7 @@ import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
@@ -99,6 +100,15 @@ public final class SpringSupport {
             @Nonnull @NonnullElements final List<BeanPostProcessor> postProcessors,
             @Nonnull @NonnullElements final List<ApplicationContextInitializer> initializers,
             @Nullable final ApplicationContext parentContext) {
+        
+        Constraint.isNotNull(configurationResources, "configurationResources cannot be null");
+        Constraint.noNullItems(configurationResources, "configurationResources must have no null items");
+        Constraint.isNotNull(factoryPostProcessors, "factoryPostProcessors cannot be null");
+        Constraint.noNullItems(factoryPostProcessors, "factoryPostProcessors must have no null items");
+        Constraint.isNotNull(postProcessors, "postProcessors cannot be null");
+        Constraint.noNullItems(postProcessors, "postProcessors must have no null items");
+        Constraint.isNotNull(initializers, "initializers cannot be null");
+        Constraint.noNullItems(initializers, "initializers must have no null items");
         
         final GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + name);

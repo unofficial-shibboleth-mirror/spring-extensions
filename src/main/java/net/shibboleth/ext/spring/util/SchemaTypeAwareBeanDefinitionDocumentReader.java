@@ -29,13 +29,13 @@ import org.w3c.dom.Element;
 public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefinitionDocumentReader {
 
     /** {@inheritDoc} */
-    @Override
-    protected BeanDefinitionParserDelegate createDelegate(final XmlReaderContext readerContext, final Element root,
+    @Override protected BeanDefinitionParserDelegate createDelegate(final XmlReaderContext readerContext,
+            final Element root,
             final BeanDefinitionParserDelegate parentDelegate) {
         final BeanDefinitionParserDelegate delegate =
                 new SchemaTypeAwareBeanDefinitionParserDelegate(readerContext);
         delegate.initDefaults(root, parentDelegate);
         return delegate;
     }
-
+    
 }

@@ -53,7 +53,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * 
      * @param authentications authentications
      */
-    public SVNBasicAuthenticationManager(List<SVNAuthentication> authentications) {
+    public SVNBasicAuthenticationManager(final List<SVNAuthentication> authentications) {
         super(authentications.toArray(new SVNAuthentication[authentications.size()]));
     }
 
@@ -65,7 +65,9 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param passphrase  a password to the private key
      * @param portNumber a port number over which an ssh tunnel is established
      */
-    public SVNBasicAuthenticationManager(String userName, File keyFile, String passphrase, int portNumber) {
+    @SuppressWarnings("deprecation")
+    public SVNBasicAuthenticationManager(final String userName, final File keyFile, 
+            final String passphrase, final int portNumber) {
         super(userName, keyFile, passphrase, portNumber);
     }
 
@@ -75,11 +77,13 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param userName a userName
      * @param password a password
      */
-    public SVNBasicAuthenticationManager(String userName, String password) {
+    @SuppressWarnings("deprecation")
+    public SVNBasicAuthenticationManager(final String userName, final String password) {
         super(userName, password);
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     @Override public void afterPropertiesSet() {
         if (proxySet) {
             setProxy(proxyHost, proxyPort, proxyUserName, proxyPassword);
@@ -97,7 +101,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy host.
      * @param host The proxyHost to set.
      */
-    public void setProxyHost(String host) {
+    public void setProxyHost(final String host) {
         proxyHost = host;
         proxySet = true;
     }
@@ -113,7 +117,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy port.
      * @param port The proxyPort to set.
      */
-    public void setProxyPort(int port) {
+    public void setProxyPort(final int port) {
         proxyPort = port;
         proxySet = true;
     }
@@ -129,7 +133,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy user name.
      * @param userName The proxyUserName to set.
      */
-    public void setProxyUserName(String userName) {
+    public void setProxyUserName(final String userName) {
         proxyUserName = userName;
         proxySet = true;
     }
@@ -145,7 +149,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
     /** Set the proxy password.
      * @param password The proxyPassword to set.
      */
-    public void setProxyPassword(String password) {
+    public void setProxyPassword(final String password) {
         proxyPassword = password;
         proxySet = true;
     }

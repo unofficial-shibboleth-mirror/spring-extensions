@@ -53,7 +53,7 @@ public class SVNResourceTest {
 
     static private final int ORIGINAL_VERSION = 492;
 
-    static private final String PATH = "data/";
+    static private final String PATH = "net/shibboleth/ext/spring/resource/";
 
     static private final String SVN_PATH = "/utilities/spring-extensions/trunk/src/test/resources/" + PATH;
 
@@ -150,7 +150,7 @@ public class SVNResourceTest {
 
     @Test(enabled=false) public void testSpringLoad() {
 
-        final GenericApplicationContext context = getContext("classpath:data/SVNBean.xml");
+        final GenericApplicationContext context = getContext("classpath:"+PATH+"SVNBean.xml");
         try {
             final Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
             Assert.assertEquals(beans.size(), 1);

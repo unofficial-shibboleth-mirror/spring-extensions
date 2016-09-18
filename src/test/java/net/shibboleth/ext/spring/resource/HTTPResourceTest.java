@@ -66,7 +66,7 @@ public class HTTPResourceTest {
     @Test public void testCompare() throws IOException {
 
         Assert.assertTrue(ResourceTestHelper.compare(new HTTPResource(client, existsURL), new ClassPathResource(
-                "data/document.xml")));
+                "net/shibboleth/ext/spring/resource/document.xml")));
     }
 
     @Test public void testRelated() throws IOException {
@@ -90,7 +90,7 @@ public class HTTPResourceTest {
         final TestHTTPResource what = new TestHTTPResource(client, existsURL);
         Assert.assertTrue(what.exists());
         Assert.assertNull(what.getLasteCacheResponseStatus());
-        Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
         Assert.assertNull(what.getLasteCacheResponseStatus());
     }
 
@@ -101,7 +101,7 @@ public class HTTPResourceTest {
         final TestHTTPResource what = new TestHTTPResource(builder.buildClient(), existsURL);
         Assert.assertTrue(what.exists());
         Assert.assertNotNull(what.getLasteCacheResponseStatus());
-        Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
+        Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
         Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
     }
@@ -122,7 +122,7 @@ public class HTTPResourceTest {
 
     @Test public void springLoadMemCache() throws IOException {
 
-        final GenericApplicationContext context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
+        final GenericApplicationContext context = getContext("classpath:net/shibboleth/ext/spring/resource/MemBackedHTTPBean.xml", null);
         try {
 
             final Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
@@ -132,7 +132,7 @@ public class HTTPResourceTest {
 
             Assert.assertTrue(what.exists());
             Assert.assertNotNull(what.getLasteCacheResponseStatus());
-            Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
             Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
         } finally {
@@ -157,7 +157,7 @@ public class HTTPResourceTest {
         GenericApplicationContext context = null;
         try {
             theDir = p.toFile();
-            context = getContext("classpath:data/MemBackedHTTPBean.xml", null);
+            context = getContext("classpath:net/shibboleth/ext/spring/resource/MemBackedHTTPBean.xml", null);
             final Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();
             Assert.assertEquals(beans.size(), 1);
 
@@ -165,7 +165,7 @@ public class HTTPResourceTest {
 
             Assert.assertTrue(what.exists());
             Assert.assertNotNull(what.getLasteCacheResponseStatus());
-            Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("data/document.xml")));
+            Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
             Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
         } finally {

@@ -37,7 +37,7 @@ public class DOMDocumentFactoryBeanTest {
     @Test
     public void getObject() throws Exception {
         final DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
-        final Resource resource = new ClassPathResource("data/document.xml");
+        final Resource resource = new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml");
         final BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         factory.setResource(resource);

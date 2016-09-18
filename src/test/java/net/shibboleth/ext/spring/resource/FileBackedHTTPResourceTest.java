@@ -55,12 +55,12 @@ public class FileBackedHTTPResourceTest {
 
     @BeforeClass public void setupClient() throws Exception {
         client = (new HttpClientBuilder()).buildClient();
-        File file = File.createTempFile("FileBackedHTTPResourceTest1", ".xml");
+        final File file = File.createTempFile("FileBackedHTTPResourceTest1", ".xml");
         existsFile = file.getAbsolutePath();
     }
 
     @AfterClass public void deleteFile() {
-        File f = new File(existsFile);
+        final File f = new File(existsFile);
         if (f.exists()) {
             f.delete();
         }
@@ -84,26 +84,26 @@ public class FileBackedHTTPResourceTest {
                 new ClassPathResource("data/document.xml")));
     }
 
-    public GenericApplicationContext getContext(String location) {
+    public GenericApplicationContext getContext(final String location) {
 
-        MockPropertySource mockEnvVars = new MockPropertySource();
+        final MockPropertySource mockEnvVars = new MockPropertySource();
         mockEnvVars.setProperty("file.name", existsFile);
         mockEnvVars.setProperty("the.url", existsURL);
 
-        GenericApplicationContext context = new FilesystemGenericApplicationContext();
+        final GenericApplicationContext context = new FilesystemGenericApplicationContext();
         context.setDisplayName("ApplicationContext");
 
-        MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
+        final MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
         propertySources.replace(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, mockEnvVars);
 
-        PropertySourcesPlaceholderConfigurer placeholderConfig = new PropertySourcesPlaceholderConfigurer();
+        final PropertySourcesPlaceholderConfigurer placeholderConfig = new PropertySourcesPlaceholderConfigurer();
         placeholderConfig.setPlaceholderPrefix("%{");
         placeholderConfig.setPlaceholderSuffix("}");
         placeholderConfig.setPropertySources(propertySources);
 
         context.addBeanFactoryPostProcessor(placeholderConfig);
 
-        SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
+        final SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.loadBeanDefinitions(location);

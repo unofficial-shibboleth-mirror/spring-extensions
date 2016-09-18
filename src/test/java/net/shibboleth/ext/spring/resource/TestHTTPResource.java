@@ -27,12 +27,12 @@ class TestHTTPResource extends HTTPResource {
 
     private CacheResponseStatus responseStatus;
 
-    public TestHTTPResource(HttpClient client, String url) throws IOException {
+    public TestHTTPResource(final HttpClient client, final String url) throws IOException {
         super(client, url);
     }
 
     /** {@inheritDoc} */
-    @Override protected void reportCachingStatus(HttpCacheContext context) {
+    @Override protected void reportCachingStatus(final HttpCacheContext context) {
         responseStatus = context.getCacheResponseStatus();
 
         super.reportCachingStatus(context);

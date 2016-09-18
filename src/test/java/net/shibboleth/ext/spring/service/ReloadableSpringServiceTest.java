@@ -48,7 +48,7 @@ public class ReloadableSpringServiceTest {
 
     private File testFile;
 
-    private void createPopulatedFile(String dataPath) throws IOException {
+    private void createPopulatedFile(final String dataPath) throws IOException {
         testFile = File.createTempFile("ReloadableSpringServiceTest", ".xml");
         overwriteFileWith(dataPath);
         testFile.setLastModified(365*24*60*60*1000);
@@ -66,7 +66,7 @@ public class ReloadableSpringServiceTest {
         return new FileSystemResource(testFile);
     }
 
-    private void overwriteFileWith(String newDataPath) throws IOException {
+    private void overwriteFileWith(final String newDataPath) throws IOException {
         final OutputStream stream = new FileOutputStream(testFile);
         ByteStreams.copy(new ClassPathResource(newDataPath).getInputStream(), stream);
         stream.close();
@@ -86,7 +86,7 @@ public class ReloadableSpringServiceTest {
         service.start();
 
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
-        TestServiceableComponent component = serviceableComponent.getComponent();
+        final TestServiceableComponent component = serviceableComponent.getComponent();
 
         Assert.assertEquals("One", component.getTheValue());
         Assert.assertFalse(component.getComponent().isDestroyed());
@@ -129,7 +129,7 @@ public class ReloadableSpringServiceTest {
         service.start();
 
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
-        TestServiceableComponent component = serviceableComponent.getComponent();
+        final TestServiceableComponent component = serviceableComponent.getComponent();
         
         final DateTime x = service.getLastReloadAttemptInstant();
         Assert.assertEquals(x,  service.getLastSuccessfulReloadInstant());
@@ -190,7 +190,7 @@ public class ReloadableSpringServiceTest {
         try {
             service.start();
             Assert.fail("Expected to fail");
-        } catch (BeanInitializationException e) {
+        } catch (final BeanInitializationException e) {
             // OK
         }
         Assert.assertNull(service.getServiceableComponent());
@@ -247,14 +247,14 @@ public class ReloadableSpringServiceTest {
 
     @Test public void testApplicationContextAware() {
 
-        Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
+        final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        GenericApplicationContext appCtx =
+        final GenericApplicationContext appCtx =
                 SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
                         Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
                         Collections.<ApplicationContextInitializer>emptyList(), null);
         try {
-            ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
+            final ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
     
             Assert.assertNotNull(service.getParentContext(), "Parent context should not be null");
         } finally {
@@ -264,18 +264,18 @@ public class ReloadableSpringServiceTest {
     
     @Test public void testBeanNameAware() {
 
-        Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
+        final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        GenericApplicationContext appCtx =
+        final GenericApplicationContext appCtx =
                 SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
                         Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
                         Collections.<ApplicationContextInitializer>emptyList(), null);
         try {
-            ReloadableSpringService service1 =
+            final ReloadableSpringService service1 =
                     appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
             Assert.assertEquals(service1.getId(), "testReloadableSpringService");
 
-            ReloadableSpringService service2 =
+            final ReloadableSpringService service2 =
                     appCtx.getBean("testReloadableSpringServiceWithCustomID", ReloadableSpringService.class);
             Assert.assertEquals(service2.getId(), "CustomID");
         } finally {

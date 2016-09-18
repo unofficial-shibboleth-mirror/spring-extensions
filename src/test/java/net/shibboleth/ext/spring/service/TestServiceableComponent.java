@@ -19,8 +19,6 @@ package net.shibboleth.ext.spring.service;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.ext.spring.service.AbstractServiceableComponent;
-
 /**
  *
  */
@@ -44,13 +42,13 @@ public class TestServiceableComponent extends AbstractServiceableComponent<TestS
     /**
      * @param theValue The theValue to set.
      */
-    public void setTheValue(String theValue) {
+    public void setTheValue(final String theValue) {
         this.theValue = theValue;
     }
     
     /** {@inheritDoc} */
     @Override
-    public void setId(@Nonnull String componentId) {
+    public void setId(@Nonnull final String componentId) {
         super.setId(componentId);
     }
 }

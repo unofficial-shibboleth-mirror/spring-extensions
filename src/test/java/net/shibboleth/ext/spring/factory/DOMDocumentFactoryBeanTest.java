@@ -36,21 +36,21 @@ public class DOMDocumentFactoryBeanTest {
      */
     @Test
     public void getObject() throws Exception {
-        DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
-        Resource resource = new ClassPathResource("data/document.xml");
-        BasicParserPool pool = new BasicParserPool();
+        final DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
+        final Resource resource = new ClassPathResource("data/document.xml");
+        final BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         factory.setResource(resource);
         factory.setParserPool(pool);
-        Document doc = factory.getObject();
+        final Document doc = factory.getObject();
 
         // look at the result
-        Element element = doc.getDocumentElement();
+        final Element element = doc.getDocumentElement();
         Assert.assertEquals(element.getLocalName(), "docElement");
 
         // check singleton behaviour
         Assert.assertEquals(factory.isSingleton(), true, "singleton assertion");
-        Document doc2 = factory.getObject();
+        final Document doc2 = factory.getObject();
         Assert.assertEquals(doc2, doc, "singleton equality");
     }
 
@@ -59,7 +59,7 @@ public class DOMDocumentFactoryBeanTest {
      */
     @Test
     public void getObjectType() {
-        DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
+        final DOMDocumentFactoryBean factory = new DOMDocumentFactoryBean();
         Assert.assertEquals(factory.getObjectType(), Document.class, "object type");
     }
 

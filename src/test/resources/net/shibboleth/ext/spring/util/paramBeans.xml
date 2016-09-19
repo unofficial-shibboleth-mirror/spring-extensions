@@ -1,0 +1,9 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="TheBeanRemainsTheSame" class="net.shibboleth.ext.spring.util.ParamClass" c:_0="Param the First" c:_1="Param the Second"/>
+    
+    <bean id="InThroughTheOutBean" class="net.shibboleth.ext.spring.util.ParamClass" c:param1="Param the First" c:param2="Param the Second"/>
+        
+</beans>

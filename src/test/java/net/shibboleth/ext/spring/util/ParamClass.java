@@ -32,6 +32,11 @@ public class ParamClass {
         p2 = param1;
     }
     
+    public ParamClass(final String param1) {
+        p1 = param1;
+        p2 = "HardWired Param The Second";
+    }
+
     public String getP1() {return p1;}
     public String getP2() {return p2;}
 }

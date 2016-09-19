@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.util;
 
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.testng.Assert;
@@ -41,19 +43,27 @@ public class ParameterNameAnnotationTest {
         Assert.assertEquals(byNumber.getP2(), "Param the Second");
         
         final ParamClass byId = context.getBean("InThroughTheOutBean", ParamClass.class);
-
-        //
         // Swapped
-        //
-        Assert.assertEquals(byId.getP2(), "Param the First");
         Assert.assertEquals(byId.getP1(), "Param the Second");
+        Assert.assertEquals(byId.getP2(), "Param the First");
+
+        final ParamClass single = context.getBean("SingleParam", ParamClass.class);
+        Assert.assertEquals(single.getP1(), "Param the First");
+        Assert.assertEquals(single.getP2(), "HardWired Param The Second");
 
     }
     
-    @Test(enabled=false) public void testWithAnnotationFilter() {
+    @Test(enabled=true) public void testWithAnnotationFilter() {
         
         final GenericApplicationContext context = new GenericApplicationContext();
         final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
+        
+        final ConfigurableListableBeanFactory factory = context.getBeanFactory();
+        if (factory instanceof AbstractAutowireCapableBeanFactory) {
+            final AbstractAutowireCapableBeanFactory aaBeanFactory = (AbstractAutowireCapableBeanFactory) factory;
+            aaBeanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        }
+        
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions("net/shibboleth/ext/spring/util/paramBeans.xml");
@@ -64,12 +74,15 @@ public class ParameterNameAnnotationTest {
         Assert.assertEquals(byNumber.getP2(), "Param the Second");
         
         final ParamClass byId = context.getBean("InThroughTheOutBean", ParamClass.class);
-
-        //
-        // Swapped
-        //
+        // Correct
         Assert.assertEquals(byId.getP1(), "Param the First");
         Assert.assertEquals(byId.getP2(), "Param the Second");
+
+        // Generate warning
+        final ParamClass single = context.getBean("SingleParam", ParamClass.class);
+        Assert.assertEquals(single.getP1(), "Param the First");
+        Assert.assertEquals(single.getP2(), "HardWired Param The Second");
+
 
     }
 

@@ -32,6 +32,8 @@ import org.springframework.core.ParameterNameDiscoverer;
 
 /**
  * An implementation of {@link ParameterNameDiscoverer} that is driven by the {@link ParameterName} Annotation.
+ *
+ * @since 5.3.0 (IdP 3.3.0)
  */
 public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDiscoverer implements
         ParameterNameDiscoverer {
@@ -46,10 +48,10 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
     }
 
     /** Given the annotations for each parameter is it one of ours?
-     * @param annotations the annotations for the parametere
-     * @return the "name" if one of ours.
+     * @param annotations the annotations for the parameter
+     * @return the "name" if one of ours. null otherwise
      */
-    private String getMyAnnotation(final Annotation[] annotations) {
+    @Nullable private String getMyAnnotation(final Annotation[] annotations) {
         for (final Annotation a : annotations) {
             if (a instanceof ParameterName) {
                 final ParameterName param = (ParameterName) a;
@@ -66,16 +68,19 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
     @Override public String[] getParameterNames(final Constructor<?> ctor) {
 
         final Annotation[][] annotationsArray = ctor.getParameterAnnotations();
-
         if (annotationsArray.length == 0) {
+            // nothing to do
             return super.getParameterNames(ctor);
         }
 
         final String className = ctor.getDeclaringClass().getName();
-        boolean allPresent = true;
         final boolean isOurs = (className != null) && 
                 (className.startsWith("org.opensaml") || className.startsWith("net.shibboleth"));
+        if (!isOurs) {
+            return super.getParameterNames(ctor);
+        }
 
+        boolean allPresent = true;
         final String[] names = new String[annotationsArray.length];
 
         for (int index = 0; index < annotationsArray.length; index++) {
@@ -89,11 +94,11 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
             if (isOurs) {
                 log.warn("Constructor for class '{}' with {} parameters: "
                         + "Not all parameters are annotated with @ParameterName", className, annotationsArray.length);
+                log.debug("Types : {}", (Object)ctor.getParameterTypes());
             }
             return super.getParameterNames(ctor);
         }
         log.trace("Constructor for class '{}' with {} parameters called {}", className, names.length, names);
         return names;
     }
-
 }

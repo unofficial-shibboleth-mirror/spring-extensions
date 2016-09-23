@@ -66,7 +66,7 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     }
 
     /** {@inheritDoc} */
-    public PrivateKey getObject() throws Exception {
+    @Override public PrivateKey getObject() throws Exception {
         if (key == null) {
             if (resource == null) {
                 throw new BeanCreationException("Private key resource must be provided in order to use this factory.");
@@ -85,12 +85,12 @@ public class PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
     }
 
     /** {@inheritDoc} */
-    @Nonnull public Class<?> getObjectType() {
+    @Override @Nonnull public Class<?> getObjectType() {
         return PrivateKey.class;
     }
 
     /** {@inheritDoc} */
-    public boolean isSingleton() {
+    @Override public boolean isSingleton() {
         return true;
     }
 }

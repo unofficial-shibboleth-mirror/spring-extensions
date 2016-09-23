@@ -17,9 +17,9 @@
 
 package net.shibboleth.ext.spring.config;
 
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
 import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class StringBooleanToPredicateConverter implements Converter<String,Predi
     @Nonnull private final Logger log = LoggerFactory.getLogger(StringBooleanToPredicateConverter.class);
 
     /** {@inheritDoc} */
-    public Predicate convert(String source) {
+    @Override public Predicate convert(final String source) {
         
         final String trimmed = StringSupport.trimOrNull(source);
         if (Boolean.valueOf(trimmed)) {

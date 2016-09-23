@@ -54,7 +54,7 @@ public class DeferPlaceholderFileSystemXmlWebApplicationContext extends FileSyst
      * unchanged.
      * </p>
      */
-    @Override protected String resolvePath(String path) {
+    @Override protected String resolvePath(final String path) {
         if (propertySourcesInitialized) {
             return super.resolvePath(path);
         }

@@ -55,7 +55,7 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentified
     private final ReentrantReadWriteLock serviceLock = new ReentrantReadWriteLock(false);
 
     /** {@inheritDoc} */
-    @Override public void setApplicationContext(ApplicationContext context) {
+    @Override public void setApplicationContext(final ApplicationContext context) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         applicationContext = context;
     }

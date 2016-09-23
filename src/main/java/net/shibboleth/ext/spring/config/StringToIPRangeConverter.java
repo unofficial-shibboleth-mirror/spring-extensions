@@ -17,9 +17,9 @@
 
 package net.shibboleth.ext.spring.config;
 
-import org.springframework.core.convert.converter.Converter;
-
 import net.shibboleth.utilities.java.support.net.IPRange;
+
+import org.springframework.core.convert.converter.Converter;
 
 
 /**
@@ -28,8 +28,7 @@ import net.shibboleth.utilities.java.support.net.IPRange;
 public class StringToIPRangeConverter implements Converter<String,IPRange> {
 
     /** {@inheritDoc} */
-    @Override
-    public IPRange convert(String source) {
+    @Override public IPRange convert(final String source) {
         return IPRange.parseCIDRBlock(source);
     }
     

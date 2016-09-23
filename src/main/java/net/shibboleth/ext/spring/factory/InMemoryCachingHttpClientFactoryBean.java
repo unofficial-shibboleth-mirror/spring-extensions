@@ -36,7 +36,7 @@ public class InMemoryCachingHttpClientFactoryBean extends HttpClientFactoryBean 
      * 
      * @param maxCacheEntries The maxCacheEntries to set.
      */
-    public void setMaxCacheEntries(int maxCacheEntries) {
+    public void setMaxCacheEntries(final int maxCacheEntries) {
         ((InMemoryCachingHttpClientBuilder) getHttpClientBuilder()).setMaxCacheEntries(maxCacheEntries);
     }
 
@@ -45,7 +45,7 @@ public class InMemoryCachingHttpClientFactoryBean extends HttpClientFactoryBean 
      * 
      * @param maxCacheEntrySize The maxCacheEntrySize to set.
      */
-    public void setMaxCacheEntrySize(long maxCacheEntrySize) {
+    public void setMaxCacheEntrySize(final long maxCacheEntrySize) {
         ((InMemoryCachingHttpClientBuilder) getHttpClientBuilder()).setMaxCacheEntrySize(maxCacheEntrySize);
     }
 

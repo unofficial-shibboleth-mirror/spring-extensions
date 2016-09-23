@@ -82,7 +82,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url) throws IOException {
+    public HTTPResource(@Nonnull final HttpClient client, @NotEmpty @Nonnull final String url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         final String trimmedAddress =
                 Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL must be non empty and non null");
@@ -97,7 +97,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull HttpClient client, @Nonnull URL url) throws IOException {
+    public HTTPResource(@Nonnull final HttpClient client, @Nonnull final URL url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         resourceURL = Constraint.isNotNull(url, "Provided URL must be non empty and non null");
 
@@ -109,7 +109,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @return a new instance of {@link HttpCacheContext}
      */
     protected HttpCacheContext buildHttpClientContext() {
-        HttpCacheContext context = HttpCacheContext.create();
+        final HttpCacheContext context = HttpCacheContext.create();
         if (credentialsProvider != null) {
             context.setCredentialsProvider(credentialsProvider);
         }
@@ -121,8 +121,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * http://hc.apache.org/httpcomponents-client-ga/tutorial/html/caching.html
      * @param context the context of the request
      */
-    protected void reportCachingStatus(HttpCacheContext context) {
-        CacheResponseStatus responseStatus = context.getCacheResponseStatus();
+    protected void reportCachingStatus(final HttpCacheContext context) {
+        final CacheResponseStatus responseStatus = context.getCacheResponseStatus();
         if (null == responseStatus) {
             log.debug("Non caching client provided");
             return;
@@ -156,10 +156,10 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         log.debug("Attempting to get data from remote resource '{}'", resourceURL);
         response = httpClient.execute(httpGet, context);
         reportCachingStatus(context);
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
-            String errMsg =
+            final String errMsg =
                     "Non-ok status code " + httpStatusCode + " returned from remote resource " + resourceURL;
             log.error(errMsg);
             closeResponse(response);
@@ -186,10 +186,10 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         final HttpResponse response;
         try {
             response = getResourceHeaders();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         return httpStatusCode == HttpStatus.SC_OK;
     }
@@ -213,7 +213,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     @Override public URI getURI() throws IOException {
         try {
             return resourceURL.toURI();
-        } catch (URISyntaxException ex) {
+        } catch (final URISyntaxException ex) {
             throw new NestedIOException("Invalid URI [" + resourceURL + "]", ex);
         }
     }
@@ -233,7 +233,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @throws IOException thrown if there is a problem contacting the resource
      */
     protected HttpResponse getResourceHeaders() throws IOException {
-        HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
+        final HttpUriRequest httpRequest = new HttpGet(resourceURL.toExternalForm());
 
         HttpResponse httpResponse = null;
         try {
@@ -242,7 +242,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
             reportCachingStatus(context);
             EntityUtils.consume(httpResponse.getEntity());
             return httpResponse;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IOException("Error contacting remote resource " + resourceURL.toString(), e);
         } finally {
             closeResponse(httpResponse);
@@ -256,12 +256,12 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @return the value of that response, or null if things failed
      * @throws IOException from lower levels.
      */
-    @Nullable protected String getResponseHeader(String what) throws IOException {
+    @Nullable protected String getResponseHeader(final String what) throws IOException {
         final HttpResponse response;
 
         log.debug("Attempting to fetch remote resource as '{}'", resourceURL);
         response = getResourceHeaders();
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode != HttpStatus.SC_OK) {
             final String errMsg =
@@ -280,7 +280,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     /** {@inheritDoc} */
     @Override public long contentLength() throws IOException {
 
-        String response = getResponseHeader(HttpHeaders.CONTENT_LENGTH);
+        final String response = getResponseHeader(HttpHeaders.CONTENT_LENGTH);
         if (null != response) {
             return Long.parseLong(response);
         }
@@ -292,7 +292,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} */
     @Override public long lastModified() throws IOException {
-        String response = getResponseHeader(HttpHeaders.LAST_MODIFIED);
+        final String response = getResponseHeader(HttpHeaders.LAST_MODIFIED);
         if (null != response) {
             return DateUtils.parseDate(response).getTime();
         }
@@ -370,17 +370,19 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
          * @param httpResponse HTTP method that was invoked
          * @throws IOException if there is a problem getting the entity content input stream from the response
          */
-        public ConnectionClosingInputStream(HttpResponse httpResponse) throws IOException {
+        public ConnectionClosingInputStream(final HttpResponse httpResponse) throws IOException {
             response = httpResponse;
             stream = response.getEntity().getContent();
         }
 
         /** {@inheritDoc} */
+        @Override
         public int available() throws IOException {
             return stream.available();
         }
 
         /** {@inheritDoc} */
+        @Override
         public void close() throws IOException {
             stream.close();
             if (response instanceof CloseableHttpResponse) {
@@ -389,37 +391,44 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         }
 
         /** {@inheritDoc} */
-        public void mark(int readLimit) {
+        @Override
+        public void mark(final int readLimit) {
             stream.mark(readLimit);
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean markSupported() {
             return stream.markSupported();
         }
 
         /** {@inheritDoc} */
+        @Override
         public int read() throws IOException {
             return stream.read();
         }
 
         /** {@inheritDoc} */
-        public int read(byte[] b) throws IOException {
+        @Override
+        public int read(final byte[] b) throws IOException {
             return stream.read(b);
         }
 
         /** {@inheritDoc} */
-        public int read(byte[] b, int off, int len) throws IOException {
+        @Override
+        public int read(final byte[] b, final int off, final int len) throws IOException {
             return stream.read(b, off, len);
         }
 
         /** {@inheritDoc} */
+        @Override
         public synchronized void reset() throws IOException {
             stream.reset();
         }
 
         /** {@inheritDoc} */
-        public long skip(long n) throws IOException {
+        @Override
+        public long skip(final long n) throws IOException {
             return stream.skip(n);
         }
     }

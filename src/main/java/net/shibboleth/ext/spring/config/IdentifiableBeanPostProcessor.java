@@ -34,7 +34,7 @@ public class IdentifiableBeanPostProcessor implements BeanPostProcessor {
     @Nonnull private final Logger log = LoggerFactory.getLogger(IdentifiableBeanPostProcessor.class);
 
     /** {@inheritDoc} */
-    @Override public Object postProcessBeforeInitialization(Object bean, String beanName) {
+    @Override public Object postProcessBeforeInitialization(final Object bean, final String beanName) {
         if (bean instanceof IdentifiableComponent) {
             final IdentifiableComponent component = (IdentifiableComponent) bean;
             if (component.getId() == null) {
@@ -52,7 +52,7 @@ public class IdentifiableBeanPostProcessor implements BeanPostProcessor {
     }
 
     /** {@inheritDoc} */
-    @Override public Object postProcessAfterInitialization(Object bean, String beanName) {
+    @Override public Object postProcessAfterInitialization(final Object bean, final String beanName) {
         return bean;
     }
 

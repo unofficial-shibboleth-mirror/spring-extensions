@@ -39,7 +39,7 @@ public class PreferFileSystemResourceLoader extends DefaultResourceLoader {
      * absolute if they are in fact absolute.
      * </p>
      */
-    @Override protected Resource getResourceByPath(String path) {
+    @Override protected Resource getResourceByPath(final String path) {
         final Resource r = new FileSystemResource(path);
         if (r.exists()) {
             return r;
@@ -55,7 +55,7 @@ public class PreferFileSystemResourceLoader extends DefaultResourceLoader {
      * Supports wildcard classpath locations prefixed with {@link ResourcePatternResolver#CLASSPATH_ALL_URL_PREFIX}.
      * </p>
      */
-    @Override public Resource getResource(String location) {
+    @Override public Resource getResource(final String location) {
         Assert.notNull(location, "Location must not be null");
         if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
             return new ClassPathResource(location.substring(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX.length()),

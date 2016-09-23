@@ -28,8 +28,7 @@ import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 public class DurationPropertyEditor extends PropertyEditorSupport {
 
     /** {@inheritDoc} */
-    @Override
-    public void setAsText(String text) {
+    @Override public void setAsText(final String text) {
 
         if (text.startsWith("P")) {
             setValue(DOMTypeSupport.getDataTypeFactory().newDuration(text.trim()));

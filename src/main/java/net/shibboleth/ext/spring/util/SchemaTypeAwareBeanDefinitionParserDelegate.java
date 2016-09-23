@@ -44,14 +44,12 @@ public class SchemaTypeAwareBeanDefinitionParserDelegate extends BeanDefinitionP
     }
 
     /** {@inheritDoc} */
-    @Override
-    public BeanDefinition parseCustomElement(final Element element) {
+    @Override public BeanDefinition parseCustomElement(final Element element) {
         return parseCustomElement(element, null);
     }
 
     /** {@inheritDoc} */
-    @Override
-    public BeanDefinition parseCustomElement(final Element element, final BeanDefinition containingBd) {
+    @Override public BeanDefinition parseCustomElement(final Element element, final BeanDefinition containingBd) {
         String namespaceUri = element.getNamespaceURI();
         if (DOMTypeSupport.hasXSIType(element)) {
             namespaceUri = DOMTypeSupport.getXSIType(element).getNamespaceURI();

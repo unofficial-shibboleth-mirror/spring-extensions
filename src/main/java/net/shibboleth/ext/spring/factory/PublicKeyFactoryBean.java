@@ -52,7 +52,7 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     }
 
     /** {@inheritDoc} */
-    public PublicKey getObject() throws Exception {
+    @Override public PublicKey getObject() throws Exception {
         if (key == null) {
             if (resource == null) {
                 throw new BeanCreationException("Public key resource must be provided in order to use this factory.");
@@ -67,12 +67,12 @@ public class PublicKeyFactoryBean implements FactoryBean<PublicKey> {
     }
 
     /** {@inheritDoc} */
-    @Nonnull public Class<?> getObjectType() {
+    @Override @Nonnull public Class<?> getObjectType() {
         return PublicKey.class;
     }
 
     /** {@inheritDoc} */
-    public boolean isSingleton() {
+    @Override public boolean isSingleton() {
         return true;
     }
 }

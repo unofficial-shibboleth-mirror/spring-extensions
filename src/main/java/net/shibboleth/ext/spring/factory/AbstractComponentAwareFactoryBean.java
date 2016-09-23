@@ -31,7 +31,7 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 public abstract class AbstractComponentAwareFactoryBean<T> extends AbstractFactoryBean<T> {
 
     /** {@inheritDoc}. Call our destroy method if aposite. */
-    @Override protected void destroyInstance(T instance) throws Exception {
+    @Override protected void destroyInstance(final T instance) throws Exception {
         super.destroyInstance(instance);
         ComponentSupport.destroy(instance);
     }

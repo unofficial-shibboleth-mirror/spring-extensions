@@ -77,8 +77,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the decorated bean definition
      */
-    @Override
-    public BeanDefinitionHolder decorate(final Node node, final BeanDefinitionHolder definition, 
+    @Override public BeanDefinitionHolder decorate(final Node node, final BeanDefinitionHolder definition, 
             final ParserContext parserContext) {
         return findDecoratorForNode(node).decorate(node, definition, parserContext);
     }
@@ -92,8 +91,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * 
      * @return the bean definition created from the given element
      */
-    @Override
-    public BeanDefinition parse(final Element element, final ParserContext parserContext) {
+    @Override public BeanDefinition parse(final Element element, final ParserContext parserContext) {
         return findParserForElement(element).parse(element, parserContext);
     }
 

@@ -61,8 +61,7 @@ public class DOMDocumentFactoryBean implements FactoryBean<Document> {
     }
 
     /** {@inheritDoc} */
-    @Override
-    @Nonnull public synchronized Document getObject() throws Exception {
+    @Override @Nonnull public synchronized Document getObject() throws Exception {
         if (document == null) {
             if (resource == null){
                 throw new BeanCreationException("Document resource must be provided in order to use this factory.");
@@ -81,14 +80,12 @@ public class DOMDocumentFactoryBean implements FactoryBean<Document> {
     }
 
     /** {@inheritDoc} */
-    @Override
-    @Nonnull public Class<?> getObjectType() {
+    @Override @Nonnull public Class<?> getObjectType() {
         return Document.class;
     }
 
     /** {@inheritDoc} */
-    @Override
-    public boolean isSingleton() {
+    @Override public boolean isSingleton() {
         return true;
     }
 }

@@ -52,7 +52,7 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
     }
 
     /** {@inheritDoc} */
-    public X509Certificate[] getObject() throws Exception {
+    @Override public X509Certificate[] getObject() throws Exception {
         if (certificates == null) {
             if (resource == null) {
                 throw new BeanCreationException(
@@ -60,7 +60,7 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
             }
 
             try (InputStream is = resource.getInputStream()) {
-                certificates = (X509Certificate[]) CertUtil.readCertificateChain(is);
+                certificates = CertUtil.readCertificateChain(is);
             }
         }
 
@@ -68,12 +68,12 @@ public class X509CertificateChainFactoryBean implements FactoryBean<X509Certific
     }
 
     /** {@inheritDoc} */
-    @Nonnull public Class<?> getObjectType() {
+    @Override @Nonnull public Class<?> getObjectType() {
         return X509Certificate.class;
     }
 
     /** {@inheritDoc} */
-    public boolean isSingleton() {
+    @Override public boolean isSingleton() {
         return true;
     }
 }

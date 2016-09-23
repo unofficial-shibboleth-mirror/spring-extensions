@@ -61,8 +61,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
      * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull HttpClient client, @NotEmpty @Nonnull String url,
-            @Nonnull Resource resource) throws IOException {
+    @Deprecated public FileBackedHTTPResource(@Nonnull final HttpClient client, @NotEmpty @Nonnull final String url,
+            @Nonnull final Resource resource) throws IOException {
         super(client, url);
         backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
         if (null == resource.getFile()) {
@@ -80,8 +80,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
      * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull HttpClient client, @Nonnull URL url, @Nonnull Resource resource)
-            throws IOException {
+    @Deprecated public FileBackedHTTPResource(@Nonnull final HttpClient client, @Nonnull final URL url,
+            @Nonnull final Resource resource) throws IOException {
         super(client, url);
         backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
         if (null == resource.getFile()) {
@@ -97,8 +97,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public FileBackedHTTPResource(@Nonnull String backingFile, @Nonnull HttpClient client, 
-            @NotEmpty @Nonnull String url) throws IOException {
+    public FileBackedHTTPResource(@Nonnull final String backingFile, @Nonnull final HttpClient client, 
+            @NotEmpty @Nonnull final String url) throws IOException {
         super(client, url);
         Constraint.isNotNull(backingFile, "File Name must not be null");
         final File file = new File(backingFile);
@@ -113,8 +113,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public FileBackedHTTPResource(@Nonnull String backingFile, @Nonnull HttpClient client, @Nonnull URL url)
-            throws IOException {
+    public FileBackedHTTPResource(@Nonnull final String backingFile, @Nonnull final HttpClient client,
+            @Nonnull final URL url) throws IOException {
         super(client, url);
         Constraint.isNotNull(backingFile, "File Name must not be null");
         final File file = new File(backingFile);
@@ -129,13 +129,13 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @throws IOException if an error happens. If the backing file might have been corrupted we delete it.
      */
 
-    protected InputStream saveAndClone(InputStream input) throws IOException {
-        FileOutputStream out = new FileOutputStream(backingResource.getFile());
+    protected InputStream saveAndClone(final InputStream input) throws IOException {
+        final FileOutputStream out = new FileOutputStream(backingResource.getFile());
         try {
             log.debug("{}: Copying file.", getDescription());
             ByteStreams.copy(input, out);
             log.debug("{}: Copy done.", getDescription());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // try to tidy up
             backingResource.getFile().delete();
             log.error("{}: Copy failed", getDescription(), e);
@@ -152,12 +152,12 @@ public class FileBackedHTTPResource extends HTTPResource {
         try {
             final InputStream stream = super.getInputStream();
             return saveAndClone(stream);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             log.debug("{} Error obtaining HTTPResource InputStream or creating backing file", getDescription(), ex);
             log.warn("{} HTTP resource was inaccessible for getInputStream(), trying backing file.", getDescription());
             try {
                 return new FileInputStream(backingResource.getFile());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.error("FileBackedHTTPResource {}: Could not read backing file", getDescription(), e);
                 throw e;
             }
@@ -171,11 +171,11 @@ public class FileBackedHTTPResource extends HTTPResource {
         final HttpResponse response;
         try {
             response = getResourceHeaders();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.exists();
         }
-        int httpStatusCode = response.getStatusLine().getStatusCode();
+        final int httpStatusCode = response.getStatusLine().getStatusCode();
 
         if (httpStatusCode == HttpStatus.SC_OK) {
             return true;
@@ -188,7 +188,7 @@ public class FileBackedHTTPResource extends HTTPResource {
 
         try {
             return super.contentLength();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.contentLength();
         }
@@ -198,7 +198,7 @@ public class FileBackedHTTPResource extends HTTPResource {
     @Override public long lastModified() throws IOException {
         try {
             return super.lastModified();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.info("{}: Could not reach URL, trying file", getDescription(), e);
             return backingResource.lastModified();
         }
@@ -215,7 +215,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         String urlAsString;
         try {
             urlAsString = getURL().toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             urlAsString = "<unknown>";
         }
 

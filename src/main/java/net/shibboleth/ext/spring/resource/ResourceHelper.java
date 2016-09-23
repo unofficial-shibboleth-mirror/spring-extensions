@@ -42,7 +42,7 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * 
      * @param theResource the spring resource;
      */
-    private ResourceHelper(@Nonnull Resource theResource) {
+    private ResourceHelper(@Nonnull final Resource theResource) {
 
         springResource = Constraint.isNotNull(theResource, "provided Spring Resource should not be null");
     }
@@ -54,7 +54,7 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * @param springResource the input
      * @return a {@link Resource} which reflects what the Spring one does
      */
-    public static net.shibboleth.utilities.java.support.resource.Resource of(Resource springResource) {
+    public static net.shibboleth.utilities.java.support.resource.Resource of(final Resource springResource) {
         if (springResource instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) springResource;
         }
@@ -108,7 +108,7 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
 
     /** {@inheritDoc} */
     @Override public net.shibboleth.utilities.java.support.resource.Resource
-            createRelativeResource(String relativePath) throws IOException {
+            createRelativeResource(final String relativePath) throws IOException {
 
         return of(springResource.createRelative(relativePath));
     }

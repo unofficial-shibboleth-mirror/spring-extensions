@@ -48,7 +48,7 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean impl
      * 
      * @param cacheDirectory The cacheDirectory to set.
      */
-    public void setCacheDirectory(String cacheDirectory) {
+    public void setCacheDirectory(final String cacheDirectory) {
         ((FileCachingHttpClientBuilder)getHttpClientBuilder()).setCacheDirectory(cacheDirectory);
     }
 
@@ -57,7 +57,7 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean impl
      * 
      * @param maxCacheEntries The maxCacheEntries to set.
      */
-    public void setMaxCacheEntries(int maxCacheEntries) {
+    public void setMaxCacheEntries(final int maxCacheEntries) {
         ((FileCachingHttpClientBuilder)getHttpClientBuilder()).setMaxCacheEntries(maxCacheEntries);
     }
 
@@ -66,7 +66,7 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean impl
      * 
      * @param maxCacheEntrySize The maxCacheEntrySize to set.
      */
-    public void setMaxCacheEntrySize(long maxCacheEntrySize) {
+    public void setMaxCacheEntrySize(final long maxCacheEntrySize) {
         ((FileCachingHttpClientBuilder)getHttpClientBuilder()).setMaxCacheEntrySize(maxCacheEntrySize);
     }
 
@@ -79,10 +79,10 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean impl
     /** {@inheritDoc} */
     @Override
     protected HttpClient doCreateInstance() throws Exception {
-        HttpClient client = super.doCreateInstance();
+        final HttpClient client = super.doCreateInstance();
         synchronized(this) {
             if (client instanceof InitializableComponent) {
-                InitializableComponent component = (InitializableComponent) client;
+                final InitializableComponent component = (InitializableComponent) client;
                 if (!component.isInitialized()) {
                    component.initialize(); 
                 }

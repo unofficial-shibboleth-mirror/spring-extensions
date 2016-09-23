@@ -57,7 +57,7 @@ public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext
     }
 
     /** {@inheritDoc} */
-    @Override @Nullable public ServiceableComponent<T> apply(@Nullable ApplicationContext appContext) {
+    @Override @Nullable public ServiceableComponent<T> apply(@Nullable final ApplicationContext appContext) {
         final Collection<? extends ServiceableComponent> components = appContext.getBeansOfType(serviceClaz).values();
 
         if (components.size() == 0) {

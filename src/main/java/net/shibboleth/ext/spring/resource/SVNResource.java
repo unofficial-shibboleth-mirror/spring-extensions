@@ -95,8 +95,8 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws BeanCreationException thrown if there is a problem initializing the SVN resource
      */
-    public SVNResource(SVNClientManager svnClientMgr, SVNURL repositoryUrl, File workingCopy, long workingRevision,
-            String resourceFile) {
+    public SVNResource(final SVNClientManager svnClientMgr, final SVNURL repositoryUrl, 
+            final File workingCopy, final long workingRevision, final String resourceFile) {
         DAVRepositoryFactory.setup();
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
@@ -114,7 +114,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             checkWorkingCopyDirectory(workingCopy);
             workingCopyDirectory = workingCopy;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new BeanCreationException(e.getMessage());
         }
 
@@ -132,7 +132,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
                 log.error("Resource file " + resourceFile + " does not exist in SVN working copy directory "
                         + workingCopy.getAbsolutePath());
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new BeanCreationException(e.getMessage());
         }
     }
@@ -149,7 +149,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @param fileName the name
      */
-    public void setFilename(String fileName) {
+    public void setFilename(final String fileName) {
         resourceFileName = StringSupport.trimOrNull(fileName);
         if (resourceFileName == null) {
             log.error("SVN working copy resource file name may not be null or empty");
@@ -186,14 +186,14 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws IOException thrown if the file is invalid
      */
-    protected void checkWorkingCopyDirectory(File directory) throws IOException {
+    protected void checkWorkingCopyDirectory(final File directory) throws IOException {
         if (directory == null) {
             log.error("SVN working copy directory cannot be null");
             throw new IOException("SVN working copy directory cannot be null");
         }
 
         if (!directory.exists()) {
-            boolean created = directory.mkdirs();
+            final boolean created = directory.mkdirs();
             if (!created) {
                 final String msg = "SVN working copy directory " + directory.getAbsolutePath()
                         + " does not exist and could not be created"; 
@@ -301,7 +301,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws IOException thrown if there is a problem getting the last modified time
      */
-    private DateTime getLastModificationForRevision(SVNRevision revision) throws IOException {
+    private DateTime getLastModificationForRevision(final SVNRevision revision) throws IOException {
         try {
             final SVNStatusHandler handler = new SVNStatusHandler();
             clientManager.getStatusClient().doStatus(getFile(), revision, SVNDepth.INFINITY, true, true, false, false,
@@ -361,7 +361,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             checkoutOrUpdateResource();
             return getFile().exists();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
     }
@@ -391,7 +391,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         try {
             return new URI(getProtocol(), null, remoteRepository.getHost(), remoteRepository.getPort(), getFullPath(),
                     null, null);
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IOException(e);
         }
     }
@@ -413,19 +413,19 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
     }
 
     /** {@inheritDoc} */
-    @Override public Resource createRelative(String relativePath) throws IOException {
+    @Override public Resource createRelative(final String relativePath) throws IOException {
         throw new IOException("Cannot support relative open on SVN resources");
     }
 
     /** {@inheritDoc} */
     @Override public net.shibboleth.utilities.java.support.resource.Resource
-            createRelativeResource(String relativePath) throws IOException {
+            createRelativeResource(final String relativePath) throws IOException {
         throw new IOException("Cannot support relative open on SVN resources");
     }
 
     /** {@inheritDoc} */
     @Override public String getDescription() {
-        StringBuffer sb = new StringBuffer("SVN Resource: ");
+        final StringBuffer sb = new StringBuffer("SVN Resource: ");
         return sb.append(getFullPath()).toString();
     }
 
@@ -435,7 +435,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
     }
 
     /** {@inheritDoc} */
-    @Override public void setBeanName(String name) {
+    @Override public void setBeanName(final String name) {
         // For some reason Spring will call this after initialization.
         if (!isInitialized()) {
             setId(name);
@@ -458,7 +458,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
         }
 
         /** {@inheritDoc} */
-        @Override public void handleStatus(SVNStatus currentStatus) throws SVNException {
+        @Override public void handleStatus(final SVNStatus currentStatus) throws SVNException {
             status = currentStatus;
         }
     }

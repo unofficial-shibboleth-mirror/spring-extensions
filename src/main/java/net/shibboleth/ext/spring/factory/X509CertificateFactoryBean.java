@@ -52,14 +52,14 @@ public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> 
     }
 
     /** {@inheritDoc} */
-    public X509Certificate getObject() throws Exception {
+    @Override public X509Certificate getObject() throws Exception {
         if (certificate == null) {
             if (resource == null) {
                 throw new BeanCreationException("Certificate resource must be provided in order to use this factory.");
             }
 
             try (InputStream is = resource.getInputStream()) {
-                certificate = (X509Certificate) CertUtil.readCertificate(is);
+                certificate = CertUtil.readCertificate(is);
             }
         }
 
@@ -67,12 +67,12 @@ public class X509CertificateFactoryBean implements FactoryBean<X509Certificate> 
     }
 
     /** {@inheritDoc} */
-    @Nonnull public Class<?> getObjectType() {
+    @Override @Nonnull public Class<?> getObjectType() {
         return X509Certificate.class;
     }
 
     /** {@inheritDoc} */
-    public boolean isSingleton() {
+    @Override public boolean isSingleton() {
         return true;
     }
 }

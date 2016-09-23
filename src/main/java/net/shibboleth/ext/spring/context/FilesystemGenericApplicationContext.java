@@ -39,7 +39,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      *
      * @param beanFactory bean factory
      */
-    public FilesystemGenericApplicationContext(DefaultListableBeanFactory beanFactory) {
+    public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory) {
         super(beanFactory);
     }
 
@@ -48,7 +48,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      *
      * @param parent parent context
      */
-    public FilesystemGenericApplicationContext(ApplicationContext parent) {
+    public FilesystemGenericApplicationContext(final ApplicationContext parent) {
         super(parent);
     }
 
@@ -58,7 +58,8 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      * @param beanFactory bean factory
      * @param parent parent context
      */
-    public FilesystemGenericApplicationContext(DefaultListableBeanFactory beanFactory, ApplicationContext parent) {
+    public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory, 
+            final ApplicationContext parent) {
         super(beanFactory, parent);
     }
 
@@ -70,7 +71,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      * paths are treated as absolute if they are in fact absolute.</p>
      */
     @Override
-    protected Resource getResourceByPath(String path) {
+    protected Resource getResourceByPath(final String path) {
         final Resource r = new FileSystemResource(path);
         if (r.exists()) {
             return r;

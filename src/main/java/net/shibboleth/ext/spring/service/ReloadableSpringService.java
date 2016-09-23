@@ -111,7 +111,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * 
      * @param claz The interface being implemented.
      */
-    public ReloadableSpringService(@Nonnull Class<T> claz) {
+    public ReloadableSpringService(@Nonnull final Class<T> claz) {
         this(claz, new ClassBasedServiceStrategy());
     }
 
@@ -121,8 +121,8 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param claz The interface being implemented.
      * @param strategy the strategy to use to look up servicable component to look for.
      */
-    public ReloadableSpringService(@Nonnull Class<T> claz,
-            @Nonnull Function<GenericApplicationContext, ServiceableComponent> strategy) {
+    public ReloadableSpringService(@Nonnull final Class<T> claz,
+            @Nonnull final Function<GenericApplicationContext, ServiceableComponent> strategy) {
         theClaz = Constraint.isNotNull(claz, "Class cannot be null");
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
         factoryPostProcessors = Collections.emptyList();
@@ -176,7 +176,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         if (!serviceConfigurations.isEmpty()) {
             resourceLastModifiedTimes = new long[serviceConfigurations.size()];
 
-            int numOfResources = serviceConfigurations.size();
+            final int numOfResources = serviceConfigurations.size();
             Resource serviceConfig;
             for (int i = 0; i < numOfResources; i++) {
                 serviceConfig = serviceConfigurations.get(i);
@@ -237,7 +237,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     public final void start() {
         try {
             initialize();
-        } catch (ComponentInitializationException e) {
+        } catch (final ComponentInitializationException e) {
             throw new BeanInitializationException("Could not start service", e);
         }
     }
@@ -273,7 +273,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         }
 
         boolean configResourceChanged = false;
-        int numOfResources = serviceConfigurations.size();
+        final int numOfResources = serviceConfigurations.size();
 
         Resource serviceConfig;
         long serviceConfigLastModified;
@@ -412,7 +412,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /** {@inheritDoc} */
-    @Override public void setApplicationContext(ApplicationContext applicationContext) {
+    @Override public void setApplicationContext(final ApplicationContext applicationContext) {
         setParentContext(applicationContext);
     }
 

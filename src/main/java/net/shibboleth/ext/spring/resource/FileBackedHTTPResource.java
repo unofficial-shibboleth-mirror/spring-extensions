@@ -26,6 +26,7 @@ import java.net.URL;
 
 import javax.annotation.Nonnull;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -61,8 +62,9 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
      * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull final HttpClient client, @NotEmpty @Nonnull final String url,
-            @Nonnull final Resource resource) throws IOException {
+    @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
+            @NotEmpty @Nonnull @ParameterName(name="url") final String url,
+            @Nonnull  @ParameterName(name="resource") final Resource resource) throws IOException {
         super(client, url);
         backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
         if (null == resource.getFile()) {
@@ -80,8 +82,10 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
      * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull final HttpClient client, @Nonnull final URL url,
-            @Nonnull final Resource resource) throws IOException {
+    @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
+            @Nonnull @NotEmpty @ParameterName(name="url") final URL url, 
+            @Nonnull @ParameterName(name="resource") final Resource resource)
+            throws IOException {
         super(client, url);
         backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
         if (null == resource.getFile()) {
@@ -97,8 +101,9 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public FileBackedHTTPResource(@Nonnull final String backingFile, @Nonnull final HttpClient client, 
-            @NotEmpty @Nonnull final String url) throws IOException {
+    public FileBackedHTTPResource(@Nonnull @ParameterName(name="backingFile") final String backingFile,
+            @Nonnull @ParameterName(name="client") final HttpClient client, 
+            @NotEmpty @Nonnull @ParameterName(name="url") final String url) throws IOException {
         super(client, url);
         Constraint.isNotNull(backingFile, "File Name must not be null");
         final File file = new File(backingFile);
@@ -113,8 +118,10 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public FileBackedHTTPResource(@Nonnull final String backingFile, @Nonnull final HttpClient client,
-            @Nonnull final URL url) throws IOException {
+    public FileBackedHTTPResource(@Nonnull  @ParameterName(name="backingFile") final String backingFile, 
+            @Nonnull @ParameterName(name="client") final HttpClient client,
+            @Nonnull  @ParameterName(name="url") final URL url)
+            throws IOException {
         super(client, url);
         Constraint.isNotNull(backingFile, "File Name must not be null");
         final File file = new File(backingFile);

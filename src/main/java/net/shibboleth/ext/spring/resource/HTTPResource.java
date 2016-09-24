@@ -304,7 +304,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** {@inheritDoc} Based on {@link org.springframework.core.io.UrlResource}. */
     @Override public HTTPResource createRelative(final String relativePath) throws IOException {
-        String path;
+        final String path;
         if (relativePath.startsWith("/")) {
             path = relativePath.substring(1);
         } else {

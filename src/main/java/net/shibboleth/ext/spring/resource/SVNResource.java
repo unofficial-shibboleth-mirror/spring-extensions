@@ -233,7 +233,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      */
     protected void checkoutOrUpdateResource() throws IOException {
         log.debug("checking out or updating working copy");
-        SVNRevision newRevision;
+        final SVNRevision newRevision;
 
         if (!workingCopyDirectoryExists()) {
             log.debug("Working copy does not yet exist, checking it out to {}", workingCopyDirectory.getAbsolutePath());

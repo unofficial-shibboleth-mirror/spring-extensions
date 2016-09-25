@@ -62,6 +62,16 @@ public class IdentifiableBeanPostProcessorTest extends AbstractTestNGSpringConte
         Assert.assertEquals(bean.getId(), "TautologousName");
     }
 
+    @Test public void testSingleton() {
+        IdentifiedComponent bean = applicationContext.getBean("SingletonIdentifiableBean", Identifiable.class);
+        Assert.assertEquals(bean.getId(), "SingletonIdentifiableBean");
+    }
+
+    @Test public void testNonDefaultSingleton() {
+        IdentifiedComponent bean = applicationContext.getBean("NonDefaultSingletonIdentifiableBean", Identifiable.class);
+        Assert.assertEquals(bean.getId(), "NameForNonDefaultSingletonIdentifiableBean");
+    }
+
     public static class Identified extends AbstractIdentifiedInitializableComponent {
         @Override public void setId(@Nonnull String componentId) {
             super.setId(componentId);
@@ -70,4 +80,5 @@ public class IdentifiableBeanPostProcessorTest extends AbstractTestNGSpringConte
 
     public static class Identifiable extends AbstractIdentifiableInitializableComponent {
     }
+
 }

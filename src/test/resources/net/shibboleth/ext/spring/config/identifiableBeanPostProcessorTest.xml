@@ -25,5 +25,13 @@
 	<bean id="TautologousName"
 		class="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessorTest$Identifiable"
 		scope="prototype" p:id="TautologousName" />
+        
+    <bean id="SingletonIdentifiableBean"
+        class="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessorTest$Identifiable"
+        scope="singleton" />
+
+    <bean id="NonDefaultSingletonIdentifiableBean"
+        class="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessorTest$Identifiable"
+        scope="singleton" p:id="NameForNonDefaultSingletonIdentifiableBean" />    
 
 </beans>

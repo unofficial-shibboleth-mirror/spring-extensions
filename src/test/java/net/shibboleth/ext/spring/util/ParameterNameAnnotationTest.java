@@ -24,24 +24,22 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- *
- */
+/** {@link AnnotationParameterNameDiscoverer} unit test. */
 public class ParameterNameAnnotationTest {
 
     @Test public void testNoAnnotationFilter() {
-        
+
         final GenericApplicationContext context = new GenericApplicationContext();
         final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions("net/shibboleth/ext/spring/util/paramBeans.xml");
         context.refresh();
-        
+
         final ParamClass byNumber = context.getBean("TheBeanRemainsTheSame", ParamClass.class);
         Assert.assertEquals(byNumber.getP1(), "Param the First");
         Assert.assertEquals(byNumber.getP2(), "Param the Second");
-        
+
         final ParamClass byId = context.getBean("InThroughTheOutBean", ParamClass.class);
         // Swapped
         Assert.assertEquals(byId.getP1(), "Param the Second");
@@ -52,27 +50,26 @@ public class ParameterNameAnnotationTest {
         Assert.assertEquals(single.getP2(), "HardWired Param The Second");
 
     }
-    
-    @Test(enabled=true) public void testWithAnnotationFilter() {
-        
+
+    @Test(enabled = true) public void testWithAnnotationFilter() {
+
         final GenericApplicationContext context = new GenericApplicationContext();
         final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
-        
+
         final ConfigurableListableBeanFactory factory = context.getBeanFactory();
         if (factory instanceof AbstractAutowireCapableBeanFactory) {
             final AbstractAutowireCapableBeanFactory aaBeanFactory = (AbstractAutowireCapableBeanFactory) factory;
             aaBeanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
         }
-        
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions("net/shibboleth/ext/spring/util/paramBeans.xml");
         context.refresh();
-        
+
         final ParamClass byNumber = context.getBean("TheBeanRemainsTheSame", ParamClass.class);
         Assert.assertEquals(byNumber.getP1(), "Param the First");
         Assert.assertEquals(byNumber.getP2(), "Param the Second");
-        
+
         final ParamClass byId = context.getBean("InThroughTheOutBean", ParamClass.class);
         // Correct
         Assert.assertEquals(byId.getP1(), "Param the First");
@@ -82,7 +79,6 @@ public class ParameterNameAnnotationTest {
         final ParamClass single = context.getBean("SingleParam", ParamClass.class);
         Assert.assertEquals(single.getP1(), "Param the First");
         Assert.assertEquals(single.getP2(), "HardWired Param The Second");
-
 
     }
 

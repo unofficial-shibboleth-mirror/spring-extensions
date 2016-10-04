@@ -61,7 +61,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
-     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)     */
+     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)}
+     */
     @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
             @NotEmpty @Nonnull @ParameterName(name="url") final String url,
             @Nonnull  @ParameterName(name="resource") final Resource resource) throws IOException {
@@ -81,7 +82,8 @@ public class FileBackedHTTPResource extends HTTPResource {
      * @param url URL to the remote data
      * @param resource the file to use as backing store
      * @throws IOException if the URL was badly formed
-     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)     */
+     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)}
+     */
     @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
             @Nonnull @NotEmpty @ParameterName(name="url") final URL url, 
             @Nonnull @ParameterName(name="resource") final Resource resource)

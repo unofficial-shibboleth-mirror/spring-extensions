@@ -43,17 +43,22 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentified
         ServiceableComponent<T>, ApplicationContextAware {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(AbstractServiceableComponent.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(AbstractServiceableComponent.class);
 
     /** The context used to load this bean. */
-    private ApplicationContext applicationContext;
+    @Nullable private ApplicationContext applicationContext;
 
     /**
      * Lock for this service. We make it unfair since we will control access and there will only ever be contention
      * during unload.
      */
-    private final ReentrantReadWriteLock serviceLock = new ReentrantReadWriteLock(false);
+    @Nonnull private final ReentrantReadWriteLock serviceLock;
 
+    /** Constructor. */
+    public AbstractServiceableComponent() {
+        serviceLock = new ReentrantReadWriteLock(false);
+    }
+    
     /** {@inheritDoc} */
     @Override public void setApplicationContext(final ApplicationContext context) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
@@ -131,4 +136,5 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentified
                     + ": Application context did not implement ConfigurableApplicationContext");
         }
     }
+
 }

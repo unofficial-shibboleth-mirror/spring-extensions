@@ -91,11 +91,10 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
         }
 
         if (!allPresent) {
-            if (isOurs) {
-                log.warn("Constructor for class '{}' with {} parameters: "
-                        + "Not all parameters are annotated with @ParameterName", className, annotationsArray.length);
-                log.debug("Types : {}", (Object)ctor.getParameterTypes());
-            }
+
+            log.debug("Constructor for class '{}' with {} parameters: "
+                    + "Not all parameters are annotated with @ParameterName", className, annotationsArray.length);
+            log.debug("Types : {}", (Object)ctor.getParameterTypes());
             return super.getParameterNames(ctor);
         }
         log.trace("Constructor for class '{}' with {} parameters called {}", className, names.length, names);

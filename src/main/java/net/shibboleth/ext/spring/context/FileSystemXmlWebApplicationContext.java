@@ -17,6 +17,9 @@
 
 package net.shibboleth.ext.spring.context;
 
+import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
+
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -30,10 +33,6 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * resources.
  */
 public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext {
-
-    /** Constructor. */
-    public FileSystemXmlWebApplicationContext() {
-    }
 
     /**
      * {@inheritDoc}
@@ -68,4 +67,10 @@ public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext
         return super.getResource(location);
     }
 
+    /** {@inheritDoc} */
+    @Override protected DefaultListableBeanFactory createBeanFactory() {
+        final DefaultListableBeanFactory result = super.createBeanFactory();
+        result.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        return result;
+    }
 }

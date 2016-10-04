@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.context;
 
+import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
+
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -24,14 +26,15 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 /**
- * An extension of {@link GenericApplicationContext} that is biased in favor of the filesystem
- * such that bare resource paths are assumed to be files rather than classpath resources.
+ * An extension of {@link GenericApplicationContext} that is biased in favor of the filesystem such that bare resource
+ * paths are assumed to be files rather than classpath resources.
  */
 public class FilesystemGenericApplicationContext extends GenericApplicationContext {
 
     /** Constructor. */
     public FilesystemGenericApplicationContext() {
-        
+        super();
+        getDefaultListableBeanFactory().setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
     }
 
     /**
@@ -41,6 +44,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      */
     public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory) {
         super(beanFactory);
+        beanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
     }
 
     /**
@@ -50,6 +54,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      */
     public FilesystemGenericApplicationContext(final ApplicationContext parent) {
         super(parent);
+        getDefaultListableBeanFactory().setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
     }
 
     /**
@@ -58,25 +63,26 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
      * @param beanFactory bean factory
      * @param parent parent context
      */
-    public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory, 
+    public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory,
             final ApplicationContext parent) {
         super(beanFactory, parent);
+        beanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
     }
 
     /**
      * {@inheritDoc}
      * 
-     * <p>Overrides the standard behavior of path-only resources and treats them as file paths if the path
-     * exists. Note that this differs from the ordinary Spring contexts that default to file paths because
-     * paths are treated as absolute if they are in fact absolute.</p>
+     * <p>
+     * Overrides the standard behavior of path-only resources and treats them as file paths if the path exists. Note
+     * that this differs from the ordinary Spring contexts that default to file paths because paths are treated as
+     * absolute if they are in fact absolute.
+     * </p>
      */
-    @Override
-    protected Resource getResourceByPath(final String path) {
+    @Override protected Resource getResourceByPath(final String path) {
         final Resource r = new FileSystemResource(path);
         if (r.exists()) {
             return r;
         }
-        
         return super.getResourceByPath(path);
     }
 

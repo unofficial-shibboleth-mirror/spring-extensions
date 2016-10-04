@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.ext.spring.util.SpringSupport;
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -111,7 +112,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * 
      * @param claz The interface being implemented.
      */
-    public ReloadableSpringService(@Nonnull final Class<T> claz) {
+    public ReloadableSpringService(@Nonnull @ParameterName(name="claz") final Class<T> claz) {
         this(claz, new ClassBasedServiceStrategy());
     }
 
@@ -121,8 +122,9 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param claz The interface being implemented.
      * @param strategy the strategy to use to look up servicable component to look for.
      */
-    public ReloadableSpringService(@Nonnull final Class<T> claz,
-            @Nonnull final Function<GenericApplicationContext, ServiceableComponent> strategy) {
+    public ReloadableSpringService(@Nonnull @ParameterName(name="claz") final Class<T> claz,
+             @Nonnull @ParameterName(name="strategy")
+                      final Function<GenericApplicationContext, ServiceableComponent> strategy) {
         theClaz = Constraint.isNotNull(claz, "Class cannot be null");
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
         factoryPostProcessors = Collections.emptyList();

@@ -25,6 +25,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -67,13 +70,13 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
     private final Logger log = LoggerFactory.getLogger(SVNResource.class);
 
     /** SVN Client manager. */
-    private final SVNClientManager clientManager;
+    @Nonnull private final SVNClientManager clientManager;
 
     /** URL to the remote repository. */
-    private SVNURL remoteRepository;
+    @Nonnull private SVNURL remoteRepository;
 
     /** Directory where the working copy will be kept. */
-    private File workingCopyDirectory;
+    @Nonnull private File workingCopyDirectory;
 
     /** Revision of the working copy. */
     private SVNRevision retrievalRevision;
@@ -95,8 +98,12 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws BeanCreationException thrown if there is a problem initializing the SVN resource
      */
-    public SVNResource(final SVNClientManager svnClientMgr, final SVNURL repositoryUrl, 
-            final File workingCopy, final long workingRevision, final String resourceFile) {
+    public SVNResource(
+            @Nonnull @ParameterName(name="svnClientMgr") final SVNClientManager svnClientMgr,
+            @Nonnull @ParameterName(name="repositoryUrl") final SVNURL repositoryUrl,
+            @Nonnull @ParameterName(name="workingCopy") final File workingCopy,
+            @ParameterName(name="workingRevision") final long workingRevision,
+            @Nonnull @ParameterName(name="resourceFile") final String resourceFile) {
         DAVRepositoryFactory.setup();
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
@@ -149,7 +156,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @param fileName the name
      */
-    public void setFilename(final String fileName) {
+    public void setFilename(@Nonnull final String fileName) {
         resourceFileName = StringSupport.trimOrNull(fileName);
         if (resourceFileName == null) {
             log.error("SVN working copy resource file name may not be null or empty");
@@ -186,7 +193,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
      * 
      * @throws IOException thrown if the file is invalid
      */
-    protected void checkWorkingCopyDirectory(final File directory) throws IOException {
+    protected void checkWorkingCopyDirectory(@Nonnull final File directory) throws IOException {
         if (directory == null) {
             log.error("SVN working copy directory cannot be null");
             throw new IOException("SVN working copy directory cannot be null");

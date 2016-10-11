@@ -28,6 +28,7 @@ import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -64,13 +65,10 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     private final Logger log = LoggerFactory.getLogger(HTTPResource.class);
 
     /** HTTP Client used to pull the resource. */
-    private final HttpClient httpClient;
-
-    /** URI to the Resource. */
-    // private final URI resourceURI;
+    @Nonnull private final HttpClient httpClient;
 
     /** URL to the Resource. */
-    private final URL resourceURL;
+    @Nonnull private final URL resourceURL;
 
     /** HttpClient credentials provider. */
     private BasicCredentialsProvider credentialsProvider;
@@ -82,7 +80,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull final HttpClient client, @NotEmpty @Nonnull final String url) throws IOException {
+    public HTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client,
+            @Nonnull @NotEmpty @ParameterName(name="url") final String url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         final String trimmedAddress =
                 Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL must be non empty and non null");
@@ -97,7 +96,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @param url URL to the remote data
      * @throws IOException if the URL was badly formed
      */
-    public HTTPResource(@Nonnull final HttpClient client, @Nonnull final URL url) throws IOException {
+    public HTTPResource(@Nonnull @ParameterName(name="") final HttpClient client,
+            @Nonnull @ParameterName(name="url") final URL url) throws IOException {
         httpClient = Constraint.isNotNull(client, "The Client must not be null");
         resourceURL = Constraint.isNotNull(url, "Provided URL must be non empty and non null");
 

@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
@@ -53,7 +55,7 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * 
      * @param authentications authentications
      */
-    public SVNBasicAuthenticationManager(final List<SVNAuthentication> authentications) {
+    public SVNBasicAuthenticationManager(@ParameterName(name="")  final List<SVNAuthentication> authentications) {
         super(authentications.toArray(new SVNAuthentication[authentications.size()]));
     }
 
@@ -66,8 +68,11 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param portNumber a port number over which an ssh tunnel is established
      */
     @SuppressWarnings("deprecation")
-    public SVNBasicAuthenticationManager(final String userName, final File keyFile, 
-            final String passphrase, final int portNumber) {
+    public SVNBasicAuthenticationManager(
+            @ParameterName(name="userName") final String userName,
+            @ParameterName(name="keyFile" ) final File keyFile,
+            @ParameterName(name="passphrase") final String passphrase,
+            @ParameterName(name="portNumber") final int portNumber) {
         super(userName, keyFile, passphrase, portNumber);
     }
 
@@ -78,7 +83,8 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param password a password
      */
     @SuppressWarnings("deprecation")
-    public SVNBasicAuthenticationManager(final String userName, final String password) {
+    public SVNBasicAuthenticationManager(@ParameterName(name="userName") final String userName,
+            @ParameterName(name="password") final String password) {
         super(userName, password);
     }
 

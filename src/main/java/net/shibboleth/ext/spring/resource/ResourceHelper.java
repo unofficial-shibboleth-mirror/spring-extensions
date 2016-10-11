@@ -25,6 +25,7 @@ import java.net.URL;
 
 import javax.annotation.Nonnull;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.springframework.core.io.Resource;
@@ -43,7 +44,6 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * @param theResource the spring resource;
      */
     private ResourceHelper(@Nonnull final Resource theResource) {
-
         springResource = Constraint.isNotNull(theResource, "provided Spring Resource should not be null");
     }
 
@@ -54,7 +54,8 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * @param springResource the input
      * @return a {@link Resource} which reflects what the Spring one does
      */
-    public static net.shibboleth.utilities.java.support.resource.Resource of(final Resource springResource) {
+    public static net.shibboleth.utilities.java.support.resource.Resource
+                 of(@ParameterName(name="springResource") final Resource springResource) {
         if (springResource instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) springResource;
         }

@@ -34,10 +34,22 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
     private final HttpClientBuilder builder;
     
     /**
-     * Connection Timeout.<br/>
+     * Connection timeout.<br/>
      * We need this field to ensure that Spring does the conversion.
      */
     @Duration private long connectionTimeout;
+    
+    /**
+     * Connection request timeout.<br/>
+     * We need this field to ensure that Spring does the conversion.
+     */
+    @Duration private long connectionRequestTimeout;
+
+    /**
+     * Socket timeout.<br/>
+     * We need this field to ensure that Spring does the conversion.
+     */
+    @Duration private long socketTimeout;
 
     /**
      * Constructor.
@@ -65,6 +77,34 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
             throw new IllegalArgumentException("Timeout was too large");
         }
         builder.setConnectionTimeout((int) timeout);
+    }
+    
+    /**
+     * Sets the maximum length of time in milliseconds to wait for a connection to be returned from the connection
+     * manager. A value of less than 1 indicates no timeout.
+     * 
+     * @param timeout maximum length of time in milliseconds to wait for a connection from the connection manager
+     */
+    @Duration public void setConnectionRequestTimeout(@Duration final long timeout) {
+        connectionRequestTimeout = timeout;
+        if (timeout > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("Timeout was too large");
+        }
+        builder.setConnectionRequestTimeout((int) timeout);
+    }
+    
+    /**
+     * Sets the maximum period inactivity between two consecutive data packets in milliseconds. A value of less
+     * than 1 indicates no timeout.
+     * 
+     * @param timeout maximum length of time in milliseconds between two consecutive data packets
+     */
+    @Duration public void setSocketTimeout(@Duration final long timeout) {
+        socketTimeout = timeout;
+        if (timeout > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException("Timeout was too large");
+        }
+        builder.setSocketTimeout((int) timeout);
     }
     
     /**

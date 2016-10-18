@@ -64,6 +64,24 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
 
         return HttpClient.class;
     }
+    
+    /**
+     * Sets the max total simultaneous connections allowed by the pooling connection manager.
+     * 
+     * @param max the max total connection
+     */
+    public void setMaxConnectionsTotal(final int max) {
+        builder.setMaxConnectionsTotal(max);
+    }
+    
+    /**
+     * Sets the max simultaneous connections per route allowed by the pooling connection manager.
+     * 
+     * @param max the max connections per route
+     */
+    public void setMaxConnectionsPerRoute(final int max) {
+        builder.setMaxConnectionsPerRoute(max);
+    }
 
     /**
      * Sets the maximum length of time in milliseconds to wait for the connection to be established. A value of less

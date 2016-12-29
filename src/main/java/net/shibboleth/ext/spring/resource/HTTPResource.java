@@ -45,7 +45,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.DateUtils;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,9 +68,6 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** URL to the Resource. */
     @Nonnull private final URL resourceURL;
-
-    /** HttpClient credentials provider. */
-    private BasicCredentialsProvider credentialsProvider;
 
     /**
      * Constructor.
@@ -109,11 +105,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @return a new instance of {@link HttpCacheContext}
      */
     protected HttpCacheContext buildHttpClientContext() {
-        final HttpCacheContext context = HttpCacheContext.create();
-        if (credentialsProvider != null) {
-            context.setCredentialsProvider(credentialsProvider);
-        }
-        return context;
+        return HttpCacheContext.create();
     }
 
     /**

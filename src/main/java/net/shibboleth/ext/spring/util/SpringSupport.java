@@ -93,6 +93,9 @@ public final class SpringSupport {
      * @param parentContext parent context, or null if there is no parent
      * 
      * @return the created context
+     * 
+     * TODO: The signature here needs to constrain the ApplicationContextInitializers supplied to
+     * be safe for use with a FilesystemGenericApplicationContext. The raw types are masking the bug. 
      */
     @Nonnull public static GenericApplicationContext newContext(@Nonnull @NotEmpty final String name,
             @Nonnull @NonnullElements final List<Resource> configurationResources,

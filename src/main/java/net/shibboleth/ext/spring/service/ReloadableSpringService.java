@@ -87,7 +87,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     @Nonnull private final Class<T> theClaz;
 
     /** How to summon up the {@link ServiceableComponent} from the {@link ApplicationContext}. */
-    @Nonnull private final Function<GenericApplicationContext, ServiceableComponent> serviceStrategy;
+    @Nonnull private final Function<ApplicationContext, ServiceableComponent<T>> serviceStrategy;
 
     /** Application context owning this engine. */
     @Nullable private ApplicationContext parentContext;
@@ -113,7 +113,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param claz The interface being implemented.
      */
     public ReloadableSpringService(@Nonnull @ParameterName(name="claz") final Class<T> claz) {
-        this(claz, new ClassBasedServiceStrategy());
+        this(claz, new ClassBasedServiceStrategy<T>());
     }
 
     /**
@@ -124,7 +124,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      */
     public ReloadableSpringService(@Nonnull @ParameterName(name="claz") final Class<T> claz,
              @Nonnull @ParameterName(name="strategy")
-                      final Function<GenericApplicationContext, ServiceableComponent> strategy) {
+                final Function<ApplicationContext,ServiceableComponent<T>> strategy) {
         theClaz = Constraint.isNotNull(claz, "Class cannot be null");
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
         factoryPostProcessors = Collections.emptyList();

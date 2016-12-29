@@ -118,9 +118,7 @@ public class FileBackedHTTPResourceTest {
 
     @Test public void testParsingOld() throws IOException {
 
-        final GenericApplicationContext context = getContext("net/shibboleth/ext/spring/resource/oldStyle.xml");
-
-        try {
+        try (final GenericApplicationContext context = getContext("net/shibboleth/ext/spring/resource/oldStyle.xml")) {
 
             Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class),
                     new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
@@ -134,15 +132,12 @@ public class FileBackedHTTPResourceTest {
             Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class),
                     new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
-        } finally {
-            context.close();
         }
     }
 
     @Test public void testParsingNew() throws IOException {
 
-        final GenericApplicationContext context = getContext("net/shibboleth/ext/spring/resource/newStyle.xml");
-        try {
+        try (final GenericApplicationContext context = getContext("net/shibboleth/ext/spring/resource/newStyle.xml")) {
 
             Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class),
                     new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
@@ -153,8 +148,6 @@ public class FileBackedHTTPResourceTest {
                     new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
             Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class),
                     new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-        } finally {
-            context.close();
         }
     }
 

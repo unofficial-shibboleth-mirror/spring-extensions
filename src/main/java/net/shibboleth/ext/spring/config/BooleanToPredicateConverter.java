@@ -25,10 +25,10 @@ import com.google.common.base.Predicates;
 /**
  * Allows setting of fixed {@link Predicate} properties using a boolean value.
  */
-public class BooleanToPredicateConverter implements Converter<Boolean,Predicate> {
+public class BooleanToPredicateConverter implements Converter<Boolean,Predicate<?>> {
 
     /** {@inheritDoc} */
-    @Override public Predicate convert(final Boolean source) {
+    @Override public Predicate<?> convert(final Boolean source) {
         return source ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
     }
     

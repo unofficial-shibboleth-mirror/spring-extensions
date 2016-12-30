@@ -49,10 +49,10 @@ import com.google.common.io.ByteStreams;
 public class FileBackedHTTPResource extends HTTPResource {
 
     /** Logger. */
-    private final Logger log = LoggerFactory.getLogger(FileBackedHTTPResource.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(FileBackedHTTPResource.class);
 
     /** Backing resource file. */
-    private final Resource backingResource;
+    @Nonnull private final Resource backingResource;
 
     /**
      * Constructor.

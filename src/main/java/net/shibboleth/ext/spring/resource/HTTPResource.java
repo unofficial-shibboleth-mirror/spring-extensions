@@ -64,7 +64,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(HTTPResource.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(HTTPResource.class);
 
     /** HTTP Client used to pull the resource. */
     @Nonnull private final HttpClient httpClient;
@@ -109,6 +109,8 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * Set a handler to manipulate the {@link HttpClientContext}.
      * 
      * @param handler the handler to install
+     * 
+     * @since 3.4.0
      */
     public void setHttpClientContextHandler(@Nonnull final HttpClientContextHandler handler) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);

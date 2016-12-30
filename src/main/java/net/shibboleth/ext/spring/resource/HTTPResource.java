@@ -110,7 +110,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * 
      * @param handler the handler to install
      * 
-     * @since 3.4.0
+     * @since 5.4.0
      */
     public void setHttpClientContextHandler(@Nonnull final HttpClientContextHandler handler) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);

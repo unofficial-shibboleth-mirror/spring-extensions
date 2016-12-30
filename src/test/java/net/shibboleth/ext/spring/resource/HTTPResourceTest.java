@@ -23,12 +23,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import net.shibboleth.ext.spring.resource.HTTPResource.HttpClientContextHandler;
 import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.cache.CacheResponseStatus;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -62,6 +65,44 @@ public class HTTPResourceTest {
         Assert.assertTrue(existsResource.exists());
         Assert.assertFalse(notExistsResource.exists());
     }
+    
+    @Test public void contextHandlerNoopTest() throws IOException {
+        final HTTPResource existsResource = new HTTPResource(client, existsURL);
+        existsResource.setHttpClientContextHandler(new HttpClientContextHandler() {
+            public void invokeBefore(HttpClientContext context, HttpUriRequest request) throws IOException {
+            }
+            public void invokeAfter(HttpClientContext context, HttpUriRequest request) throws IOException {
+            }
+        });
+
+        Assert.assertTrue(existsResource.exists());
+    }
+    
+    @Test public void contextHandlerFailBeforeTest() throws IOException {
+        final HTTPResource existsResource = new HTTPResource(client, existsURL);
+        existsResource.setHttpClientContextHandler(new HttpClientContextHandler() {
+            public void invokeBefore(HttpClientContext context, HttpUriRequest request) throws IOException {
+                throw new IOException("Fail");
+            }
+            public void invokeAfter(HttpClientContext context, HttpUriRequest request) throws IOException {
+            }
+        });
+
+        Assert.assertFalse(existsResource.exists());
+    }
+    
+    @Test public void contextHandlerFailAfterTest() throws IOException {
+        final HTTPResource existsResource = new HTTPResource(client, existsURL);
+        existsResource.setHttpClientContextHandler(new HttpClientContextHandler() {
+            public void invokeBefore(HttpClientContext context, HttpUriRequest request) throws IOException {
+            }
+            public void invokeAfter(HttpClientContext context, HttpUriRequest request) throws IOException {
+                throw new IOException("Fail");
+            }
+        });
+
+        Assert.assertFalse(existsResource.exists());
+    }
 
     @Test public void testCompare() throws IOException {
 
@@ -89,9 +130,9 @@ public class HTTPResourceTest {
 
         final TestHTTPResource what = new TestHTTPResource(client, existsURL);
         Assert.assertTrue(what.exists());
-        Assert.assertNull(what.getLasteCacheResponseStatus());
+        Assert.assertNull(what.getLastCacheResponseStatus());
         Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-        Assert.assertNull(what.getLasteCacheResponseStatus());
+        Assert.assertNull(what.getLastCacheResponseStatus());
     }
 
     @Test public void testCachedCache() throws Exception {
@@ -100,10 +141,10 @@ public class HTTPResourceTest {
         builder.setMaxCacheEntries(3);
         final TestHTTPResource what = new TestHTTPResource(builder.buildClient(), existsURL);
         Assert.assertTrue(what.exists());
-        Assert.assertNotNull(what.getLasteCacheResponseStatus());
+        Assert.assertNotNull(what.getLastCacheResponseStatus());
         Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
-        Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
+        Assert.assertEquals(what.getLastCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
     }
 
     private GenericApplicationContext getContext(final String fileName, final File theDir) {
@@ -131,10 +172,10 @@ public class HTTPResourceTest {
             final TestHTTPResource what = beans.iterator().next();
 
             Assert.assertTrue(what.exists());
-            Assert.assertNotNull(what.getLasteCacheResponseStatus());
+            Assert.assertNotNull(what.getLastCacheResponseStatus());
             Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
-            Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
+            Assert.assertEquals(what.getLastCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
         } finally {
             ((GenericApplicationContext) context.getParent()).close();
             context.close();
@@ -164,10 +205,10 @@ public class HTTPResourceTest {
             final TestHTTPResource what = beans.iterator().next();
 
             Assert.assertTrue(what.exists());
-            Assert.assertNotNull(what.getLasteCacheResponseStatus());
+            Assert.assertNotNull(what.getLastCacheResponseStatus());
             Assert.assertTrue(ResourceTestHelper.compare(what, new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
 
-            Assert.assertEquals(what.getLasteCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
+            Assert.assertEquals(what.getLastCacheResponseStatus(), CacheResponseStatus.CACHE_HIT);
         } finally {
             if (null != theDir) {
                 emptyDir(theDir);

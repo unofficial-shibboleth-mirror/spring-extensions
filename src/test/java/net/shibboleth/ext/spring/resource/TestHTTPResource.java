@@ -38,7 +38,7 @@ class TestHTTPResource extends HTTPResource {
         super.reportCachingStatus(context);
     }
 
-    public CacheResponseStatus getLasteCacheResponseStatus() {
+    public CacheResponseStatus getLastCacheResponseStatus() {
         return responseStatus;
     }
 

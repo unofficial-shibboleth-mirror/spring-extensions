@@ -27,10 +27,12 @@ import java.net.URL;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -44,6 +46,7 @@ import org.apache.http.client.cache.HttpCacheContext;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -65,9 +68,12 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
     /** HTTP Client used to pull the resource. */
     @Nonnull private final HttpClient httpClient;
-
+    
     /** URL to the Resource. */
     @Nonnull private final URL resourceURL;
+    
+    /** Optional handler to pre- and post-process context. */
+    @Nullable private HttpClientContextHandler httpClientContextHandler;
 
     /**
      * Constructor.
@@ -78,9 +84,9 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      */
     public HTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client,
             @Nonnull @NotEmpty @ParameterName(name="url") final String url) throws IOException {
-        httpClient = Constraint.isNotNull(client, "The Client must not be null");
+        httpClient = Constraint.isNotNull(client, "HttpClient cannot be null");
         final String trimmedAddress =
-                Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL must be non empty and non null");
+                Constraint.isNotNull(StringSupport.trimOrNull(url), "Provided URL cannot be null or empty");
         resourceURL = new URL(trimmedAddress);
 
     }
@@ -94,9 +100,20 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      */
     public HTTPResource(@Nonnull @ParameterName(name="") final HttpClient client,
             @Nonnull @ParameterName(name="url") final URL url) throws IOException {
-        httpClient = Constraint.isNotNull(client, "The Client must not be null");
-        resourceURL = Constraint.isNotNull(url, "Provided URL must be non empty and non null");
+        httpClient = Constraint.isNotNull(client, "HttpClient cannot be null");
+        resourceURL = Constraint.isNotNull(url, "Provided URL cannot be null or empty");
 
+    }
+    
+    /**
+     * Set a handler to manipulate the {@link HttpClientContext}.
+     * 
+     * @param handler the handler to install
+     */
+    public void setHttpClientContextHandler(@Nonnull final HttpClientContextHandler handler) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
+        httpClientContextHandler = handler;
     }
 
     /**
@@ -143,10 +160,20 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     @Override public InputStream getInputStream() throws IOException {
         final HttpGet httpGet = new HttpGet(resourceURL.toExternalForm());
         final HttpCacheContext context = buildHttpClientContext();
-        HttpResponse response = null;
-
+        
+        if (httpClientContextHandler != null) {
+            log.debug("Invoking HttpClientContextHandler prior to execution");
+            httpClientContextHandler.invokeBefore(context, httpGet);
+        }
+        
         log.debug("Attempting to get data from remote resource '{}'", resourceURL);
-        response = httpClient.execute(httpGet, context);
+        final HttpResponse response = httpClient.execute(httpGet, context);
+        
+        if (httpClientContextHandler != null) {
+            log.debug("Invoking HttpClientContextHandler after execution");
+            httpClientContextHandler.invokeAfter(context, httpGet);
+        }
+        
         reportCachingStatus(context);
         final int httpStatusCode = response.getStatusLine().getStatusCode();
 
@@ -230,7 +257,19 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         HttpResponse httpResponse = null;
         try {
             final HttpCacheContext context = buildHttpClientContext();
+            
+            if (httpClientContextHandler != null) {
+                log.debug("Invoking HttpClientContextHandler prior to execution");
+                httpClientContextHandler.invokeBefore(context, httpRequest);
+            }
+            
             httpResponse = httpClient.execute(httpRequest, context);
+            
+            if (httpClientContextHandler != null) {
+                log.debug("Invoking HttpClientContextHandler after execution");
+                httpClientContextHandler.invokeAfter(context, httpRequest);
+            }
+            
             reportCachingStatus(context);
             EntityUtils.consume(httpResponse.getEntity());
             return httpResponse;
@@ -345,10 +384,40 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
     
     /**
+     * Extension that allows the {@link HttpClientContext} to be externally manipulated before use.
+     */
+    @ThreadSafe
+    public static interface HttpClientContextHandler {
+        
+        /**
+         * Perform any desired context modifications before use.
+         * 
+         * @param context the context to operate on
+         * @param request the request that will be executed
+         * 
+         * @throws IOException if the call should be aborted
+         */
+        void invokeBefore(@Nonnull final HttpClientContext context, @Nonnull final HttpUriRequest request)
+            throws IOException;
+        
+        /**
+         * Perform any desired context modifications after use.
+         * 
+         * @param context the context to operate on
+         * @param request the request that was executed
+         * 
+         * @throws IOException if the call should be aborted
+         */
+        void invokeAfter(@Nonnull final HttpClientContext context, @Nonnull final HttpUriRequest request)
+            throws IOException;
+        
+    }
+    
+    /**
      * A wrapper around the entity content {@link InputStream} represented by an {@link HttpResponse}
      * that closes the stream and the HttpResponse when {@link #close()} is invoked.
      */
-    private static class ConnectionClosingInputStream extends InputStream {
+     private static class ConnectionClosingInputStream extends InputStream {
 
         /** HTTP response that is being wrapped. */
         private final HttpResponse response;
@@ -362,7 +431,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
          * @param httpResponse HTTP method that was invoked
          * @throws IOException if there is a problem getting the entity content input stream from the response
          */
-        public ConnectionClosingInputStream(final HttpResponse httpResponse) throws IOException {
+        public ConnectionClosingInputStream(@Nonnull final HttpResponse httpResponse) throws IOException {
             response = httpResponse;
             stream = response.getEntity().getContent();
         }

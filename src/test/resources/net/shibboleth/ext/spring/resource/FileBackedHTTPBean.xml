@@ -14,7 +14,7 @@
 	<bean id="ShibResource" class="net.shibboleth.ext.spring.resource.HTTPResource"
 		c:client-ref="apacheClient" c:url="https://git.shibboleth.net/view/?p=spring-extensions.git;a=blob_plain;f=src/test/resources/data/document.xml;h=e8ec7c0d20c7a6b8193e1868398cda0c28df45ed;hb=HEAD" />
 
-<!--  for testing we will use out test resource -->
+<!--  for testing we will use our test resource -->
     <bean id="TestResource" class="net.shibboleth.ext.spring.resource.TestHTTPResource"
         c:client-ref="apacheClient" c:url="https://git.shibboleth.net/view/?p=spring-extensions.git;a=blob_plain;f=src/test/resources/data/document.xml;h=e8ec7c0d20c7a6b8193e1868398cda0c28df45ed;hb=HEAD" />
 

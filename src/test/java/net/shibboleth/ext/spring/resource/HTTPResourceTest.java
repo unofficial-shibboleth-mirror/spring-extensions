@@ -23,9 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
-import net.shibboleth.ext.spring.resource.HTTPResource.HttpClientContextHandler;
 import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
 import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 import org.apache.http.client.HttpClient;

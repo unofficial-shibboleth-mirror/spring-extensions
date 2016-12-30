@@ -27,12 +27,12 @@ import java.net.URL;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -381,36 +381,6 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         } catch (final IOException e) {
             log.error("Error closing HTTP response from '{}'", resourceURL.toExternalForm(), e);
         }
-    }
-    
-    /**
-     * Extension that allows the {@link HttpClientContext} to be externally manipulated before use.
-     */
-    @ThreadSafe
-    public static interface HttpClientContextHandler {
-        
-        /**
-         * Perform any desired context modifications before use.
-         * 
-         * @param context the context to operate on
-         * @param request the request that will be executed
-         * 
-         * @throws IOException if the call should be aborted
-         */
-        void invokeBefore(@Nonnull final HttpClientContext context, @Nonnull final HttpUriRequest request)
-            throws IOException;
-        
-        /**
-         * Perform any desired context modifications after use.
-         * 
-         * @param context the context to operate on
-         * @param request the request that was executed
-         * 
-         * @throws IOException if the call should be aborted
-         */
-        void invokeAfter(@Nonnull final HttpClientContext context, @Nonnull final HttpUriRequest request)
-            throws IOException;
-        
     }
     
     /**

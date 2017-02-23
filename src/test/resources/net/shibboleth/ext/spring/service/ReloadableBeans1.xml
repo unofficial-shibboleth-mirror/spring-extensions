@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+    default-init-method="initialize"
+    default-destroy-method="destroy">
+        
+    <!-- This bean exists in the "top" level context. -->
+    <bean id="nonReloadableBean" class="net.shibboleth.ext.spring.service.NonReloadableTestBean"
+        c:_0="One">
+        <!-- This ensures that this singleton gets a "fresh" copy of the injected bean each call. -->
+        <lookup-method name="getChild" bean="reloadableBean" />
+    </bean>
+
+    <!-- This bean only exists in the embedded "reloadable" context because of its custom scope. -->
+    <bean id="reloadableBean" class="net.shibboleth.ext.spring.service.ReloadableTestBean" scope="reloadable"
+        c:_0="Two" c:_1="10" />
+
+    <!--
+    This machinery installs an embedded copy of this same bean set into itself. The "default" profile ensures that
+    the embedded copy ignores these beans because the bean profile there is overridden to a non-default value.
+    The BeanFactoryPostProcessor ensures that the embedded version's reloadable beans become singletons and the
+    rest are ignored (via lazy-init). Most of this can be buried in parent beans.
+    -->
+    <beans profile="default">
+        <bean id="reloadableBeanService" class="net.shibboleth.ext.spring.service.ReloadableSpringService"
+                p:beanProfiles="reloadable"
+                p:serviceConfigurations="classpath:/net/shibboleth/ext/spring/service/ReloadableBeans1.xml">
+            <constructor-arg name="claz" value="org.springframework.context.ApplicationContext" />
+            <constructor-arg name="strategy">
+                <bean class="net.shibboleth.ext.spring.service.ApplicationContextServiceStrategy" />
+            </constructor-arg>
+            <property name="beanFactoryPostProcessors">
+                <bean class="net.shibboleth.ext.spring.config.NonReloadableExcluder" />
+            </property>
+        </bean>
+
+	    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+	        <property name="scopes">
+	            <map>
+	                <entry key="reloadable">
+	                    <bean class="net.shibboleth.ext.spring.config.ReloadableScope"
+                            c:service-ref="reloadableBeanService" />
+	                </entry>
+	            </map>
+	        </property>
+	    </bean>
+    </beans>
+</beans>

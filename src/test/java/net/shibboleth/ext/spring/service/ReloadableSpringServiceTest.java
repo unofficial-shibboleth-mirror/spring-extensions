@@ -23,14 +23,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
-import net.shibboleth.ext.spring.util.SpringSupport;
+import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -240,7 +237,7 @@ public class ReloadableSpringServiceTest {
             Thread.sleep(RELOAD_DELAY);
             count--;
         }
-        Assert.assertTrue(component.isDestroyed(), "After 7 second component has still not be destroyed");
+        Assert.assertTrue(component.isDestroyed(), "After 7 seconds component has still not be destroyed");
 
         testFile.delete();
     }
@@ -249,10 +246,10 @@ public class ReloadableSpringServiceTest {
 
         final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        final GenericApplicationContext appCtx =
-                SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
-                        Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
-                        Collections.<ApplicationContextInitializer>emptyList(), null);
+        final GenericApplicationContext appCtx = new ApplicationContextBuilder()
+                .setName("appCtx")
+                .setServiceConfigurations(Collections.singletonList(parentResource))
+                .build();
         try {
             final ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
     
@@ -266,10 +263,10 @@ public class ReloadableSpringServiceTest {
 
         final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        final GenericApplicationContext appCtx =
-                SpringSupport.newContext("appCtx", Collections.singletonList(parentResource),
-                        Collections.<BeanFactoryPostProcessor>emptyList(), Collections.<BeanPostProcessor>emptyList(),
-                        Collections.<ApplicationContextInitializer>emptyList(), null);
+        final GenericApplicationContext appCtx = new ApplicationContextBuilder()
+                .setName("appCtx")
+                .setServiceConfigurations(Collections.singletonList(parentResource))
+                .build();
         try {
             final ReloadableSpringService service1 =
                     appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);

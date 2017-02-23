@@ -95,7 +95,9 @@ public final class SpringSupport {
      * @return the created context
      * 
      * TODO: The signature here needs to constrain the ApplicationContextInitializers supplied to
-     * be safe for use with a FilesystemGenericApplicationContext. The raw types are masking the bug. 
+     * be safe for use with a FilesystemGenericApplicationContext. The raw types are masking the bug.
+     * 
+     *  @deprecated
      */
     @Nonnull public static GenericApplicationContext newContext(@Nonnull @NotEmpty final String name,
             @Nonnull @NonnullElements final List<Resource> configurationResources,

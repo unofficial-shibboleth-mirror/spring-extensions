@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,13 +27,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.ext.spring.util.SpringSupport;
+import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.service.AbstractReloadableService;
 import net.shibboleth.utilities.java.support.service.ServiceException;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
@@ -46,9 +48,9 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.Lifecycle;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.Resource;
 
 import com.google.common.base.Function;
@@ -82,7 +84,13 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
 
     /** List of bean post processors for this service's content. */
     @Nonnull @NonnullElements private List<BeanPostProcessor> postProcessors;
+    
+    /** Bean profiles to enable. */
+    @Nonnull @NonnullElements private Collection<String> beanProfiles;
 
+    /** Conversion service to use. */
+    @Nullable private ConversionService conversionService;
+    
     /** The class we are looking for. */
     @Nonnull private final Class<T> theClaz;
 
@@ -129,6 +137,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         serviceStrategy = Constraint.isNotNull(strategy, "Strategy cannot be null");
         factoryPostProcessors = Collections.emptyList();
         postProcessors = Collections.emptyList();
+        beanProfiles = Collections.emptyList();
     }
 
     /**
@@ -163,11 +172,11 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /**
-     * Sets the list of configurations for this service.
+     * Set the list of configurations for this service.
      * 
      * This setting can not be changed after the service has been initialized.
      * 
-     * @param configs list of configurations for this service, may be null or empty
+     * @param configs list of configurations for this service
      */
     public void setServiceConfigurations(@Nonnull @NonnullElements final List<Resource> configs) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
@@ -233,6 +242,34 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
 
         postProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
     }
+    
+    /**
+     * Set the bean profiles for this service.
+     * 
+     * @param profiles bean profiles to apply
+     * 
+     * @since 5.4.0
+     */
+    public void setBeanProfiles(@Nonnull @NonnullElements final Collection<String> profiles) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        
+        beanProfiles = StringSupport.normalizeStringCollection(profiles);
+    }
+    
+    /**
+     * Set a conversion service to use.
+     * 
+     * @param service conversion service
+     * 
+     * @since 5.4.0
+     */
+    public void setConversionService(@Nullable final ConversionService service) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+
+        conversionService = service;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -257,8 +294,8 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
 
+// Checkstyle: CyclomaticComplexity OFF
     /** {@inheritDoc} */
-    // Checkstyle: CyclomaticComplexity OFF
     @Override protected boolean shouldReload() {
         // Loop over each resource and check if the any resources have been changed since
         // the last time the service was reloaded. I believe a read lock is all we need here
@@ -318,8 +355,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
 
         return configResourceChanged;
     }
-
-    // Checkstyle: CyclomaticComplexity ON
+// Checkstyle: CyclomaticComplexity ON
 
     /** {@inheritDoc} */
     @Override protected void doReload() {
@@ -329,9 +365,14 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         log.debug("{} Reloading from {}", getLogPrefix(), getServiceConfigurations());
         final GenericApplicationContext appContext;
         try {
-            appContext =
-                    SpringSupport.newContext(getId(), getServiceConfigurations(), factoryPostProcessors, postProcessors,
-                            Collections.<ApplicationContextInitializer> emptyList(), getParentContext());
+            appContext = new ApplicationContextBuilder()
+                .setName(getId()).setParentContext(getParentContext())
+                .setServiceConfigurations(getServiceConfigurations())
+                .setBeanFactoryPostProcessors(factoryPostProcessors)
+                .setBeanPostProcessors(postProcessors)
+                .setBeanProfiles(beanProfiles)
+                .setConversionService(conversionService)
+                .build();
         } catch (final FatalBeanException e) {
             throw new ServiceException(e);
         }

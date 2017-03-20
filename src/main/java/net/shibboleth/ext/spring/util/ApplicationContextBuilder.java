@@ -116,6 +116,19 @@ public class ApplicationContextBuilder {
     }
     
     /**
+     * Set a single configuration resource for this context.
+     * 
+     * @param config configuration for this context
+     * 
+     * @return this builder
+     */
+    @Nonnull public ApplicationContextBuilder setServiceConfiguration(@Nonnull final Resource config) {
+        configurationResources = Collections.singletonList(Constraint.isNotNull(config, "Resource cannot be null"));
+        
+        return this;
+    }
+    
+    /**
      * Set the list of configurations for this context.
      * 
      * @param configs list of configurations for this context
@@ -161,6 +174,23 @@ public class ApplicationContextBuilder {
         
         return this;
     }
+    
+    /**
+     * Set a single bean factory post processor for this context.
+     * 
+     * @param processor bean factory post processor to apply
+     * 
+     * @return this builder
+     */
+    @Nonnull public ApplicationContextBuilder setBeanFactoryPostProcessor(
+            @Nonnull final BeanFactoryPostProcessor processor) {
+        Constraint.isNotNull(processor, "BeanFactoryPostProcessor cannot be null");
+        
+        factoryPostProcessors = Collections.singletonList(processor);
+        
+        return this;
+    }
+
 
     /**
      * Set the list of bean factory post processors for this context.
@@ -172,6 +202,21 @@ public class ApplicationContextBuilder {
     @Nonnull public ApplicationContextBuilder setBeanFactoryPostProcessors(
             @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
         factoryPostProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
+        
+        return this;
+    }
+    
+    /**
+     * Set a single bean post processor for this context.
+     * 
+     * @param processor bean post processor to apply
+     * 
+     * @return this builder
+     */
+    @Nonnull public ApplicationContextBuilder setBeanPostProcessor(@Nonnull final BeanPostProcessor processor) {
+        Constraint.isNotNull(processor, "BeanPostProcessor cannot be null");
+        
+        postProcessors = Collections.singletonList(processor);
         
         return this;
     }

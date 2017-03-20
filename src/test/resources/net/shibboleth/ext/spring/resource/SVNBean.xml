@@ -20,14 +20,13 @@
 
 	<bean id="TheSVNURL" factory-method="create" class="org.tmatesoft.svn.core.SVNURL">
 		<!-- see http://svnkit.com/javadoc/org/tmatesoft/svn/core/SVNURL.html -->
-		<constructor-arg value="https" />
+		<constructor-arg value="file" />
 		<constructor-arg>
 			<null />
 		</constructor-arg>
-		<constructor-arg value="svn.shibboleth.net" />
+		<constructor-arg value="" />
 		<constructor-arg value="-1" />
-		<constructor-arg
-			value="/utilities/spring-extensions/trunk/src/test/resources/data/" />
+		<constructor-arg value="%{the.SVN.Dir}" />
 		<constructor-arg value="false" />
 	</bean>
 

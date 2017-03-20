@@ -30,9 +30,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mock.env.MockPropertySource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -51,11 +55,9 @@ public class SVNResourceTest {
 
     static private final String ORIGINAL_TEXT = "This is a Test Resource which will be superseded by other Data";
 
-    static private final int ORIGINAL_VERSION = 492;
+    static private final int ORIGINAL_VERSION = 1;
 
     static private final String PATH = "net/shibboleth/ext/spring/resource/";
-
-    static private final String SVN_PATH = "/utilities/spring-extensions/trunk/src/test/resources/" + PATH;
 
     static private final String FILENAME = "TestResource.txt";
 
@@ -68,14 +70,15 @@ public class SVNResourceTest {
     private SVNURL url;
 
     private File theDir;
-
+    
     @BeforeClass public void setup() throws SVNException, IOException {
         final ISVNAuthenticationManager authnManager = new BasicAuthenticationManager(null);
         clientManager = SVNClientManager.newInstance();
         clientManager.setAuthenticationManager(authnManager);
+        
+        final String theDirPath = new ClassPathResource(PATH).getFile().getAbsolutePath();
 
-        url = SVNURL.create("https", null, "svn.shibboleth.net", -1, SVN_PATH, false);
-
+        url = SVNURL.create("file", null, "", -1, theDirPath + "/SVN", false);
     }
 
     @BeforeMethod public void makeDir() throws IOException {
@@ -98,12 +101,13 @@ public class SVNResourceTest {
         theDir = null;
     }
 
-    @Test(enabled=false) public void testRevision() throws IOException, ParseException {
+    @Test(enabled=true) public void testRevision() throws IOException, ParseException {
         final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION, FILENAME);
         Assert.assertTrue(resource.exists());
 
-        Assert.assertEquals(resource.lastModified(),
-                new DateTime(2013, 12, 31, 16, 54, 40, 927, DateTimeZone.UTC).getMillis());
+        final long delta =
+                resource.lastModified() - new DateTime(2017, 3, 20, 13, 40, 50, 500, DateTimeZone.UTC).getMillis();
+        Assert.assertTrue(delta < 501 && delta > -501);
 
         final Resource other = new ByteArrayResource(ORIGINAL_TEXT.getBytes());
 
@@ -113,19 +117,19 @@ public class SVNResourceTest {
         Assert.assertTrue(ResourceTestHelper.compare(other, resource));
     }
 
-    @Test(enabled=false) public void testNotExist() {
-        final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION - 50, FILENAME);
+    @Test(enabled=true) public void testNotExist() {
+        final Resource resource = new SVNResource(clientManager, url, theDir, 0, FILENAME);
         Assert.assertFalse(resource.exists());
 
     }
 
-    @Test(enabled=false) public void testMain() throws IOException {
+    @Test(enabled=true) public void testMain() throws IOException {
         final Resource resource = new SVNResource(clientManager, url, theDir, -1, FILENAME);
         Assert.assertTrue(resource.exists());
 
         // CHANGE IF WE CHECKIN A NEW FILE
         final long delta =
-                resource.lastModified() - new DateTime(2013, 12, 31, 16, 59, 06, 500, DateTimeZone.UTC).getMillis();
+                resource.lastModified() - new DateTime(2017, 3, 20, 13, 41, 26, 500, DateTimeZone.UTC).getMillis();
         Assert.assertTrue(delta < 501 && delta > -501);
 
         Assert.assertTrue(ResourceTestHelper.compare(comparer, resource));
@@ -142,15 +146,29 @@ public class SVNResourceTest {
 
         beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
         beanDefinitionReader.loadBeanDefinitions(fileName);
-        context.refresh(); 
 
+        final MockPropertySource mockEnvVars = new MockPropertySource();
+        mockEnvVars.setProperty("the.SVN.Dir", url.getPath());
+        final MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
+        propertySources.replace(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, mockEnvVars);
+
+        final PropertySourcesPlaceholderConfigurer placeholderConfig = new PropertySourcesPlaceholderConfigurer();
+        placeholderConfig.setPlaceholderPrefix("%{");
+        placeholderConfig.setPlaceholderSuffix("}");
+        placeholderConfig.setPropertySources(propertySources);
+
+        context.addBeanFactoryPostProcessor(placeholderConfig);
+
+        context.refresh(); 
         return context;
 
     }
 
-    @Test(enabled=false) public void testSpringLoad() {
+    @Test(enabled=true) public void testSpringLoad() {
 
         final GenericApplicationContext context = getContext("classpath:"+PATH+"SVNBean.xml");
+
+        
         try {
             final Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
             Assert.assertEquals(beans.size(), 1);

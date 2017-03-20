@@ -20,6 +20,7 @@ package net.shibboleth.ext.spring.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.slf4j.Logger;
@@ -128,6 +130,24 @@ public class ApplicationContextBuilder {
     }
 
     /**
+     * Set a single context initializer for this context.
+     * 
+     * @param initializer initializer to apply
+     * 
+     * @return this builder
+     */
+    @Nonnull public ApplicationContextBuilder setContextInitializer(
+            @Nonnull final ApplicationContextInitializer<? super FilesystemGenericApplicationContext> initializer) {
+        Constraint.isNotNull(initializer, "ApplicationContextInitializer cannot be null");
+        
+        contextInitializers =
+                Collections.<ApplicationContextInitializer<? super FilesystemGenericApplicationContext>>singletonList(
+                        initializer);
+        
+        return this;
+    }
+    
+    /**
      * Set the list of context initializers for this context.
      * 
      * @param initializers initializers to apply
@@ -141,7 +161,7 @@ public class ApplicationContextBuilder {
         
         return this;
     }
-    
+
     /**
      * Set the list of bean factory post processors for this context.
      * 

@@ -54,7 +54,7 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
      * @param springResource the input
      * @return a {@link Resource} which reflects what the Spring one does
      */
-    public static net.shibboleth.utilities.java.support.resource.Resource
+    @Nonnull public static net.shibboleth.utilities.java.support.resource.Resource
                  of(@ParameterName(name="springResource") final Resource springResource) {
         if (springResource instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) springResource;

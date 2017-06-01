@@ -148,7 +148,7 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
      * 
      * @param host hostname of the default proxy used when making connection
      */
-    public void setConnectionProxyHost(final String host) {
+    public void setConnectionProxyHost(@Nullable final String host) {
         builder.setConnectionProxyHost(host);
     }
 
@@ -166,7 +166,7 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
      * 
      * @param usename username to use when authenticating to the proxy; may be null
      */
-    public void setConnectionProxyUsername(final String usename) {
+    public void setConnectionProxyUsername(@Nullable final String usename) {
         builder.setConnectionProxyUsername(usename);
     }
 
@@ -175,7 +175,7 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
      * 
      * @param password password used when authenticating to the proxy; may be null
      */
-    public void setConnectionProxyPassword(final String password) {
+    public void setConnectionProxyPassword(@Nullable final String password) {
         builder.setConnectionProxyPassword(password);
     }
 
@@ -189,6 +189,28 @@ public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<Htt
         builder.setUserAgent(agent);
     }
     
+    /**
+     * Sets whether to disable content compression.
+     * 
+     * @param disable whether to disable content compression
+     * 
+     * @since 5.4.0
+     */
+    public void setDisableContentCompression(final boolean disable) {
+        builder.setDisableContentCompression(disable);
+    }
+    
+    /**
+     * Sets whether to disable cookie management.
+     * 
+     * @param disable whether to disable cookie management
+     * 
+     * @since 5.4.0
+     */
+    public void setDisableCookieManagement(final boolean disable) {
+        builder.setDisableCookieManagement(disable);
+    }
+
     /**
      * Create and return the instance of {@link HttpClientBuilder} to use.  
      * Subclasses may override to build a specialized subclass.

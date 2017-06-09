@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -71,8 +73,9 @@ public class FileBackedHTTPResource extends HTTPResource {
         if (null == resource.getFile()) {
             throw new IOException("Backing resource has to be file backed");
         }
-        log.warn("This constructor is deprecated, use backingFile=\"/path/to/file\" instead "
-                + "of resource=\"file:///path/to/file\"");
+        
+        DeprecationSupport.warn(ObjectType.METHOD, "FileBackedHTTPResource constructor with resource argument", null,
+                "FileBackedHTTPResource constructor with backingFile argument");
     }
 
     /**
@@ -93,8 +96,9 @@ public class FileBackedHTTPResource extends HTTPResource {
         if (null == resource.getFile()) {
             throw new IOException("Backing resource has to be file backed");
         }
-        log.warn("This constructor is deprecated, use backingFile=\"/path/to/file\" instead "
-                + "of resource=\"file:///path/to/file\"");
+        
+        DeprecationSupport.warn(ObjectType.METHOD, "FileBackedHTTPResource constructor with resource argument", null,
+                "FileBackedHTTPResource constructor with backingFile argument");
     }
 
     /**

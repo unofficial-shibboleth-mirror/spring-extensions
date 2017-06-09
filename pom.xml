@@ -136,6 +136,12 @@
 
     </dependencies>
 
+    <scm>
+        <connection>${scm.connection}${project.artifactId}</connection>
+        <developerConnection>${scm.developerConnection}${project.artifactId}</developerConnection>
+        <url>${scm.url}${project.artifactId}.git</url>
+    </scm>
+
     <distributionManagement>
         <site>
             <id>site</id>

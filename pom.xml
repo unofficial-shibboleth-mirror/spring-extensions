@@ -137,9 +137,9 @@
     </dependencies>
 
     <scm>
-        <connection>${scm.connection}${project.artifactId}</connection>
-        <developerConnection>${scm.developerConnection}${project.artifactId}</developerConnection>
-        <url>${scm.url}${project.artifactId}.git</url>
+        <connection>${shibboleth.scm.connection}${project.artifactId}</connection>
+        <developerConnection>${shibboleth.scm.developerConnection}${project.artifactId}</developerConnection>
+        <url>${shibboleth.scm.url}${project.artifactId}.git</url>
     </scm>
 
     <distributionManagement>

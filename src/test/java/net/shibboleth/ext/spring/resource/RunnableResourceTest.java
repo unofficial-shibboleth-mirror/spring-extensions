@@ -109,7 +109,7 @@ public class RunnableResourceTest {
     
     @Test public void testResource() throws ScriptException, ComponentInitializationException, IOException, InterruptedException {
         
-        final long now = System.currentTimeMillis();
+        final long now = new File(fileName).lastModified();
         final EvaluableScript script = new EvaluableScript("custom.update();");
         final ScriptedRunnable runnable = new ScriptedRunnable();
         runnable.setCustomObject(object);
@@ -140,7 +140,7 @@ public class RunnableResourceTest {
         
         Assert.assertTrue(modified >= now);
         Thread.sleep(20);
-        Assert.assertTrue(modified <= System.currentTimeMillis());
+        Assert.assertTrue(modified <= new File(fileName).lastModified());
         
     }
     

@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
+import net.shibboleth.utilities.java.support.scripting.ScriptedRunnable;
 
 /**
  *

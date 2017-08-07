@@ -132,15 +132,15 @@ public class RunnableResourceTest {
         Assert.assertTrue(object.isValid(getValue(resource))); // GetValue increments
         Assert.assertTrue(object.isValid((byte) 4));
         
-        Thread.sleep(250);
+        Thread.sleep(20);
         final long modified = resource.lastModified(); // lastModified Increments
         Assert.assertTrue(object.wasUppdated());
         Assert.assertTrue(object.isValid(getValue(resource)));// GetValue increments
         Assert.assertTrue(object.isValid((byte) 6));
         
-        Assert.assertTrue(modified > now);
-        Thread.sleep(250);
-        Assert.assertTrue(modified < System.currentTimeMillis());
+        Assert.assertTrue(modified >= now);
+        Thread.sleep(20);
+        Assert.assertTrue(modified <= System.currentTimeMillis());
         
     }
     

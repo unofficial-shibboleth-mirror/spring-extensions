@@ -22,11 +22,13 @@ import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.utilities.java.support.annotation.ParameterName;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
+
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 
 /**
  * Authentication manager for SVN resources based on {@link BasicAuthenticationManager}. <br/>
@@ -67,13 +69,14 @@ public class SVNBasicAuthenticationManager extends BasicAuthenticationManager im
      * @param passphrase  a password to the private key
      * @param portNumber a port number over which an ssh tunnel is established
      */
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public SVNBasicAuthenticationManager(
             @ParameterName(name="userName") final String userName,
             @ParameterName(name="keyFile" ) final File keyFile,
             @ParameterName(name="passphrase") final String passphrase,
             @ParameterName(name="portNumber") final int portNumber) {
         super(userName, keyFile, passphrase, portNumber);
+        DeprecationSupport.warnOnce(ObjectType.CLASS, SVNBasicAuthenticationManager.class.getName(), null, null);
     }
 
     /**

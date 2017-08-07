@@ -27,10 +27,6 @@ import java.net.URL;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.annotation.ParameterName;
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +45,12 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNStatus;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 /**
  * Implementation of a Spring {@link Resource} that communications with a Subversion server (via a spool directory).
  * 
@@ -63,6 +65,7 @@ import org.tmatesoft.svn.core.wc.SVNStatus;
  * 
  * The behavior of multiple {@link SVNResource} operating on the same local copy are undefined.
  */
+@Deprecated
 public class SVNResource extends AbstractIdentifiedInitializableComponent implements Resource, BeanNameAware,
         InitializingBean, net.shibboleth.utilities.java.support.resource.Resource {
 
@@ -104,6 +107,7 @@ public class SVNResource extends AbstractIdentifiedInitializableComponent implem
             @Nonnull @ParameterName(name="workingCopy") final File workingCopy,
             @ParameterName(name="workingRevision") final long workingRevision,
             @Nonnull @ParameterName(name="resourceFile") final String resourceFile) {
+        DeprecationSupport.warnOnce(ObjectType.CLASS, SVNResource.class.getName(), null, null);
         DAVRepositoryFactory.setup();
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();

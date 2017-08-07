@@ -24,8 +24,6 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.Collection;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -51,8 +49,7 @@ import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 /**
  * test,
  */
-@SuppressWarnings("deprecation")
-public class SVNResourceTest {
+public class SVNRunnableTest {
 
     static private final String ORIGINAL_TEXT = "This is a Test Resource which will be superseded by other Data";
 
@@ -83,7 +80,7 @@ public class SVNResourceTest {
     }
 
     @BeforeMethod public void makeDir() throws IOException {
-        final Path p = Files.createTempDirectory("SVNResourceTest");
+        final Path p = Files.createTempDirectory("SVNRunnableTest");
         theDir = p.toFile();
     }
 
@@ -101,14 +98,23 @@ public class SVNResourceTest {
         theDir.delete();
         theDir = null;
     }
+    
+    private Resource makeResource(
+            final SVNClientManager svnClientMgr,
+            final SVNURL repositoryUrl,
+            final File workingCopy,
+            final long workingRevision,
+            final String resourceFile)
+    {
+        final SVNRunnable runnable = new SVNRunnable(svnClientMgr, repositoryUrl, workingCopy, workingRevision);
+        
+        return new RunnableFileSystemResource(new File(workingCopy, resourceFile), runnable);
+    }
+    
 
     @Test(enabled=true) public void testRevision() throws IOException, ParseException {
-        final Resource resource = new SVNResource(clientManager, url, theDir, ORIGINAL_VERSION, FILENAME);
+        final Resource resource = makeResource(clientManager, url, theDir, ORIGINAL_VERSION, FILENAME);
         Assert.assertTrue(resource.exists());
-
-        final long delta =
-                resource.lastModified() - new DateTime(2017, 3, 20, 13, 40, 50, 500, DateTimeZone.UTC).getMillis();
-        Assert.assertTrue(delta < 501 && delta > -501);
 
         final Resource other = new ByteArrayResource(ORIGINAL_TEXT.getBytes());
 
@@ -119,19 +125,14 @@ public class SVNResourceTest {
     }
 
     @Test(enabled=true) public void testNotExist() {
-        final Resource resource = new SVNResource(clientManager, url, theDir, 0, FILENAME);
+        final Resource resource = makeResource(clientManager, url, theDir, 0, FILENAME);
         Assert.assertFalse(resource.exists());
 
     }
 
     @Test(enabled=true) public void testMain() throws IOException {
-        final Resource resource = new SVNResource(clientManager, url, theDir, -1, FILENAME);
+        final Resource resource = makeResource(clientManager, url, theDir, -1, FILENAME);
         Assert.assertTrue(resource.exists());
-
-        // CHANGE IF WE CHECKIN A NEW FILE
-        final long delta =
-                resource.lastModified() - new DateTime(2017, 3, 20, 13, 41, 26, 500, DateTimeZone.UTC).getMillis();
-        Assert.assertTrue(delta < 501 && delta > -501);
 
         Assert.assertTrue(ResourceTestHelper.compare(comparer, resource));
 

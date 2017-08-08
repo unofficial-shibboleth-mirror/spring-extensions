@@ -22,7 +22,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.Assert;
+
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * An extension of {@link DefaultResourceLoader} that (1) is biased in favor of the filesystem such that bare resource
@@ -56,7 +57,7 @@ public class PreferFileSystemResourceLoader extends DefaultResourceLoader {
      * </p>
      */
     @Override public Resource getResource(final String location) {
-        Assert.notNull(location, "Location must not be null");
+        Constraint.isNotNull(location, "Location must not be null");
         if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
             return new ClassPathResource(location.substring(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX.length()),
                     getClassLoader());

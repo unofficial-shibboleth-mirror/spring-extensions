@@ -17,15 +17,17 @@
 
 package net.shibboleth.ext.spring.context;
 
-import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
+import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.Assert;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+
+import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * An extension of {@link XmlWebApplicationContext} that (1) is biased in favor of the filesystem such that bare
@@ -58,8 +60,8 @@ public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext
      * Supports wildcard classpath locations prefixed with {@link ResourcePatternResolver#CLASSPATH_ALL_URL_PREFIX}.
      * </p>
      */
-    @Override public Resource getResource(final String location) {
-        Assert.notNull(location, "Location must not be null");
+    @Override public Resource getResource(@Nonnull final String location) {
+        Constraint.isNotNull(location, "Location must not be null");
         if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
             return new ClassPathResource(location.substring(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX.length()),
                     getClassLoader());

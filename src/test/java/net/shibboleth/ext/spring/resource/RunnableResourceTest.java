@@ -21,9 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 import javax.script.ScriptException;
 
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -31,6 +34,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.scripting.EvaluableScript;
 import net.shibboleth.utilities.java.support.scripting.ScriptedRunnable;
@@ -143,6 +147,20 @@ public class RunnableResourceTest {
         Assert.assertTrue(modified <= new File(fileName).lastModified());
         
     }
+    
+    @Test(enabled=true) public void testSpringLoad() {
+
+        final GenericApplicationContext context = new GenericApplicationContext();
+        final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
+
+        beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
+        beanDefinitionReader.loadBeanDefinitions("classpath:net/shibboleth/ext/spring/resource/RunnableResource.xml");
+
+        context.refresh();
+        final Collection<Resource> beans = context.getBeansOfType(Resource.class).values();
+        Assert.assertEquals(beans.size(), 1);    
+    }
+    
     
     
     

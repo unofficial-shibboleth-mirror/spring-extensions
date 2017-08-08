@@ -22,7 +22,7 @@ import java.security.cert.X509Certificate;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @ContextConfiguration({"X509CertificateChainFactoryBean-config.xml"})
@@ -30,9 +30,9 @@ public class X509CertificateChainFactoryBeanTest extends AbstractTestNGSpringCon
 
     @Test public void testFactory() {
         final Object bean = applicationContext.getBean("chain");
-        Assert.notNull(bean);
+        Assert.assertNotNull(bean);
         final X509Certificate[] chain = (X509Certificate[])bean;
-        Assert.isTrue(chain.length == 3);
+        Assert.assertTrue(chain.length == 3);
     }
 
 }

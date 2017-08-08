@@ -24,7 +24,7 @@ import java.security.interfaces.RSAPublicKey;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @ContextConfiguration({"X509CertificateFactoryBean-config.xml"})
@@ -32,14 +32,14 @@ public class X509CertificateFactoryBeanTest extends AbstractTestNGSpringContextT
 
     @Test public void testFactory() {
         final Object bean = applicationContext.getBean("certificate");
-        Assert.notNull(bean);
-        Assert.isInstanceOf(X509Certificate.class, bean);
+        Assert.assertNotNull(bean);
+        Assert.assertTrue(bean instanceof X509Certificate);
         final X509Certificate cert = (X509Certificate)bean;
         final PublicKey pubkey = cert.getPublicKey();
-        Assert.notNull(pubkey);
-        Assert.isInstanceOf(RSAPublicKey.class, pubkey);
+        Assert.assertNotNull(pubkey);
+        Assert.assertTrue(pubkey instanceof RSAPublicKey);
         final RSAPublicKey rsaKey = (RSAPublicKey)pubkey;
-        Assert.isTrue(rsaKey.getModulus().bitLength() == 2048);
+        Assert.assertTrue(rsaKey.getModulus().bitLength() == 2048);
     }
 
 }

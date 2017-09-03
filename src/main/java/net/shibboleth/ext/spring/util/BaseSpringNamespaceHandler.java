@@ -22,9 +22,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
-import net.shibboleth.utilities.java.support.xml.QNameSupport;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -36,6 +33,9 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
+import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 /**
  * A base class for {@link NamespaceHandler} implementations.
@@ -148,7 +148,7 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
                 decorator = decorators.get(QNameSupport.getNodeQName(node));
             }
         } else if (node instanceof Attr) {
-            decorator = attributeDecorators.get(node.getLocalName());
+            decorator = attributeDecorators.get(QNameSupport.getNodeQName(node));
         } else {
             throw new IllegalArgumentException("Can not decorate based on Nodes of type [" + node.getClass().getName()
                     + "]");

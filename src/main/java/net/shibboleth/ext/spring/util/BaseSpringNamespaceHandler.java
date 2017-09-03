@@ -34,6 +34,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
@@ -59,13 +61,13 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      * Stores the {@link BeanDefinitionDecorator} implementations keyed by the local name of the {@link Element
      * Elements} they handle.
      */
-    private Map<QName, BeanDefinitionDecorator> decorators = new HashMap<>();
+    @Deprecated private Map<QName, BeanDefinitionDecorator> decorators = new HashMap<>();
 
     /**
      * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Attr Attrs} they
      * handle.
      */
-    private Map<QName, BeanDefinitionDecorator> attributeDecorators = new HashMap<>();
+    @Deprecated private Map<QName, BeanDefinitionDecorator> attributeDecorators = new HashMap<>();
 
     /**
      * Decorates the supplied {@link Node} by delegating to the {@link BeanDefinitionDecorator} that is registered to
@@ -176,24 +178,28 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
     /**
      * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to handle the specified
      * element. The element name is the local (non-namespace qualified) name.
+     * @deprecated - the parsers should be cast to not need decorations or another base class used
      * 
      * @param elementNameOrType the element name or schema type the parser is for
      * @param decorator the decorator to register
      */
-    protected void registerBeanDefinitionDecorator(final QName elementNameOrType, 
+    @Deprecated protected void registerBeanDefinitionDecorator(final QName elementNameOrType,
             final BeanDefinitionDecorator decorator) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "registerBeanDefinitionDecorator", null, null);
         decorators.put(elementNameOrType, decorator);
     }
 
     /**
      * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to handle the specified
      * attribute. The attribute name is the local (non-namespace qualified) name.
+     * @deprecated - the parsers should be cast to not need decorations or another base class used
      * 
      * @param attributeName the name of the attribute to register the decorator for
      * @param decorator the decorator to register
      */
-    protected void registerBeanDefinitionDecoratorForAttribute(final QName attributeName, 
+    @Deprecated protected void registerBeanDefinitionDecoratorForAttribute(final QName attributeName,
             final BeanDefinitionDecorator decorator) {
+        DeprecationSupport.warnOnce(ObjectType.METHOD, "registerBeanDefinitionDecoratorForAttribute", null, null);
         attributeDecorators.put(attributeName, decorator);
     }
 }

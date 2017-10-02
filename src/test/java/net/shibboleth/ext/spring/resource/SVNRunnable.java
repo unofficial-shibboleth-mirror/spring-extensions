@@ -68,7 +68,6 @@ public class SVNRunnable extends AbstractIdentifiedInitializableComponent
      * @param repositoryUrl URL of the remote repository
      * @param workingCopy directory that will serve as the root of the local working copy
      * @param workingRevision revision of the resource to retrieve or -1 for HEAD revision
-     * @param resourceFile file, within the working copy, represented by this resource
      * 
      * @throws BeanCreationException thrown if there is a problem initializing the SVN resource
      */
@@ -233,8 +232,6 @@ public class SVNRunnable extends AbstractIdentifiedInitializableComponent
     }
 
      /** Updates an existing local working copy from the repository.
-     * 
-     * @return the revision of the fetched content
      * 
      * @throws IOException thrown if there is a problem updating the working copy
      */

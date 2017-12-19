@@ -151,4 +151,22 @@ public class ConditionalResourceTest {
         Assert.assertFalse(context.containsBean("testBean"));
     }
     
+    @Test public void testImport() {
+        final ClassPathResource resource =
+                new ClassPathResource("net/shibboleth/ext/spring/resource/conditional-import.xml");
+        
+        final GenericApplicationContext parentContext = new GenericApplicationContext();
+        parentContext.refresh(); // THIS IS REQUIRED
+
+        final GenericApplicationContext context = new GenericApplicationContext(parentContext);
+        final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
+        context.addProtocolResolver(new ConditionalResourceResolver());
+
+        beanDefinitionReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
+        beanDefinitionReader.loadBeanDefinitions(resource);
+        context.refresh();
+        
+        Assert.assertEquals(context.getBean("testBean"), "foo");
+    }
+    
 }

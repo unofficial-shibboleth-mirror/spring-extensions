@@ -33,6 +33,7 @@ import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.config.StringToResourceConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
+import net.shibboleth.ext.spring.resource.ConditionalResourceResolver;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -274,6 +275,7 @@ public class ApplicationContextBuilder {
         context.setDisplayName("ApplicationContext:" + contextName != null ? contextName : "anonymous");
         
         context.setResourceLoader(new PreferFileSystemResourceLoader());
+        context.addProtocolResolver(new ConditionalResourceResolver());
         
         if (conversionService != null) {
             context.getBeanFactory().setConversionService(conversionService);

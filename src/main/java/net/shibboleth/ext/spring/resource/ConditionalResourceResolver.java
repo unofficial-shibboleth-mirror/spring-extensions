@@ -29,6 +29,8 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 /**
  * Supports a "conditional:resourcepath" URL syntax for wrapping a Spring resource with a
  * {@link ConditionalResource}.
+ * 
+ * @since 5.4.0
  */
 public class ConditionalResourceResolver implements ProtocolResolver {
 

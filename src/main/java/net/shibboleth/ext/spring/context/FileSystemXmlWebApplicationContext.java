@@ -26,16 +26,22 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import net.shibboleth.ext.spring.resource.ConditionalResourceResolver;
 import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * An extension of {@link XmlWebApplicationContext} that (1) is biased in favor of the filesystem such that bare
  * resource paths are assumed to be files rather than classpath resources and (2) supports loading "classpath*:"
- * resources.
+ * and "conditional:" resources.
  */
 public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext {
 
+    /** Constructor. */
+    public FileSystemXmlWebApplicationContext() {
+        addProtocolResolver(new ConditionalResourceResolver());
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -75,4 +81,5 @@ public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext
         result.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
         return result;
     }
+    
 }

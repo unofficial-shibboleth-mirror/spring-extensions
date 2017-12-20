@@ -39,6 +39,8 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A wrapper that guards a {@link Resource} that may be absent by returning an empty bean file instead.
+ * 
+ * @since 5.4.0
  */
 public class ConditionalResource extends AbstractIdentifiedInitializableComponent
         implements Resource, BeanNameAware, net.shibboleth.utilities.java.support.resource.Resource {

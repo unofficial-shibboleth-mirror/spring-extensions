@@ -17,6 +17,7 @@
 
 package net.shibboleth.ext.spring.context;
 
+import net.shibboleth.ext.spring.resource.ConditionalResourceResolver;
 import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
 
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -27,14 +28,14 @@ import org.springframework.core.io.Resource;
 
 /**
  * An extension of {@link GenericApplicationContext} that is biased in favor of the filesystem such that bare resource
- * paths are assumed to be files rather than classpath resources.
+ * paths are assumed to be files rather than classpath resources, and supports conditional resources.
  */
 public class FilesystemGenericApplicationContext extends GenericApplicationContext {
 
     /** Constructor. */
     public FilesystemGenericApplicationContext() {
-        super();
         getDefaultListableBeanFactory().setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        addProtocolResolver(new ConditionalResourceResolver());
     }
 
     /**

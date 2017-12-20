@@ -275,7 +275,6 @@ public class ApplicationContextBuilder {
         context.setDisplayName("ApplicationContext:" + contextName != null ? contextName : "anonymous");
         
         context.setResourceLoader(new PreferFileSystemResourceLoader());
-        context.addProtocolResolver(new ConditionalResourceResolver());
         
         if (conversionService != null) {
             context.getBeanFactory().setConversionService(conversionService);

@@ -27,8 +27,13 @@ import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import org.apache.http.client.HttpClient;
 
 /**
+ * @deprecated
+ * 
  * Factory bean to accumulate the parameters into a {@link FileCachingHttpClientBuilder} 
  * and to then emit a {@link org.apache.http.client.HttpClient}.
+ * 
+ * <p>This class will likely either be removed or moved into an implementation package.
+ * Use {@link FileCachingHttpClientBuilder} instead.</p>
  */
 public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean {
     
@@ -38,7 +43,6 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean {
 
     /** Constructor. */
     public FileCachingHttpClientFactoryBean() {
-        super();
         clientRefs = new ArrayList<>();
     }
 
@@ -90,4 +94,5 @@ public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean {
         }
         return client;
     }
+    
 }

@@ -25,13 +25,12 @@ import net.shibboleth.utilities.java.support.httpclient.FileCachingHttpClientBui
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
-import org.springframework.beans.factory.DisposableBean;
 
 /**
  * Factory bean to accumulate the parameters into a {@link FileCachingHttpClientBuilder} 
  * and to then emit a {@link org.apache.http.client.HttpClient}.
  */
-public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean implements DisposableBean {
+public class FileCachingHttpClientFactoryBean extends HttpClientFactoryBean {
     
     /** List of HttpClients produced by this factory, used to invoke their destroy() 
      * when this factory instances is destroy()-ed. */

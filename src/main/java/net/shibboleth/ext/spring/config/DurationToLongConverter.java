@@ -41,12 +41,14 @@ public class DurationToLongConverter implements Converter<String,Long>, Conditio
         if (source.startsWith("P")) {
             return DOMTypeSupport.durationToLong(source.trim());
         } else if (source.startsWith("-P")) {
-            throw new IllegalArgumentException("Negative durations are not supported");
+            throw new IllegalArgumentException("Negative duration syntax is not supported");
         } else {
             // Treat as a milliseconds.  But note this
             final long duration = Long.valueOf(source);
-            log.info("Deprecated duration of {} was specified. Use XML duration of {}", source,
-                    DOMTypeSupport.longToDuration(duration));
+            if (duration > 0) {
+                log.info("Deprecated duration of {} was specified. Use XML duration of {}", source,
+                        DOMTypeSupport.longToDuration(duration));
+            }
             return duration;
         }
     }

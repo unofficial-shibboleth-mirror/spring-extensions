@@ -26,7 +26,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 
 /**
+ * @deprecated
+ * 
  * Factory bean to accumulate the parameters into a {@link HttpClientBuilder} and to then emit a {@link HttpClient}.
+ * 
+ * <p>This class will likely either be removed or moved into an implementation package.
+ * Use {@link HttpClientBuilder} instead.</p>
  */
 public class HttpClientFactoryBean extends AbstractComponentAwareFactoryBean<HttpClient> {
 

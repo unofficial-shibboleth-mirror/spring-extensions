@@ -21,13 +21,13 @@ import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 /**
- * @deprecated
- * 
  * Factory bean to accumulate the parameters into a {@link InMemoryCachingHttpClientBuilder} and to then emit a
  * {@link org.apache.http.client.HttpClient}.
  * 
  * <p>This class will likely either be removed or moved into an implementation package.
  * Use {@link InMemoryCachingHttpClientBuilder} instead.</p>
+ * 
+ * @deprecated
  */
 public class InMemoryCachingHttpClientFactoryBean extends HttpClientFactoryBean {
 

@@ -23,12 +23,12 @@ import java.lang.reflect.Method;
 
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.annotation.ParameterName;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
+
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 
 /**
  * An implementation of {@link ParameterNameDiscoverer} that is driven by the {@link ParameterName} Annotation.
@@ -94,7 +94,7 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
 
             log.debug("Constructor for class '{}' with {} parameters: "
                     + "Not all parameters are annotated with @ParameterName", className, annotationsArray.length);
-            log.debug("Types : {}", (Object)ctor.getParameterTypes());
+            log.trace("Types : {}", (Object)ctor.getParameterTypes());
             return super.getParameterNames(ctor);
         }
         log.trace("Constructor for class '{}' with {} parameters called {}", className, names.length, names);

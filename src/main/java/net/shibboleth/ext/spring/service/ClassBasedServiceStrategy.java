@@ -22,13 +22,14 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.service.ServiceException;
-import net.shibboleth.utilities.java.support.service.ServiceableComponent;
-
 import org.springframework.context.ApplicationContext;
 
 import com.google.common.base.Function;
+
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.service.ServiceException;
+import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
 /**
  * Strategy to create {@link ServiceableComponent}s from the {@link ApplicationContext}.
@@ -52,7 +53,8 @@ public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext
      * 
      * @param serviceableClaz what to look for.
      */
-    public ClassBasedServiceStrategy(final Class<? extends ServiceableComponent> serviceableClaz) {
+    public ClassBasedServiceStrategy(
+            @ParameterName(name="serviceableClaz") final Class<? extends ServiceableComponent> serviceableClaz) {
         serviceClaz = Constraint.isNotNull(serviceableClaz, "Serviceable Class cannot be null");
     }
 

@@ -22,40 +22,32 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import com.google.common.base.Predicate;
+
+import com.google.common.base.Function;
 
 /**
- * Predicate whose condition is defined by an Spring EL expression.
+ * Function whose output is defined by an Spring EL expression.
  * 
  * @param <T> type of input
+ * @param <U> type of output
  * 
  * @since 5.4.0
  */
-public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvaluator<T, Boolean> 
-            implements Predicate<T> {
+public class SpringExpressionFunction<T,U> extends AbstractSpringExpressionEvaluator<T, U> 
+            implements Function<T,U> {
     
     /**
      * Constructor.
      *
      * @param expression the expression to evaluate
      */
-    public SpringExpressionPredicate(@Nonnull @NotEmpty @ParameterName(name="expression") final String expression) {
+    public SpringExpressionFunction(@Nonnull @NotEmpty @ParameterName(name="expression") final String expression) {
         super(expression);
-        setOutputType(Boolean.class);
-    }
-
-    /**
-     * Set value to return if an error occurs (default is false).
-     * 
-     * @param flag flag to set
-     */
-    public void setReturnOnError(final boolean flag) {
-        super.setReturnOnError(flag);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean apply(@Nullable final T input) {
+    public U apply(@Nullable final T input) {
         return evaluate(input);
     }
 }

@@ -48,6 +48,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -271,14 +273,29 @@ public final class SpringSupport {
      * Gets the value of a list-type attribute as a {@link ManagedList}.
      * 
      * @param attribute attribute whose value will be turned into a list
-     * 
+     * @deprecated - use {@link #getAttributeValueAsList(Attr)}
      * @return list of values, never null
      */
-    @Nonnull public static ManagedList<String> getAttributeValueAsManagedList(@Nullable final Attr attribute) {
+    @Nonnull @Deprecated public static ManagedList<String> 
+                getAttributeValueAsManagedList(@Nullable final Attr attribute) {
         final List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
         final ManagedList<String> managedList = new ManagedList<>(valuesAsList.size());
         managedList.addAll(valuesAsList);
         return managedList;
+    }
+    
+    /**
+     * Gets the value of a list-type attribute as a {@link BeanDefinitionBuilder}.
+     * 
+     * @param attribute attribute whose value will be turned into a list
+     * @return a bean which will generate a list of the values.
+     */
+    @Nonnull public static AbstractBeanDefinition getAttributeValueAsList(@Nullable final Attr attribute) {
+        final BeanDefinitionBuilder result =
+                BeanDefinitionBuilder.rootBeanDefinition(StringSupport.class, "stringToList");
+        result.addConstructorArgValue(attribute.getValue());
+        result.addConstructorArgValue(XMLConstants.LIST_DELIMITERS);
+        return result.getBeanDefinition();
     }
 
     /**

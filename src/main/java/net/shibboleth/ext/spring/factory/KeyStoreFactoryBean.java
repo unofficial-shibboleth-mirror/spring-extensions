@@ -27,6 +27,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.core.io.Resource;
 
 /**
@@ -37,19 +38,19 @@ import org.springframework.core.io.Resource;
 public class KeyStoreFactoryBean implements FactoryBean<KeyStore> {
 
     /** KeyStore resource. */
-    private Resource resource;
+    @Nullable private Resource resource;
 
     /** Password for the keystore. */
-    private String keyPass;
+    @Nullable private String keyPass;
 
     /** KeyStore type. */
-    private String type;
+    @Nullable private String type;
 
     /** KeyStore provider. */
-    private String provider;
+    @Nullable private String provider;
     
     /** The singleton instance of the private key produced by this factory. */
-    private KeyStore keyStore;
+    @Nullable private KeyStore keyStore;
 
     /**
      * Set the resource containing the keystore.
@@ -89,14 +90,17 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore> {
     
     /** {@inheritDoc} */
     @Override public KeyStore getObject() throws Exception {
+
         if (keyStore == null) {
+            if (resource == null) {
+                throw new FactoryBeanNotInitializedException("Resource property cannot be null");
+            }
+            
             if (provider != null && type != null) {
                 keyStore = KeyStore.getInstance(type, provider);
-            }
-            else if (type != null) {
+            } else if (type != null) {
                 keyStore = KeyStore.getInstance(type);
-            }
-            else {
+            } else {
                 keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             }
             try (final InputStream is = resource.getInputStream()) {

@@ -122,7 +122,6 @@ public class PKCS11PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      * @return the singleton {@link Provider}
      * @throws Exception if something goes wrong building the {@link Provider}
      */
-    @SuppressWarnings("unchecked")
     private Provider getProvider() throws Exception {
         if (provider == null) {
             final ClassLoader loader = PKCS11PrivateKeyFactoryBean.class.getClassLoader();

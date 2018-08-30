@@ -382,7 +382,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         final ServiceableComponent<T> service;
         try {
             service = serviceStrategy.apply(appContext);
-        } catch (final ServiceException e) {
+        } catch (final Exception e) {
             appContext.close();
             throw new ServiceException("Failed to load " + getServiceConfigurations(), e);
         }

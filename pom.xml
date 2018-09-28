@@ -21,6 +21,7 @@
     </description>
 
     <properties>
+        <automatic.module.name>net.shibboleth.ext.spring</automatic.module.name>
         <java-support.version>7.4.0-SNAPSHOT</java-support.version>
     </properties>
 
@@ -135,6 +136,22 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${automatic.module.name}</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+             </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>${shibboleth.scm.connection}${project.artifactId}</connection>

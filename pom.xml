@@ -107,6 +107,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <!-- Required if you're using classes from the velocity package -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>

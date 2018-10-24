@@ -199,9 +199,12 @@ public class VelocityView extends AbstractTemplateView {
             template = getTemplate(getUrl());
             return true;
         } catch (final ResourceNotFoundException ex) {
+            /*
+             * TODO: uncomment once we have a commons logging answer
             if (logger.isDebugEnabled()) {
                 logger.debug("No Velocity view found for URL: " + getUrl());
             }
+            */
             return false;
         } catch (final Exception ex) {
             throw new NestedIOException(
@@ -285,9 +288,12 @@ public class VelocityView extends AbstractTemplateView {
      */
     protected void doRender(@Nonnull final Context context, @Nonnull final HttpServletResponse response)
             throws Exception {
+        /*
+         * TODO: uncomment once we have a commons logging solution
         if (logger.isDebugEnabled()) {
             logger.debug("Rendering Velocity template [" + getUrl() + "] in VelocityView '" + getBeanName() + "'");
         }
+        */
         mergeTemplate(getTemplate(), context, response);
     }
 

@@ -246,7 +246,6 @@ public class VelocityEngineFactory {
         overrideLogging = flag;
     }
 
-
     /**
      * Prepare the VelocityEngine instance and return it.
      * 

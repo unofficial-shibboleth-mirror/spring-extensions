@@ -150,8 +150,11 @@ public class HTTPResourceTest {
     private GenericApplicationContext getContext(final String fileName, final File theDir) {
         final GenericApplicationContext parentContext = new GenericApplicationContext();
         parentContext.refresh(); // THIS IS REQUIRED
-        parentContext.getBeanFactory().registerSingleton("theDir", theDir);
-
+        if (theDir != null) {
+            // Spring 5 blows up on a null registration.
+            parentContext.getBeanFactory().registerSingleton("theDir", theDir);
+        }
+        
         final GenericApplicationContext context = new GenericApplicationContext(parentContext);
         final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(context);
 

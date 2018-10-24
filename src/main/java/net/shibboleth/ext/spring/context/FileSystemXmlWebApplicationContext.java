@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.context;
 
-import javax.annotation.Nonnull;
-
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -66,7 +64,7 @@ public class FileSystemXmlWebApplicationContext extends XmlWebApplicationContext
      * Supports wildcard classpath locations prefixed with {@link ResourcePatternResolver#CLASSPATH_ALL_URL_PREFIX}.
      * </p>
      */
-    @Override public Resource getResource(@Nonnull final String location) {
+    @Override public Resource getResource(final String location) {
         Constraint.isNotNull(location, "Location must not be null");
         if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
             return new ClassPathResource(location.substring(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX.length()),

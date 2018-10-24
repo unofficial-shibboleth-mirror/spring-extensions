@@ -62,21 +62,23 @@ public class DOMDocumentFactoryBean implements FactoryBean<Document> {
 
     /** {@inheritDoc} */
     @Override @Nonnull public synchronized Document getObject() throws Exception {
-        if (document == null) {
-            if (resource == null){
-                throw new BeanCreationException("Document resource must be provided in order to use this factory.");
-            }
-            
-            if (parserPool == null){
-                throw new BeanCreationException("ParserPool must be provided in order to use this factory.");
-            }
-            
-            try (InputStream is = resource.getInputStream()) {
-                document = parserPool.parse(is);
-            }
+        
+        if (document != null) {
+            return document;
+        }
+
+        if (resource == null){
+            throw new BeanCreationException("Document resource must be provided in order to use this factory.");
         }
         
-        return document;
+        if (parserPool == null){
+            throw new BeanCreationException("ParserPool must be provided in order to use this factory.");
+        }
+        
+        try (InputStream is = resource.getInputStream()) {
+            document = parserPool.parse(is);
+            return document;
+        }
     }
 
     /** {@inheritDoc} */

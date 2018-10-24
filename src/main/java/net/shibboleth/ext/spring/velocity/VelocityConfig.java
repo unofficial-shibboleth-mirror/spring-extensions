@@ -17,8 +17,6 @@
 
 package net.shibboleth.ext.spring.velocity;
 
-import javax.annotation.Nonnull;
-
 import org.apache.velocity.app.VelocityEngine;
 
 /**
@@ -39,5 +37,5 @@ public interface VelocityConfig {
       * 
       * @return the VelocityEngine
       */
-     @Nonnull VelocityEngine getVelocityEngine();
+     VelocityEngine getVelocityEngine();
 }

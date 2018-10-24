@@ -123,7 +123,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * 
      * @return a new instance of {@link HttpCacheContext}
      */
-    protected HttpCacheContext buildHttpClientContext() {
+    @Nonnull protected HttpCacheContext buildHttpClientContext() {
         return HttpCacheContext.create();
     }
 
@@ -159,7 +159,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
 
     /** {@inheritDoc} */
-    @Override public InputStream getInputStream() throws IOException {
+    @Override @Nonnull public InputStream getInputStream() throws IOException {
         final HttpGet httpGet = new HttpGet(resourceURL.toExternalForm());
         final HttpCacheContext context = buildHttpClientContext();
         

@@ -17,7 +17,6 @@
 
 package net.shibboleth.ext.spring.context;
 
-import javax.annotation.Nonnull;
 
 /**
  * An extension of {@link FileSystemXmlWebApplicationContext} that defers property placeholder resolution of config
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
 public class DeferPlaceholderFileSystemXmlWebApplicationContext extends FileSystemXmlWebApplicationContext {
 
     /** Whether property sources have been initialized. */
-    @Nonnull private boolean propertySourcesInitialized;
+    private boolean propertySourcesInitialized;
 
     /** Constructor. */
     public DeferPlaceholderFileSystemXmlWebApplicationContext() {

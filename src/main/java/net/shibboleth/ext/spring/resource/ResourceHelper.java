@@ -63,64 +63,64 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
     }
 
     /** {@inheritDoc} */
-    @Override public InputStream getInputStream() throws IOException {
+    @Nonnull public InputStream getInputStream() throws IOException {
         return springResource.getInputStream();
     }
 
     /** {@inheritDoc} */
-    @Override public boolean exists() {
+    public boolean exists() {
         return springResource.exists();
     }
 
     /** {@inheritDoc} */
-    @Override public boolean isReadable() {
+    public boolean isReadable() {
         return springResource.isReadable();
     }
 
     /** {@inheritDoc} */
-    @Override public boolean isOpen() {
+    public boolean isOpen() {
         return springResource.isOpen();
     }
 
     /** {@inheritDoc} */
-    @Override public URL getURL() throws IOException {
+    public URL getURL() throws IOException {
         return springResource.getURL();
     }
 
     /** {@inheritDoc} */
-    @Override public URI getURI() throws IOException {
+    public URI getURI() throws IOException {
         return springResource.getURI();
     }
 
     /** {@inheritDoc} */
-    @Override public File getFile() throws IOException {
+    public File getFile() throws IOException {
         return springResource.getFile();
     }
 
     /** {@inheritDoc} */
-    @Override public long contentLength() throws IOException {
+    public long contentLength() throws IOException {
         return springResource.contentLength();
     }
 
     /** {@inheritDoc} */
-    @Override public long lastModified() throws IOException {
+    public long lastModified() throws IOException {
         return springResource.lastModified();
     }
 
     /** {@inheritDoc} */
-    @Override public net.shibboleth.utilities.java.support.resource.Resource
+    public net.shibboleth.utilities.java.support.resource.Resource
             createRelativeResource(final String relativePath) throws IOException {
 
         return of(springResource.createRelative(relativePath));
     }
 
     /** {@inheritDoc} */
-    @Override public String getFilename() {
+    public String getFilename() {
         return springResource.getFilename();
     }
 
     /** {@inheritDoc} */
-    @Override public String getDescription() {
+    public String getDescription() {
         return springResource.getDescription();
     }
 

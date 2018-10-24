@@ -77,7 +77,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     }
 
     /** {@inheritDoc} */
-    public InputStream getInputStream() throws IOException {
+    @Nonnull public InputStream getInputStream() throws IOException {
         try {
             return wrappedResource.getInputStream();
         } catch (final IOException e) {
@@ -216,9 +216,12 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      * @return a string for insertion at the beginning of any log messages
      */
     @Nonnull @NotEmpty protected String getLogPrefix() {
-        if (logPrefix == null) {
-            logPrefix = "ConditionalResource " + getId() + ":";
+        
+        if (logPrefix != null) {
+            return logPrefix;
         }
+
+        logPrefix = "ConditionalResource " + getId() + ":";
         return logPrefix;
     }
     

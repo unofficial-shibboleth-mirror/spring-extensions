@@ -163,7 +163,7 @@ public class FileBackedHTTPResource extends HTTPResource {
     }
 
     /** {@inheritDoc} */
-    @Override public InputStream getInputStream() throws IOException {
+    @Override @Nonnull public InputStream getInputStream() throws IOException {
         try {
             final InputStream stream = super.getInputStream();
             return saveAndClone(stream);
@@ -239,4 +239,5 @@ public class FileBackedHTTPResource extends HTTPResource {
                         .append(backingResource.getDescription()).append(']');
         return builder.toString();
     }
+    
 }

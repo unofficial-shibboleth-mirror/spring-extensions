@@ -40,8 +40,6 @@ import org.springframework.core.NestedIOException;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 import org.springframework.web.util.NestedServletException;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-
 /**
  * View using the Velocity template engine.
  *
@@ -220,8 +218,8 @@ public class VelocityView extends AbstractTemplateView {
      * This method can be overridden if custom behavior is needed.</p>
      */
     @Override
-    protected void renderMergedTemplateModel(@Nullable final Map<String,Object> model,
-            @Nonnull final HttpServletRequest request, @Nonnull final HttpServletResponse response) throws Exception {
+    protected void renderMergedTemplateModel(final Map<String,Object> model,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
         final Context velocityContext = createVelocityContext(model, request, response);
 
@@ -265,7 +263,7 @@ public class VelocityView extends AbstractTemplateView {
      * 
      * @throws Exception if there's a fatal error while creating the context
      */
-    protected Context createVelocityContext(@Nullable final Map<String, Object> model) throws Exception {
+    protected Context createVelocityContext(final Map<String, Object> model) throws Exception {
         return new VelocityContext(model);
     }
 
@@ -286,7 +284,7 @@ public class VelocityView extends AbstractTemplateView {
      * 
      * @throws Exception if thrown by Velocity
      */
-    protected void doRender(@Nonnull final Context context, @Nonnull final HttpServletResponse response)
+    protected void doRender(final Context context, final HttpServletResponse response)
             throws Exception {
         /*
          * TODO: uncomment once we have a commons logging solution
@@ -332,7 +330,7 @@ public class VelocityView extends AbstractTemplateView {
      * 
      * @throws Exception if thrown by Velocity
      */
-    protected Template getTemplate(@Nonnull @NotEmpty final String name) throws Exception {
+    protected Template getTemplate(final String name) throws Exception {
         return getEncoding() != null ?
                 getVelocityEngine().getTemplate(name, getEncoding()) :
                 getVelocityEngine().getTemplate(name);
@@ -347,7 +345,7 @@ public class VelocityView extends AbstractTemplateView {
      * 
      * @throws Exception if thrown by Velocity
      */
-    protected void mergeTemplate(@Nonnull final Template t, @Nonnull final Context context,
+    protected void mergeTemplate(final Template t, final Context context,
             @Nonnull final HttpServletResponse response) throws Exception {
 
         try {

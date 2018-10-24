@@ -30,7 +30,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -77,7 +76,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     @Nonnull private final Logger log = LoggerFactory.getLogger(ReloadableSpringService.class);
 
     /** List of configuration resources for this service. */
-    @Nullable @NonnullElements private List<Resource> serviceConfigurations;
+    @Nonnull @NonnullElements private List<Resource> serviceConfigurations;
 
     /** List of bean factory post processors for this service's content. */
     @Nonnull @NonnullElements private List<BeanFactoryPostProcessor> factoryPostProcessors;
@@ -138,6 +137,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         factoryPostProcessors = Collections.emptyList();
         postProcessors = Collections.emptyList();
         beanProfiles = Collections.emptyList();
+        serviceConfigurations = Collections.emptyList();
     }
 
     /**
@@ -455,18 +455,18 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /** {@inheritDoc} */
-    @Override public void setApplicationContext(final ApplicationContext applicationContext) {
+    public void setApplicationContext(final ApplicationContext applicationContext) {
         setParentContext(applicationContext);
     }
 
     /** {@inheritDoc} */
-    @Override public void setBeanName(@Nonnull @NotEmpty final String name) {
+    public void setBeanName(final String name) {
         beanName = name;
     }
 
     /** {@inheritDoc} */
     @Override protected void doInitialize() throws ComponentInitializationException {
-        if (getId() == null) {
+        if (getId() == null && beanName != null) {
             setId(beanName);
         }
         super.doInitialize();

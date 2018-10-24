@@ -85,8 +85,7 @@ public class VelocityConfigurer extends VelocityEngineFactory
     @Nullable private VelocityEngine velocityEngine;
     
     /** {@inheritDoc} */
-    @Override
-    public void setServletContext(@Nonnull final ServletContext context) {
+    public void setServletContext(final ServletContext context) {
         servletContext = context;
     }
 
@@ -110,7 +109,6 @@ public class VelocityConfigurer extends VelocityEngineFactory
     }
 
     /** {@inheritDoc} */
-    @Override
     public VelocityEngine getVelocityEngine() {
         return velocityEngine;
     }

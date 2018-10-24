@@ -40,8 +40,7 @@ public class ApplicationContextServiceableComponent extends AbstractServiceableC
     @Override
     @Nonnull public ApplicationContext getComponent() {
         final ApplicationContext context = getApplicationContext();
-        Constraint.isNotNull(context, "ApplicationContext not yet set");
-        return context;
+        return Constraint.isNotNull(context, "ApplicationContext not yet set");
     }
 
 }

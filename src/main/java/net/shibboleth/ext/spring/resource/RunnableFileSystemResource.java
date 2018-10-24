@@ -103,7 +103,7 @@ public class RunnableFileSystemResource extends FileSystemResource
     }
 
     /** {@inheritDoc} */
-    @Override public InputStream getInputStream() throws IOException {
+    @Override @Nonnull public InputStream getInputStream() throws IOException {
         callRunnable();
         return super.getInputStream();
     }
@@ -127,4 +127,5 @@ public class RunnableFileSystemResource extends FileSystemResource
             throw new IOException(ex);
         }
     }
+    
 }

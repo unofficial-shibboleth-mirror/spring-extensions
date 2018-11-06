@@ -17,13 +17,16 @@
 
 package net.shibboleth.ext.spring.velocity;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.web.context.ServletContextAware;
 
@@ -67,7 +70,7 @@ import org.springframework.web.context.ServletContextAware;
  * @since 6.0.0
  */
 public class VelocityConfigurer extends VelocityEngineFactory
-        implements VelocityConfig, ResourceLoaderAware, ServletContextAware {
+        implements VelocityConfig, InitializingBean, ResourceLoaderAware, ServletContextAware {
 
     /** Name of the resource loader for Spring's bind macros. */
     private static final String SPRING_MACRO_RESOURCE_LOADER_NAME = "springMacro";
@@ -88,7 +91,20 @@ public class VelocityConfigurer extends VelocityEngineFactory
     public void setServletContext(final ServletContext context) {
         servletContext = context;
     }
-
+    
+    /**
+     * Initialize VelocityEngineFactory's VelocityEngine
+     * if not overridden by a pre-configured VelocityEngine.
+     * @see #createVelocityEngine
+     * @see #setVelocityEngine
+     */
+    @Override
+    public void afterPropertiesSet() throws IOException, VelocityException {
+        if (this.velocityEngine == null) {
+            this.velocityEngine = createVelocityEngine();
+        }
+    }
+    
     /**
      * Provides a ClasspathResourceLoader in addition to any default or user-defined
      * loader in order to load the spring Velocity macros from the class path.

@@ -38,7 +38,7 @@ import org.springframework.web.context.ServletContextAware;
  *
  * <pre class="code">
  * &lt;bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer"&gt;
- *   &lt;property name="resourceLoaderPath">&lt;value&gt;/WEB-INF/velocity/&lt;/value>&lt;/property&gt;
+ *   &lt;property name="resourceLoaderPath"&gt;&lt;value&gt;/WEB-INF/velocity/&lt;/value&gt;&lt;/property&gt;
  * &lt;/bean&gt;</pre>
  *
  * This bean must be included in the application context of any application

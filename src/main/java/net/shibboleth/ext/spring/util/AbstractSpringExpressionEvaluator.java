@@ -151,7 +151,12 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
         returnOnError = what;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Evaluate the Spring expression on the provided input.
+     *
+     * @param input input over which to evaluate the expression
+     * @return result of applying the expression to the provided input
+     */
     protected U evaluate(@Nullable final T input) {
 
         // Try outside the try so as to preserve derived semantics

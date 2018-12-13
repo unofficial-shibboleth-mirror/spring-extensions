@@ -23,6 +23,7 @@ import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
+import net.shibboleth.utilities.java.support.repository.RepositorySupport;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -39,11 +40,9 @@ import org.testng.annotations.Test;
  */
 public class ConditionalResourceTest {
 
-    private final String existsURL =
-            "https://git.shibboleth.net/view/?p=spring-extensions.git;a=blob_plain;f=src/test/resources/data/document.xml;h=e8ec7c0d20c7a6b8193e1868398cda0c28df45ed;hb=HEAD";
+    private final String existsURL = RepositorySupport.buildHTTPResourceURL("spring-extensions", "src/test/resources/net/shibboleth/ext/spring/resource/document.xml",false);
 
-    private final String nonExistsURL =
-            "http://svn.shibboleth.net/view/utilities/spring-extensions/trunk/src/test/resources/data/documxent.xml?view=co";
+    private final String nonExistsURL = RepositorySupport.buildHTTPResourceURL("spring-extensions.git", "trunk/src/test/resources/data/document.xml",false);
 
     private HttpClient client;
 
@@ -60,9 +59,12 @@ public class ConditionalResourceTest {
         
         existsResource.setId("test");
         existsResource.initialize();
-        
+
         notExistsResource.setId("test");
         notExistsResource.initialize();
+
+        Assert.assertTrue(existsHTTPResource.exists());
+        Assert.assertFalse(notExistsHTTPResource.exists());
 
         Assert.assertTrue(existsResource.exists());
         Assert.assertTrue(notExistsResource.exists());
@@ -110,7 +112,7 @@ public class ConditionalResourceTest {
         final ConditionalResource existsResource = new ConditionalResource(existsHTTPResource);
         existsResource.setId("test");
         existsResource.initialize();
-        
+
         Assert.assertTrue(ResourceTestHelper.compare(existsResource, new ClassPathResource(
                 "net/shibboleth/ext/spring/resource/document.xml")));
     }

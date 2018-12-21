@@ -200,7 +200,7 @@ public class HTTPResourceTest {
         Assert.assertTrue(dir.delete());
     }
 
-    @Test public void springLoadFileCache() throws IOException {
+    @Test(enabled=false) public void springLoadFileCache() throws IOException {
         File theDir = null;
         GenericApplicationContext context = null;
         try {

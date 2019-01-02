@@ -83,8 +83,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} getInputStream failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} getInputStream failed on wrapped resource", getLogPrefix());
             }
             return new ByteArrayInputStream(EMPTY_RESOURCE.getBytes(StandardCharsets.UTF_8));
         }
@@ -110,7 +108,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     /** {@inheritDoc} */
     public boolean exists() {
         if (!wrappedResource.exists()) {
-            log.info("{} Wrapped resource does not exist", getLogPrefix());
+            log.debug("{} Wrapped resource does not exist", getLogPrefix());
         }
         return true;
     }
@@ -132,8 +130,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} getURL failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} getURL failed on wrapped resource", getLogPrefix());
             }
             return null;
         }
@@ -146,8 +142,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} getURI failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} getURI failed on wrapped resource", getLogPrefix());
             }
             return null;
         }
@@ -160,8 +154,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} getFile failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} getFile failed on wrapped resource", getLogPrefix());
             }
             return null;
         }
@@ -174,8 +166,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} contentLength failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} contentLength failed on wrapped resource", getLogPrefix());
             }
             return EMPTY_RESOURCE.length();
         }
@@ -188,8 +178,6 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} lastModified failed on wrapped resource", getLogPrefix(), e);
-            } else {
-                log.info("{} lastModified failed on wrapped resource", getLogPrefix());
             }
             return 0;
         }

@@ -21,18 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
-import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
-import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
-import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
-import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.cache.CacheResponseStatus;
@@ -48,6 +40,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
+
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
+import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 /**
  * Test for HTTPResource.

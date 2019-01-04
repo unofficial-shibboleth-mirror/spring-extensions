@@ -81,8 +81,10 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         try {
             return wrappedResource.getInputStream();
         } catch (final IOException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("{} getInputStream failed on wrapped resource", getLogPrefix(), e);
+            if (log.isTraceEnabled()) {
+                log.trace("{} getInputStream failed on wrapped resource", getLogPrefix(), e);
+            } else {
+                log.debug("{} getInputStream failed on wrapped resource", getLogPrefix());
             }
             return new ByteArrayInputStream(EMPTY_RESOURCE.getBytes(StandardCharsets.UTF_8));
         }

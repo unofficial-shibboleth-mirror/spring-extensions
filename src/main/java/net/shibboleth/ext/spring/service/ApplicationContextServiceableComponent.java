@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 
 import org.springframework.context.ApplicationContext;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -31,11 +30,6 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  */
 public class ApplicationContextServiceableComponent extends AbstractServiceableComponent<ApplicationContext> {
     
-    /** {@inheritDoc} */
-    public void setId(@Nonnull @NotEmpty final String componentId) {
-        super.setId(componentId);
-    }
-
     /** {@inheritDoc} */
     @Override
     @Nonnull public ApplicationContext getComponent() {

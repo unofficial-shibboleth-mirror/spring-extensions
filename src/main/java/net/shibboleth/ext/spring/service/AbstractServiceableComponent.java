@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
@@ -39,7 +39,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * 
  * @param <T> The type of service.
  */
-public abstract class AbstractServiceableComponent<T> extends AbstractIdentifiedInitializableComponent implements
+public abstract class AbstractServiceableComponent<T> extends AbstractIdentifiableInitializableComponent implements
         ServiceableComponent<T>, ApplicationContextAware {
 
     /** Class logger. */

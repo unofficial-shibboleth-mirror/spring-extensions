@@ -46,6 +46,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
     public FilesystemGenericApplicationContext(final DefaultListableBeanFactory beanFactory) {
         super(beanFactory);
         beanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        addProtocolResolver(new ConditionalResourceResolver());
     }
 
     /**
@@ -56,6 +57,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
     public FilesystemGenericApplicationContext(final ApplicationContext parent) {
         super(parent);
         getDefaultListableBeanFactory().setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        addProtocolResolver(new ConditionalResourceResolver());
     }
 
     /**
@@ -68,6 +70,7 @@ public class FilesystemGenericApplicationContext extends GenericApplicationConte
             final ApplicationContext parent) {
         super(beanFactory, parent);
         beanFactory.setParameterNameDiscoverer(new AnnotationParameterNameDiscoverer());
+        addProtocolResolver(new ConditionalResourceResolver());
     }
 
     /**

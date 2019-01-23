@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.log.CommonsLogLogChute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -38,8 +37,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import net.shibboleth.utilities.java.support.velocity.SLF4JLogChute;
 
 /**
  * Factory that configures a VelocityEngine. Can be used standalone,
@@ -96,16 +93,12 @@ public class VelocityEngineFactory {
 
     /** Whether to favor file system lookup first. */
     private boolean preferFileSystemAccess;
-
-    /** Override logging? */
-    private boolean overrideLogging;
     
     /** Constructor. */
     public VelocityEngineFactory() {
         velocityProperties = new HashMap<String, Object>();
         resourceLoader = new DefaultResourceLoader();
         preferFileSystemAccess = true;
-        overrideLogging = true;
     }
 
     /**
@@ -235,18 +228,6 @@ public class VelocityEngineFactory {
     }
 
     /**
-     * Set whether Velocity should log via SLF4J, i.e. whether Velocity's
-     * log system should be set to {@link SLF4JLogChute}.
-     * 
-     * <p>Default is "true".</p>
-     * 
-     * @param flag flag to set
-     */
-    public void setOverrideLogging(final boolean flag) {
-        overrideLogging = flag;
-    }
-
-    /**
      * Prepare the VelocityEngine instance and return it.
      * 
      * @return the VelocityEngine instance
@@ -274,11 +255,6 @@ public class VelocityEngineFactory {
         // Set a resource loader path, if required.
         if (resourceLoaderPath != null) {
             initVelocityResourceLoader(velocityEngine, resourceLoaderPath);
-        }
-        
-        // Log via SLF4J?
-        if (overrideLogging) {
-            velocityEngine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, new SLF4JLogChute());
         }
 
         // Apply properties to VelocityEngine.

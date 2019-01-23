@@ -18,16 +18,17 @@
 package net.shibboleth.ext.spring.velocity;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
+import org.apache.velocity.util.ExtProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -82,7 +83,7 @@ public class SpringResourceLoader extends ResourceLoader {
 
     /** {@inheritDoc} */
     @Override
-    public void init(final ExtendedProperties configuration) {
+    public void init(final ExtProperties configuration) {
         resourceLoader =
                 (org.springframework.core.io.ResourceLoader) rsvc.getApplicationAttribute(SPRING_RESOURCE_LOADER);
         final String resourceLoaderPath = (String) rsvc.getApplicationAttribute(SPRING_RESOURCE_LOADER_PATH);
@@ -109,14 +110,14 @@ public class SpringResourceLoader extends ResourceLoader {
 
     /** {@inheritDoc} */
     @Override
-    public InputStream getResourceStream(final String source)
+    public Reader getResourceReader(final String source, final String encoding)
             throws ResourceNotFoundException {
         log.debug("Looking for Velocity resource with name '{}'", source);
         for (final String resourceLoaderPath : resourceLoaderPaths) {
             final org.springframework.core.io.Resource resource =
                     resourceLoader.getResource(resourceLoaderPath + source);
             try {
-                return resource.getInputStream();
+                return new InputStreamReader(resource.getInputStream(), encoding);
             } catch (final IOException ex) {
                 log.debug("Could not find Velocity resource: {}", resource);
             }

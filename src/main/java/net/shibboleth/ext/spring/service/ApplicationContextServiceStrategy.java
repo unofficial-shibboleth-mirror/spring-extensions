@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.service;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,8 +28,6 @@ import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-
-import com.google.common.base.Function;
 
 /**
  * Strategy for summoning up an {@link ApplicationContextServiceableComponent} wrapper
@@ -42,8 +42,7 @@ public class ApplicationContextServiceStrategy implements
     @Nonnull private final Logger log = LoggerFactory.getLogger(ApplicationContextServiceStrategy.class);
     
     /** {@inheritDoc} */
-    @Override @Nullable public ServiceableComponent<ApplicationContext> apply(
-            @Nullable final ApplicationContext appContext) {
+    @Nullable public ServiceableComponent<ApplicationContext> apply(@Nullable final ApplicationContext appContext) {
 
         if (appContext != null) {
             final ApplicationContextServiceableComponent wrapper = new ApplicationContextServiceableComponent();

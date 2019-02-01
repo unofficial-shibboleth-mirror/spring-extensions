@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.ext.spring.config.BooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.DurationToLongConverter;
+import net.shibboleth.ext.spring.config.FunctionToFunctionConverter;
+import net.shibboleth.ext.spring.config.PredicateToPredicateConverter;
 import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.config.StringToResourceConverter;
@@ -284,7 +286,9 @@ public class ApplicationContextBuilder {
                     new StringToIPRangeConverter(),
                     new BooleanToPredicateConverter(),
                     new StringBooleanToPredicateConverter(),
-                    new StringToResourceConverter())));
+                    new StringToResourceConverter(),
+                    new PredicateToPredicateConverter(),
+                    new FunctionToFunctionConverter())));
             service.afterPropertiesSet();
             context.getBeanFactory().setConversionService(service.getObject());
         }

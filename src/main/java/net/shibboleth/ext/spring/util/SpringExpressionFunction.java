@@ -17,13 +17,13 @@
 
 package net.shibboleth.ext.spring.util;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-
-import com.google.common.base.Function;
 
 /**
  * Function whose output is defined by an Spring EL expression.
@@ -46,8 +46,8 @@ public class SpringExpressionFunction<T,U> extends AbstractSpringExpressionEvalu
     }
 
     /** {@inheritDoc} */
-    @Override
     public U apply(@Nullable final T input) {
         return evaluate(input);
     }
+    
 }

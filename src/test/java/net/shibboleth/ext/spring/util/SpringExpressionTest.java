@@ -36,11 +36,11 @@ public class SpringExpressionTest {
         
         SpringExpressionPredicate predicate = new SpringExpressionPredicate<>("#input.getValue99() == 99");
         
-        Assert.assertTrue(predicate.apply(this));
+        Assert.assertTrue(predicate.test(this));
         
         predicate = new SpringExpressionPredicate<>("#input.getValue99() == #custom");
         predicate.setCustomObject(99);
-        Assert.assertTrue(predicate.apply(this));
+        Assert.assertTrue(predicate.test(this));
 
     }
 

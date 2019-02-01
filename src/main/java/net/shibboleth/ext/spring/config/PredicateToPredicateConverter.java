@@ -17,20 +17,22 @@
 
 package net.shibboleth.ext.spring.config;
 
-import java.util.function.Predicate;
-
 import org.springframework.core.convert.converter.Converter;
 
-import com.google.common.base.Predicates;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 
 /**
- * Allows setting of fixed {@link Predicate} properties using a boolean value.
+ * Auto-converts standard Java predicates to Guava's version for legacy compatibility.
  */
-public class BooleanToPredicateConverter implements Converter<Boolean,Predicate<?>> {
+public class PredicateToPredicateConverter
+        implements Converter<java.util.function.Predicate,com.google.common.base.Predicate> {
 
     /** {@inheritDoc} */
-    @Override public Predicate<?> convert(final Boolean source) {
-        return source ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
+    public com.google.common.base.Predicate convert(final java.util.function.Predicate source) {
+        DeprecationSupport.warn(ObjectType.CLASS, com.google.common.base.Predicate.class.getName(), null,
+                java.util.function.Predicate.class.getName());
+        return source::test;
     }
     
 }

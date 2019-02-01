@@ -18,6 +18,7 @@
 package net.shibboleth.ext.spring.error;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-
-import com.google.common.base.Function;
 
 /**
  * Custom Spring exception to view mapper that populates the view model with data

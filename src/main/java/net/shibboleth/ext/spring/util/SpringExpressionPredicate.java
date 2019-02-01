@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import com.google.common.base.Predicate;
+import net.shibboleth.utilities.java.support.logic.Predicate;
 
 /**
  * Predicate whose condition is defined by an Spring EL expression.
@@ -54,8 +54,8 @@ public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvalua
     }
 
     /** {@inheritDoc} */
-    @Override
-    public boolean apply(@Nullable final T input) {
+    public boolean test(@Nullable final T input) {
         return evaluate(input);
     }
+    
 }

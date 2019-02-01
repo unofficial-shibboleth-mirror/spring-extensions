@@ -18,13 +18,12 @@
 package net.shibboleth.ext.spring.service;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.springframework.context.ApplicationContext;
-
-import com.google.common.base.Function;
 
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -59,7 +58,7 @@ public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext
     }
 
     /** {@inheritDoc} */
-    @Override @Nullable public ServiceableComponent<T> apply(@Nullable final ApplicationContext appContext) {
+    @Nullable public ServiceableComponent<T> apply(@Nullable final ApplicationContext appContext) {
         final Collection<? extends ServiceableComponent> components = appContext.getBeansOfType(serviceClaz).values();
 
         if (components.size() == 0) {

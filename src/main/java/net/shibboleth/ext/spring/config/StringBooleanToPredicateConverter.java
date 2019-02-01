@@ -17,6 +17,8 @@
 
 package net.shibboleth.ext.spring.config;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -25,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**

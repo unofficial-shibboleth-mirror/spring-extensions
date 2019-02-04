@@ -351,7 +351,7 @@ public class VelocityView extends AbstractTemplateView {
         try {
             t.merge(context, response.getWriter());
         } catch (final MethodInvocationException ex) {
-            final Throwable cause = ex.getWrappedThrowable();
+            final Throwable cause = ex.getCause();
             throw new NestedServletException(
                     "Method invocation failed during rendering of Velocity view with name '" +
                     getBeanName() + "': " + ex.getMessage() + "; reference [" + ex.getReferenceName() +

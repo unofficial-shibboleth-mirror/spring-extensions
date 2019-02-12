@@ -28,19 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.ext.spring.config.DurationToLongConverter;
-import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
-import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
-import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
-import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.xml.AttributeSupport;
-import net.shibboleth.utilities.java.support.xml.SerializeSupport;
-import net.shibboleth.utilities.java.support.xml.XMLConstants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -65,6 +52,18 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
+
+import net.shibboleth.ext.spring.config.DurationToLongConverter;
+import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
+import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
+import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
+import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.xml.SerializeSupport;
+import net.shibboleth.utilities.java.support.xml.XMLConstants;
 
 /**
  * Helper class for performing some common Spring-related functions.
@@ -269,21 +268,6 @@ public final class SpringSupport {
         return bean;
     }
 
-    /**
-     * Gets the value of a list-type attribute as a {@link ManagedList}.
-     * 
-     * @param attribute attribute whose value will be turned into a list
-     * @deprecated - use {@link #getAttributeValueAsList(Attr)}
-     * @return list of values, never null
-     */
-    @Nonnull @Deprecated public static ManagedList<String> 
-                getAttributeValueAsManagedList(@Nullable final Attr attribute) {
-        final List<String> valuesAsList = AttributeSupport.getAttributeValueAsList(attribute);
-        final ManagedList<String> managedList = new ManagedList<>(valuesAsList.size());
-        managedList.addAll(valuesAsList);
-        return managedList;
-    }
-    
     /**
      * Gets the value of a list-type attribute as a {@link BeanDefinitionBuilder}.
      * 

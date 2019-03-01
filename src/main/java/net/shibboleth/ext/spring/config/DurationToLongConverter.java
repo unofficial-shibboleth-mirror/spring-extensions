@@ -17,13 +17,9 @@
 
 package net.shibboleth.ext.spring.config;
 
-import javax.annotation.Nonnull;
-
 import net.shibboleth.utilities.java.support.annotation.Duration;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
@@ -33,24 +29,18 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class DurationToLongConverter implements Converter<String,Long>, ConditionalConverter {
 
-    /** Logger. */
-    @Nonnull private Logger log = LoggerFactory.getLogger(DurationToLongConverter.class);
-
     /** {@inheritDoc} */
-    @Override public Long convert(final String source) {
+    public Long convert(final String source) {
         if (source.startsWith("P") || source.startsWith("-P")) {
             return DOMTypeSupport.durationToLong(source.trim());
         } else {
-            // Treat as a milliseconds.  But note this
-            final long duration = Long.valueOf(source);
-            log.info("Deprecated duration of {} was specified. Use XML duration of {}", source,
-                    DOMTypeSupport.longToDuration(duration));
-            return duration;
+            // Treat as a milliseconds.
+            return Long.valueOf(source);
         }
     }
 
     /** {@inheritDoc} */
-    @Override public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
         return targetType.hasAnnotation(Duration.class);
     }
 

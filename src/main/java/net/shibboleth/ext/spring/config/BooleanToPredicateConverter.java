@@ -29,7 +29,7 @@ import com.google.common.base.Predicates;
 public class BooleanToPredicateConverter implements Converter<Boolean,Predicate<?>> {
 
     /** {@inheritDoc} */
-    @Override public Predicate<?> convert(final Boolean source) {
+    public Predicate<?> convert(final Boolean source) {
         return source ? Predicates.alwaysTrue() : Predicates.alwaysFalse();
     }
     

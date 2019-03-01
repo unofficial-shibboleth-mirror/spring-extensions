@@ -112,10 +112,6 @@
             <!-- Required if you're using classes from the velocity package -->
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
 
         <!-- Provided dependencies -->
         <dependency>

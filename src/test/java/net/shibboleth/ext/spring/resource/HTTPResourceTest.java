@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -31,7 +32,6 @@ import org.apache.http.client.cache.CacheResponseStatus;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -125,7 +125,7 @@ public class HTTPResourceTest {
 
         final long when = child.lastModified();
         final long size = child.contentLength();
-        final String whenAsString = new DateTime(when).toString();
+        final String whenAsString = Instant.ofEpochMilli(when).toString();
 
         Assert.assertEquals(when, 1205848652000L, "Expected date of " + whenAsString + " did not match)");
         Assert.assertEquals(size, 20784226L, "Size mismatch");

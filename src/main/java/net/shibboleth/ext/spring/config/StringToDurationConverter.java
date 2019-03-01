@@ -17,19 +17,25 @@
 
 package net.shibboleth.ext.spring.config;
 
-import net.shibboleth.utilities.java.support.net.IPRange;
+import java.time.Duration;
+
+import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 
 import org.springframework.core.convert.converter.Converter;
 
-
 /**
- * Allows setting of {@link IPRange} properties using a CIDR string.
+ * Allows setting of Duration-valued properties using lexical string form.
  */
-public class StringToIPRangeConverter implements Converter<String,IPRange> {
+public class StringToDurationConverter implements Converter<String,Duration> {
 
     /** {@inheritDoc} */
-    public IPRange convert(final String source) {
-        return IPRange.parseCIDRBlock(source);
+    public Duration convert(final String source) {
+        if (source.startsWith("P") || source.startsWith("-P")) {
+            return Duration.ofMillis(DOMTypeSupport.durationToLong(source.trim()));
+        } else {
+            // Treat as milliseconds.
+            return Duration.ofMillis(Long.valueOf(source));
+        }
     }
-    
+
 }

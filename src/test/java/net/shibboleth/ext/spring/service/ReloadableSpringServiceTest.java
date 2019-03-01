@@ -21,12 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.util.Collections;
 
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -128,7 +128,7 @@ public class ReloadableSpringServiceTest {
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
         final TestServiceableComponent component = serviceableComponent.getComponent();
         
-        final DateTime x = service.getLastReloadAttemptInstant();
+        final Instant x = service.getLastReloadAttemptInstant();
         Assert.assertEquals(x,  service.getLastSuccessfulReloadInstant());
 
         Assert.assertEquals(component.getTheValue(), "One");

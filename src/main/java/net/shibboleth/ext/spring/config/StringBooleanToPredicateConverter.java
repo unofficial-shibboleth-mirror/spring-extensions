@@ -38,7 +38,7 @@ public class StringBooleanToPredicateConverter implements Converter<String,Predi
     @Nonnull private final Logger log = LoggerFactory.getLogger(StringBooleanToPredicateConverter.class);
 
     /** {@inheritDoc} */
-    @Override public Predicate<?> convert(final String source) {
+    public Predicate<?> convert(final String source) {
         
         final String trimmed = StringSupport.trimOrNull(source);
         if (Boolean.valueOf(trimmed)) {

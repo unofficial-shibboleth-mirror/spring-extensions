@@ -17,46 +17,62 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
+import javax.annotation.Nullable;
+
+import org.apache.http.client.HttpClient;
+import org.springframework.beans.factory.FactoryBean;
+
 import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClientBuilder;
 
 /**
- * Factory bean to accumulate the parameters into a {@link InMemoryCachingHttpClientBuilder} and to then emit a
- * {@link org.apache.http.client.HttpClient}.
- * 
- * <p>This class will likely either be removed or moved into an implementation package.
- * Use {@link InMemoryCachingHttpClientBuilder} instead.</p>
- * 
- * @deprecated
+ * Factory bean version of {@link InMemoryCachingHttpClientBuilder}.
  */
-public class InMemoryCachingHttpClientFactoryBean extends HttpClientFactoryBean {
+public class InMemoryCachingHttpClientFactoryBean extends InMemoryCachingHttpClientBuilder
+    implements FactoryBean<HttpClient> {
+
+    /** Singleton flag. */
+    private boolean singleton;
+    
+    /** Our captive client in singleton cases. */
+    @Nullable private HttpClient singletonInstance;
 
     /** Constructor. */
     public InMemoryCachingHttpClientFactoryBean() {
-        
+        singleton = true;
     }
-
+    
     /**
-     * Set the maximum number of cached responses.
+     * Set if a singleton should be created, or a new object on each request
+     * otherwise. Default is {@code true} (a singleton).
      * 
-     * @param maxCacheEntries The maxCacheEntries to set.
+     * @param flag flag to set
      */
-    public void setMaxCacheEntries(final int maxCacheEntries) {
-        ((InMemoryCachingHttpClientBuilder) getHttpClientBuilder()).setMaxCacheEntries(maxCacheEntries);
-    }
-
-    /**
-     * Set the maximum response body size, in bytes, that will be eligible for caching.
-     * 
-     * @param maxCacheEntrySize The maxCacheEntrySize to set.
-     */
-    public void setMaxCacheEntrySize(final long maxCacheEntrySize) {
-        ((InMemoryCachingHttpClientBuilder) getHttpClientBuilder()).setMaxCacheEntrySize(maxCacheEntrySize);
+    public void setSingleton(final boolean flag) {
+        singleton = flag;
     }
 
     /** {@inheritDoc} */
-    @Override protected HttpClientBuilder createHttpClientBuilder() {
-        return new InMemoryCachingHttpClientBuilder();
+    public boolean isSingleton() {
+        return singleton;
+    }
+
+    /** {@inheritDoc} */
+    public Class<HttpClient> getObjectType() {
+        return HttpClient.class;
+    }
+    
+    /** {@inheritDoc} */
+    public synchronized HttpClient getObject() throws Exception {
+        if (isSingleton()) {
+            if (singletonInstance != null) {
+                return singletonInstance;
+            }
+            
+            singletonInstance = buildClient();
+            return singletonInstance;
+        } else {
+            return buildClient();
+        }
     }
 
 }

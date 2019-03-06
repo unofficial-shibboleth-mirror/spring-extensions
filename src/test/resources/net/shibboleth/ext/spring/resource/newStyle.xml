@@ -6,6 +6,15 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
                            
+    <!-- This bean MUST be called "conversionService" to work properly. -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="net.shibboleth.ext.spring.config.StringToDurationConverter" />
+            </set>
+        </property>
+    </bean>
+                           
     <bean id="shibboleth.NonCachingHttpClient"
           lazy-init="true"
           class="net.shibboleth.ext.spring.factory.HttpClientFactoryBean"

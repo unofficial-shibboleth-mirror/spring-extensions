@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 
@@ -41,7 +42,7 @@ import com.google.common.io.ByteStreams;
 /** {@link ReloadableSpringService} unit test. */
 public class ReloadableSpringServiceTest {
 
-    private static final long RELOAD_DELAY = 100;
+    private static final Duration RELOAD_DELAY = Duration.ofMillis(100);
 
     private File testFile;
 
@@ -93,7 +94,7 @@ public class ReloadableSpringServiceTest {
 
         long count = 70;
         while (count > 0 && !component.isDestroyed()) {
-            Thread.sleep(RELOAD_DELAY);
+            Thread.sleep(RELOAD_DELAY.toMillis());
             count--;
         }
         Assert.assertTrue(component.isDestroyed(), "After 7 second initial component has still not be destroyed");
@@ -134,7 +135,7 @@ public class ReloadableSpringServiceTest {
         Assert.assertEquals(component.getTheValue(), "One");
         Assert.assertFalse(component.isDestroyed());
 
-        Thread.sleep(RELOAD_DELAY*3);
+        Thread.sleep(RELOAD_DELAY.toMillis() * 3);
         Assert.assertEquals(x,  service.getLastReloadAttemptInstant());
 
         overwriteFileWith("net/shibboleth/ext/spring/service/ServiceableBean2.xml");
@@ -155,7 +156,7 @@ public class ReloadableSpringServiceTest {
             }
             component2.unpinComponent();
             component2 = null;
-            Thread.sleep(RELOAD_DELAY);
+            Thread.sleep(RELOAD_DELAY.toMillis());
             count--;
         }
         Assert.assertNotNull(component2, "After 7 second initial component has still not got new value");
@@ -164,7 +165,7 @@ public class ReloadableSpringServiceTest {
 
         count = 70;
         while (count > 0 && !component.isDestroyed()) {
-            Thread.sleep(RELOAD_DELAY);
+            Thread.sleep(RELOAD_DELAY.toMillis());
             count--;
         }
         Assert.assertTrue(component.isDestroyed(), "After 7 second initial component has still not be destroyed");
@@ -181,7 +182,7 @@ public class ReloadableSpringServiceTest {
 
         service.setFailFast(true);
         service.setId("testFailFast");
-        service.setReloadCheckDelay(0);
+        service.setReloadCheckDelay(Duration.ZERO);
         service.setServiceConfigurations(Collections.singletonList(testFileResource()));
 
         try {
@@ -194,7 +195,7 @@ public class ReloadableSpringServiceTest {
 
         overwriteFileWith("net/shibboleth/ext/spring/service/ServiceableBean2.xml");
 
-        Thread.sleep(RELOAD_DELAY * 2);
+        Thread.sleep(RELOAD_DELAY.toMillis() * 2);
         Assert.assertNull(service.getServiceableComponent());
 
         service.stop();
@@ -220,7 +221,7 @@ public class ReloadableSpringServiceTest {
         long count = 700;
         ServiceableComponent<TestServiceableComponent> serviceableComponent = service.getServiceableComponent();
         while (count > 0 && null == serviceableComponent) {
-            Thread.sleep(RELOAD_DELAY);
+            Thread.sleep(RELOAD_DELAY.toMillis());
             count--;
             serviceableComponent = service.getServiceableComponent();
         }
@@ -234,7 +235,7 @@ public class ReloadableSpringServiceTest {
 
         count = 70;
         while (count > 0 && !component.isDestroyed()) {
-            Thread.sleep(RELOAD_DELAY);
+            Thread.sleep(RELOAD_DELAY.toMillis());
             count--;
         }
         Assert.assertTrue(component.isDestroyed(), "After 7 seconds component has still not be destroyed");

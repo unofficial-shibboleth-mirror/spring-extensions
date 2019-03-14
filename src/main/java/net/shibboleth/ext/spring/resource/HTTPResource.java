@@ -246,7 +246,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
     }
 
     /**
-     * Attempts to fetch only the headers for a given resource. If HEAD requests are unsupported than a more costly GET
+     * Attempts to fetch only the headers for a given resource. If HEAD requests are unsupported then a more costly GET
      * request is performed.
      * 
      * @return the response from the request

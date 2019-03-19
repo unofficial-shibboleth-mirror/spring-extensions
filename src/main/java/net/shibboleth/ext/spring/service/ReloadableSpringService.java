@@ -18,6 +18,7 @@
 package net.shibboleth.ext.spring.service;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -109,10 +110,10 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     private boolean lastLoadFailed = true;
 
     /**
-     * Time, in milliseconds, when the service configuration for the given index was last observed to have changed. -1
-     * indicates the configuration resource did not exist.
+     * Time when the service configuration for the given index was last observed to have changed.
+     * A null indicates the configuration resource did not exist.
      */
-    @Nullable private long[] resourceLastModifiedTimes;
+    @Nullable private Instant[] resourceLastModifiedTimes;
 
     /**
      * Constructor.
@@ -185,7 +186,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         serviceConfigurations =
                 ImmutableList.<Resource> builder().addAll(Iterables.filter(configs, Predicates.notNull())).build();
         if (!serviceConfigurations.isEmpty()) {
-            resourceLastModifiedTimes = new long[serviceConfigurations.size()];
+            resourceLastModifiedTimes = new Instant[serviceConfigurations.size()];
 
             final int numOfResources = serviceConfigurations.size();
             Resource serviceConfig;
@@ -193,14 +194,14 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
                 serviceConfig = serviceConfigurations.get(i);
                 try {
                     if (serviceConfig.exists()) {
-                        resourceLastModifiedTimes[i] = serviceConfig.lastModified();
+                        resourceLastModifiedTimes[i] = Instant.ofEpochMilli(serviceConfig.lastModified());
                     } else {
-                        resourceLastModifiedTimes[i] = -1;
+                        resourceLastModifiedTimes[i] = null;
                     }
                 } catch (final IOException e) {
                     log.info("{} Configuration resource '" + serviceConfig.getDescription()
                             + "' last modification date could not be determined", getLogPrefix(), e);
-                    resourceLastModifiedTimes[i] = -1;
+                    resourceLastModifiedTimes[i] = null;
                 }
             }
         } else {
@@ -315,30 +316,30 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         final int numOfResources = serviceConfigurations.size();
 
         Resource serviceConfig;
-        long serviceConfigLastModified;
+        Instant serviceConfigLastModified;
         for (int i = 0; i < numOfResources; i++) {
             serviceConfig = serviceConfigurations.get(i);
             try {
-                if (resourceLastModifiedTimes[i] == -1 && !serviceConfig.exists()) {
+                if (resourceLastModifiedTimes[i] == null && !serviceConfig.exists()) {
                     // Resource did not exist and still does not exist.
                     log.debug("{} Resource remains unavailable/inaccessible: '{}'", getLogPrefix(),
                             serviceConfig.getDescription());
-                } else if (resourceLastModifiedTimes[i] == -1 && serviceConfig.exists()) {
+                } else if (resourceLastModifiedTimes[i] == null && serviceConfig.exists()) {
                     // Resource did not exist, but does now.
                     log.debug("{} Resource was unavailable, now present: '{}'", getLogPrefix(),
                             serviceConfig.getDescription());
                     configResourceChanged = true;
-                    resourceLastModifiedTimes[i] = serviceConfig.lastModified();
-                } else if (resourceLastModifiedTimes[i] > -1 && !serviceConfig.exists()) {
+                    resourceLastModifiedTimes[i] = Instant.ofEpochMilli(serviceConfig.lastModified());
+                } else if (resourceLastModifiedTimes[i] != null && !serviceConfig.exists()) {
                     // Resource existed, but is now unavailable.
                     log.debug("{} Resource was available, now is not: '{}'", getLogPrefix(),
                             serviceConfig.getDescription());
                     configResourceChanged = true;
-                    resourceLastModifiedTimes[i] = -1;
+                    resourceLastModifiedTimes[i] = null;
                 } else {
                     // Check to see if an existing resource, that still exists, has been modified.
-                    serviceConfigLastModified = serviceConfig.lastModified();
-                    if (serviceConfigLastModified != resourceLastModifiedTimes[i]) {
+                    serviceConfigLastModified = Instant.ofEpochMilli(serviceConfig.lastModified());
+                    if (!serviceConfigLastModified.equals(resourceLastModifiedTimes[i])) {
                         log.debug("{} Resource has changed: '{}'", getLogPrefix(), serviceConfig.getDescription());
                         configResourceChanged = true;
                         resourceLastModifiedTimes[i] = serviceConfigLastModified;
@@ -465,10 +466,11 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     }
 
     /** {@inheritDoc} */
-    @Override protected void doInitialize() throws ComponentInitializationException {
+    @Override protected void doInitialize() throws ComponentInitializationException {        
         if (getId() == null && beanName != null) {
             setId(beanName);
         }
+        
         super.doInitialize();
     }
     

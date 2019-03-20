@@ -28,10 +28,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.ext.spring.config.BooleanToPredicateConverter;
-import net.shibboleth.ext.spring.config.DurationToLongConverter;
 import net.shibboleth.ext.spring.config.FunctionToFunctionConverter;
 import net.shibboleth.ext.spring.config.PredicateToPredicateConverter;
 import net.shibboleth.ext.spring.config.StringBooleanToPredicateConverter;
+import net.shibboleth.ext.spring.config.StringToDurationConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.config.StringToResourceConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
@@ -50,6 +50,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 
 import com.google.common.base.Predicates;
@@ -57,7 +58,7 @@ import com.google.common.collect.Collections2;
 
 /**
  * Fluent builder for a {@link FilesystemGenericApplicationContext} equipped with various standard features,
- * behavior, converters, etc.
+ * behavior, converters, etc. that are applicable to the Shibboleth software components.
  * 
  * @since 5.4.0
  */
@@ -69,8 +70,8 @@ public class ApplicationContextBuilder {
     /** Context name. */
     @Nullable @NotEmpty private String contextName;
     
-    /** List of configuration resources for this service. */
-    @Nullable @NonnullElements private List<Resource> configurationResources;
+    /** Configuration resources for this service. */
+    @Nullable @NonnullElements private Collection<Resource> configurationResources;
 
     /** Conversion service to use. */
     @Nullable private ConversionService conversionService;
@@ -84,6 +85,9 @@ public class ApplicationContextBuilder {
 
     /** List of bean post processors for this service's content. */
     @Nullable @NonnullElements private List<BeanPostProcessor> postProcessors;
+    
+    /** List of property sources to add. */
+    @Nullable @NonnullElements private List<PropertySource> propertySources;
     
     /** Bean profiles to enable. */
     @Nullable @NonnullElements private Collection<String> beanProfiles;
@@ -131,18 +135,33 @@ public class ApplicationContextBuilder {
     }
     
     /**
-     * Set the list of configurations for this context.
+     * Set the configurations for this context.
      * 
-     * @param configs list of configurations for this context
+     * @param configs configurations for this context
      * 
      * @return this builder
      */
     @Nonnull public ApplicationContextBuilder setServiceConfigurations(
-            @Nonnull @NonnullElements final List<Resource> configs) {
+            @Nonnull @NonnullElements final Collection<Resource> configs) {
         configurationResources = new ArrayList<>(Collections2.filter(configs, Predicates.notNull()));
         
         return this;
     }
+    
+    /**
+     * Set additional property sources for this context.
+     * 
+     * @param sources property sources to add
+     * 
+     * @return this builder
+     */
+    @Nonnull public ApplicationContextBuilder setPropertySources(
+            @Nonnull @NonnullElements final List<PropertySource> sources) {
+        propertySources = new ArrayList<>(Collections2.filter(sources, Predicates.notNull()));
+        
+        return this;
+    }
+    
 
     /**
      * Set a single context initializer for this context.
@@ -272,7 +291,7 @@ public class ApplicationContextBuilder {
      */
     @Nonnull public GenericApplicationContext build() {
         
-        final GenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
+        final FilesystemGenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + contextName != null ? contextName : "anonymous");
         
         context.setResourceLoader(new PreferFileSystemResourceLoader());
@@ -282,11 +301,11 @@ public class ApplicationContextBuilder {
         } else {
             final ConversionServiceFactoryBean service = new ConversionServiceFactoryBean();
             service.setConverters(new HashSet<>(Arrays.asList(
-                    new DurationToLongConverter(),
                     new StringToIPRangeConverter(),
                     new BooleanToPredicateConverter(),
                     new StringBooleanToPredicateConverter(),
                     new StringToResourceConverter(),
+                    new StringToDurationConverter(),
                     new PredicateToPredicateConverter(),
                     new FunctionToFunctionConverter())));
             service.afterPropertiesSet();
@@ -294,19 +313,21 @@ public class ApplicationContextBuilder {
         }
         
         if (factoryPostProcessors != null) {
-            for (final BeanFactoryPostProcessor bfpp : factoryPostProcessors) {
-                context.addBeanFactoryPostProcessor(bfpp);
-            }
+            factoryPostProcessors.forEach(bfpp -> context.addBeanFactoryPostProcessor(bfpp));
         }
 
         if (postProcessors != null) {
-            for (final BeanPostProcessor bpp : postProcessors) {
-                context.getBeanFactory().addBeanPostProcessor(bpp);
-            }
+            postProcessors.forEach(bpp -> context.getBeanFactory().addBeanPostProcessor(bpp));
         }
         
         if (beanProfiles != null) {
             context.getEnvironment().setActiveProfiles(beanProfiles.toArray(new String[0]));
+        }
+        
+        if (propertySources != null) {
+            propertySources.forEach(p -> context.getEnvironment().getPropertySources().addLast(p));
+            context.getEnvironment().setPlaceholderPrefix("%{");
+            context.getEnvironment().setPlaceholderSuffix("}");
         }
 
         final SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
@@ -317,9 +338,7 @@ public class ApplicationContextBuilder {
         }
 
         if (contextInitializers != null) {
-            for (final ApplicationContextInitializer initializer : contextInitializers) {
-                initializer.initialize(context);
-            }
+            contextInitializers.forEach(i -> i.initialize(context));
         }
 
         context.refresh();

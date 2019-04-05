@@ -26,16 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.xml.BeanDefinitionDecorator;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandler;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
-import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
@@ -58,30 +54,17 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
     private Map<QName, BeanDefinitionParser> parsers = new HashMap<>();
 
     /**
-     * Stores the {@link BeanDefinitionDecorator} implementations keyed by the local name of the {@link Element
-     * Elements} they handle.
-     */
-    @Deprecated private Map<QName, BeanDefinitionDecorator> decorators = new HashMap<>();
-
-    /**
-     * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Attr Attrs} they
-     * handle.
-     */
-    @Deprecated private Map<QName, BeanDefinitionDecorator> attributeDecorators = new HashMap<>();
-
-    /**
-     * Decorates the supplied {@link Node} by delegating to the {@link BeanDefinitionDecorator} that is registered to
-     * handle that {@link Node}.
+     * A noop decorator.  Returns the input.
      * 
      * @param node the node decorating a the given bean definition
      * @param definition the bean being decorated
      * @param parserContext the current parser context
      * 
-     * @return the decorated bean definition
+     * @return the input bean definition
      */
     @Override public BeanDefinitionHolder decorate(final Node node, final BeanDefinitionHolder definition, 
             final ParserContext parserContext) {
-        return findDecoratorForNode(node).decorate(node, definition, parserContext);
+        return definition;
     }
 
     /**
@@ -134,37 +117,6 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
     }
 
     /**
-     * Locates the {@link BeanDefinitionParser} from the register implementations using the local name of the supplied
-     * {@link Node}. Supports both {@link Element Elements} and {@link Attr Attrs}.
-     * 
-     * @param node the node to locate the decorator for
-     * 
-     * @return the decorator for the given node
-     */
-    protected BeanDefinitionDecorator findDecoratorForNode(final Node node) {
-        BeanDefinitionDecorator decorator = null;
-
-        if (node instanceof Element) {
-            decorator = decorators.get(DOMTypeSupport.getXSIType((Element) node));
-            if (decorator == null) {
-                decorator = decorators.get(QNameSupport.getNodeQName(node));
-            }
-        } else if (node instanceof Attr) {
-            decorator = attributeDecorators.get(QNameSupport.getNodeQName(node));
-        } else {
-            throw new IllegalArgumentException("Can not decorate based on Nodes of type [" + node.getClass().getName()
-                    + "]");
-        }
-
-        if (decorator == null) {
-            throw new IllegalArgumentException("Can not locate BeanDefinitionDecorator for " + " ["
-                    + node.getLocalName() + "]");
-        }
-
-        return decorator;
-    }
-
-    /**
      * Subclasses can call this to register the supplied {@link BeanDefinitionParser} to handle the specified element.
      * The element name is the local (non-namespace qualified) name.
      * 
@@ -173,33 +125,5 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
      */
     protected void registerBeanDefinitionParser(final QName elementNameOrType, final BeanDefinitionParser parser) {
         parsers.put(elementNameOrType, parser);
-    }
-
-    /**
-     * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to handle the specified
-     * element. The element name is the local (non-namespace qualified) name.
-     * @deprecated - the parsers should be cast to not need decorations or another base class used
-     * 
-     * @param elementNameOrType the element name or schema type the parser is for
-     * @param decorator the decorator to register
-     */
-    @Deprecated protected void registerBeanDefinitionDecorator(final QName elementNameOrType,
-            final BeanDefinitionDecorator decorator) {
-        DeprecationSupport.warnOnce(ObjectType.METHOD, "registerBeanDefinitionDecorator", null, null);
-        decorators.put(elementNameOrType, decorator);
-    }
-
-    /**
-     * Subclasses can call this to register the supplied {@link BeanDefinitionDecorator} to handle the specified
-     * attribute. The attribute name is the local (non-namespace qualified) name.
-     * @deprecated - the parsers should be cast to not need decorations or another base class used
-     * 
-     * @param attributeName the name of the attribute to register the decorator for
-     * @param decorator the decorator to register
-     */
-    @Deprecated protected void registerBeanDefinitionDecoratorForAttribute(final QName attributeName,
-            final BeanDefinitionDecorator decorator) {
-        DeprecationSupport.warnOnce(ObjectType.METHOD, "registerBeanDefinitionDecoratorForAttribute", null, null);
-        attributeDecorators.put(attributeName, decorator);
     }
 }

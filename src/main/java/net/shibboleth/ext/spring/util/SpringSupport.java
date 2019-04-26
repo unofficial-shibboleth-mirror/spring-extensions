@@ -75,7 +75,6 @@ public final class SpringSupport {
      * 
      * @return list of bean definitions
      */
-    // TODO better javadoc, annotations
     @Nullable public static ManagedList<BeanDefinition> parseCustomElements(
             @Nullable @NonnullElements final Collection<Element> elements, @Nonnull final ParserContext parserContext) {
         if (elements == null) {
@@ -91,6 +90,33 @@ public final class SpringSupport {
 
         return definitions;
     }
+
+    /**
+     * Parse list of elements into bean definitions and set the lazy-init flag.
+     * 
+     * @param elements list of elements to parse
+     * @param parserContext current parsing context
+     * 
+     * @return list of bean definitions
+     * 
+     * @since 6.0.0
+     */
+    @Nullable public static ManagedList<BeanDefinition> parseLazyInitCustomElements(
+            @Nullable @NonnullElements final Collection<Element> elements, @Nonnull final ParserContext parserContext) {
+        if (elements == null) {
+            return null;
+        }
+
+        final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
+        for (final Element e : elements) {
+            if (e != null) {
+                definitions.add(parseLazyInitCustomElement(e, parserContext));
+            }
+        }
+
+        return definitions;
+    }
+
     
     /**
      * Parse an element into a bean definition.
@@ -107,6 +133,27 @@ public final class SpringSupport {
         }
 
         return parserContext.getDelegate().parseCustomElement(element);
+    }
+
+    /**
+     * Parse an element into a bean definition and set the lazy-init flag.
+     * 
+     * @param element the element to parse
+     * @param parserContext current parsing context
+     * 
+     * @return the parsed bean definition
+     * 
+     * @since 6.0.0
+     */
+    @Nullable public static BeanDefinition parseLazyInitCustomElement(@Nullable final Element element, 
+            @Nonnull final ParserContext parserContext) {
+        if (element == null) {
+            return null;
+        }
+
+        final BeanDefinition def = parserContext.getDelegate().parseCustomElement(element);
+        def.setLazyInit(true);
+        return def;
     }
 
     /**

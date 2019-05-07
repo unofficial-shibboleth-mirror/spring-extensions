@@ -235,13 +235,27 @@ public final class SpringSupport {
      * @param attribute attribute whose value will be turned into a list
      * @return a bean which will generate a list of the values.
      */
-    @Nonnull public static AbstractBeanDefinition getAttributeValueAsList(@Nullable final Attr attribute) {
+    @Nonnull public static AbstractBeanDefinition getAttributeValueAsList(@Nonnull final Attr attribute) {
         final BeanDefinitionBuilder result =
                 BeanDefinitionBuilder.rootBeanDefinition(StringSupport.class, "stringToList");
         result.addConstructorArgValue(attribute.getValue());
         result.addConstructorArgValue(XMLConstants.LIST_DELIMITERS);
         return result.getBeanDefinition();
     }
+    
+    /**
+     * Gets the value of a boolean-type string as a (ptentially null) {@link Boolean}.
+     * 
+     * @param string value will be turned into a boolean (or null) (after property replacement)
+     * @return a bean which will generate a list of the values.
+     */
+    @Nullable public static AbstractBeanDefinition getStringValueAsBoolean(@Nullable final String string) {
+        final BeanDefinitionBuilder result =
+                BeanDefinitionBuilder.rootBeanDefinition(StringSupport.class, "booleanOf");
+        result.addConstructorArgValue(string);
+        return result.getBeanDefinition();
+    }
+
 
     /**
      * Gets the text content of a list of {@link Element}s as a {@link ManagedList}.

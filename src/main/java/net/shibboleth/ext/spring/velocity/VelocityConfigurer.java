@@ -76,7 +76,7 @@ public class VelocityConfigurer extends VelocityEngineFactory
     private static final String SPRING_MACRO_RESOURCE_LOADER_NAME = "springMacro";
 
     /** Key for the class of Spring's bind macro resource loader. */
-    private static final String SPRING_MACRO_RESOURCE_LOADER_CLASS = "springMacro.resource.loader.class";
+    private static final String SPRING_MACRO_RESOURCE_LOADER_CLASS = "resource.loader.springMacro.class";
 
     /** Name of Spring's default bind macro library. */
     private static final String SPRING_MACRO_LIBRARY = "net/shibboleth/ext/spring/velocity/spring.vm";
@@ -119,7 +119,7 @@ public class VelocityConfigurer extends VelocityEngineFactory
         velocityEngine.setProperty(
                 SPRING_MACRO_RESOURCE_LOADER_CLASS, ClasspathResourceLoader.class.getName());
         velocityEngine.addProperty(
-                VelocityEngine.RESOURCE_LOADER, SPRING_MACRO_RESOURCE_LOADER_NAME);
+                VelocityEngine.RESOURCE_LOADERS, SPRING_MACRO_RESOURCE_LOADER_NAME);
         velocityEngine.addProperty(
                 VelocityEngine.VM_LIBRARY, SPRING_MACRO_LIBRARY);
     }

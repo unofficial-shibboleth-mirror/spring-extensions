@@ -292,7 +292,7 @@ public class ApplicationContextBuilder {
     @Nonnull public GenericApplicationContext build() {
         
         final FilesystemGenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
-        context.setDisplayName("ApplicationContext:" + contextName != null ? contextName : "anonymous");
+        context.setDisplayName("ApplicationContext:" + (contextName != null ? contextName : "anonymous"));
         
         context.setResourceLoader(new PreferFileSystemResourceLoader());
         

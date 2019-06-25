@@ -46,6 +46,7 @@ import com.google.common.base.Strings;
 
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLConstants;
@@ -68,28 +69,54 @@ public final class SpringSupport {
     }
 
     /**
+     * Parse list of elements into bean definitions which are inserted into the parent context.
+     *
+     * @param elements list of elements to parse
+     * @param parserContext current parsing context
+     *
+     */
+    @Nullable public static void parseCustomElements(
+            @Nullable @NonnullElements final Collection<Element> elements, @Nonnull final ParserContext parserContext) {
+        if (elements == null) {
+            return;
+        }
+
+        for (final Element e : elements) {
+            if (e != null) {
+                parseCustomElement(e, parserContext, null, false);
+            }
+        }
+    }
+
+    /**
      * Parse list of elements into bean definitions.
      * 
      * @param elements list of elements to parse
      * @param parserContext current parsing context
+     * @param parentBuilder the builder we are going to insert into
      * 
      * @return list of bean definitions
      */
     @Nullable public static ManagedList<BeanDefinition> parseCustomElements(
-            @Nullable @NonnullElements final Collection<Element> elements, @Nonnull final ParserContext parserContext) {
+            @Nullable @NonnullElements final Collection<Element> elements,
+            @Nonnull final ParserContext parserContext,
+            @Nonnull final BeanDefinitionBuilder parentBuilder) {
+
         if (elements == null) {
             return null;
         }
+        Constraint.isNotNull(parentBuilder, "parentBuilder must not be null");
 
         final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
         for (final Element e : elements) {
             if (e != null) {
-                definitions.add(parseCustomElement(e, parserContext));
+                definitions.add(parseCustomElement(e, parserContext, parentBuilder, false));
             }
         }
 
         return definitions;
     }
+
 
     /**
      * Parse list of elements into bean definitions and set the lazy-init flag.
@@ -97,42 +124,53 @@ public final class SpringSupport {
      * @param elements list of elements to parse
      * @param parserContext current parsing context
      * 
-     * @return list of bean definitions
-     * 
      * @since 6.0.0
      */
-    @Nullable public static ManagedList<BeanDefinition> parseLazyInitCustomElements(
+    @Nullable public static void parseLazyInitCustomElements(
             @Nullable @NonnullElements final Collection<Element> elements, @Nonnull final ParserContext parserContext) {
         if (elements == null) {
-            return null;
+            return;
         }
 
-        final ManagedList<BeanDefinition> definitions = new ManagedList<>(elements.size());
         for (final Element e : elements) {
             if (e != null) {
-                definitions.add(parseLazyInitCustomElement(e, parserContext));
+                parseLazyInitCustomElement(e, parserContext);
             }
         }
-
-        return definitions;
     }
-
     
-    /**
-     * Parse an element into a bean definition.
+    /** Root method for all parsing.
      * 
-     * @param element the element to parse
+     * @param element the element to parse.<br/>This works in two scoping modes.  If the parent builder is
+     * null then this bean is to be inserted into the provided parser context, in this case the parent builder is null.
+     * If the parent builder is provided then the scope is limited and the bean definition is returned.
      * @param parserContext current parsing context
-     * 
-     * @return the parsed bean definition
+     * @param parentBuilder the parent builder (for nested building).
+     * @param lazyInit whether this is lazy initialized;
+     * @return the bean definition, <em>unless this is for a parent scoped bean</em>
      */
     @Nullable public static BeanDefinition parseCustomElement(@Nullable final Element element, 
-            @Nonnull final ParserContext parserContext) {
+            @Nonnull final ParserContext parserContext,
+            @Nullable final BeanDefinitionBuilder parentBuilder,
+            final boolean lazyInit) {
         if (element == null) {
             return null;
         }
+        final AbstractBeanDefinition containingBd;
+        if (parentBuilder != null) {
+            containingBd = parentBuilder.getRawBeanDefinition();
+        } else {
+            containingBd = null;
+        }
 
-        return parserContext.getDelegate().parseCustomElement(element);
+        final BeanDefinition def = parserContext.getDelegate().parseCustomElement(element, containingBd);
+        if (lazyInit) {
+            def.setLazyInit(true);
+        }
+        if (null == parentBuilder) {
+            return null;
+        }
+        return def;
     }
 
     /**
@@ -141,19 +179,14 @@ public final class SpringSupport {
      * @param element the element to parse
      * @param parserContext current parsing context
      * 
-     * @return the parsed bean definition
-     * 
      * @since 6.0.0
      */
-    @Nullable public static BeanDefinition parseLazyInitCustomElement(@Nullable final Element element, 
+    @Nullable public static void parseLazyInitCustomElement(@Nullable final Element element, 
             @Nonnull final ParserContext parserContext) {
         if (element == null) {
-            return null;
+            return;
         }
-
-        final BeanDefinition def = parserContext.getDelegate().parseCustomElement(element);
-        def.setLazyInit(true);
-        return def;
+        parseCustomElement(element, parserContext, null, true);
     }
 
     /**
@@ -170,7 +203,6 @@ public final class SpringSupport {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SerializeSupport.writeNode(springBeans, outputStream);
         definitionReader.loadBeanDefinitions(new InputSource(new ByteArrayInputStream(outputStream.toByteArray())));
-
     }
 
     /**

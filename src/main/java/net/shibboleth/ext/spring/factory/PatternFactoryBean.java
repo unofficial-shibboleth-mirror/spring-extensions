@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
  * Factory bean for {@link Pattern}. Allows us to inject property based case sensitivity.
@@ -30,7 +31,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Pattern> {
 
     /** Whether the we are case sensitive or not. */
-    @Nullable private Boolean caseSensitive;
+    @Nullable private String caseSensitive;
 
     /** The regular expressions. */
     @Nullable private String regexp;
@@ -45,7 +46,7 @@ public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Patter
      * 
      * @return Returns the caseSensitive.
      */
-    public Boolean getCaseSensitive() {
+    public String getCaseSensitive() {
         return caseSensitive;
     }
 
@@ -54,7 +55,7 @@ public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Patter
      * 
      * @param what The value to set.
      */
-    public void setCaseSensitive(@Nullable final Boolean what) {
+    public void setCaseSensitive(@Nullable final String what) {
         caseSensitive = what;
     }
 
@@ -80,7 +81,10 @@ public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Patter
     @Override protected Pattern doCreateInstance() throws Exception {
         Constraint.isNotNull(regexp, "Regular expression cannot be null");
         
-        if (null == getCaseSensitive() || getCaseSensitive()) {
+        final Boolean isCaseSentitive = StringSupport.booleanOf(caseSensitive);
+        Constraint.isNotNull(isCaseSentitive, "caseSensitive cannot be null");
+
+        if (isCaseSentitive) {
             return Pattern.compile(regexp, 0);
         } else {
             return Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);

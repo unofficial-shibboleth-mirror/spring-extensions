@@ -56,6 +56,7 @@ public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Patter
      * @param what The value to set.
      */
     public void setCaseSensitive(@Nullable final String what) {
+        Constraint.isNotNull(what, "caseSensitive cannot be null");
         caseSensitive = what;
     }
 
@@ -81,8 +82,13 @@ public class PatternFactoryBean extends AbstractComponentAwareFactoryBean<Patter
     @Override protected Pattern doCreateInstance() throws Exception {
         Constraint.isNotNull(regexp, "Regular expression cannot be null");
         
-        final Boolean isCaseSentitive = StringSupport.booleanOf(caseSensitive);
-        Constraint.isNotNull(isCaseSentitive, "caseSensitive cannot be null");
+        final Boolean isCaseSentitive;
+        if (caseSensitive != null) {
+            isCaseSentitive = StringSupport.booleanOf(caseSensitive);
+            Constraint.isNotNull(isCaseSentitive, "caseSensitive cannot be null");
+        } else {
+            isCaseSentitive = true;
+        }
 
         if (isCaseSentitive) {
             return Pattern.compile(regexp, 0);

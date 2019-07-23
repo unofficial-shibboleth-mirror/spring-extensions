@@ -252,7 +252,7 @@ public class ReloadableSpringServiceTest {
                 .setServiceConfigurations(Collections.singletonList(parentResource))
                 .build();
         try {
-            final ReloadableSpringService service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
+            final ReloadableSpringService<?> service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
     
             Assert.assertNotNull(service.getParentContext(), "Parent context should not be null");
         } finally {
@@ -269,11 +269,11 @@ public class ReloadableSpringServiceTest {
                 .setServiceConfigurations(Collections.singletonList(parentResource))
                 .build();
         try {
-            final ReloadableSpringService service1 =
+            final ReloadableSpringService<?> service1 =
                     appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
             Assert.assertEquals(service1.getId(), "testReloadableSpringService");
 
-            final ReloadableSpringService service2 =
+            final ReloadableSpringService<?> service2 =
                     appCtx.getBean("testReloadableSpringServiceWithCustomID", ReloadableSpringService.class);
             Assert.assertEquals(service2.getId(), "CustomID");
         } finally {

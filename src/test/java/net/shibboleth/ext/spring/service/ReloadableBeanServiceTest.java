@@ -47,7 +47,7 @@ public class ReloadableBeanServiceTest {
             
             final ReloadableTestBean child1 = bean.getChild();
             
-            final ReloadableService embedded = (ReloadableService) appCtx.getBean("reloadableBeanService");
+            final ReloadableService<ApplicationContext> embedded = (ReloadableService<ApplicationContext>) appCtx.getBean("reloadableBeanService");
             
             final ServiceableComponent<ApplicationContext> component = embedded.getServiceableComponent();
             try {

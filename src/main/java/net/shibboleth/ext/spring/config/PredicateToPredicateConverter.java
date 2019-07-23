@@ -24,12 +24,14 @@ import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.Object
 
 /**
  * Auto-converts standard Java predicates to Guava's version for legacy compatibility.
+ * 
+ * @param <T> input type
  */
-public class PredicateToPredicateConverter
-        implements Converter<java.util.function.Predicate,com.google.common.base.Predicate> {
+public class PredicateToPredicateConverter<T>
+        implements Converter<java.util.function.Predicate<T>,com.google.common.base.Predicate<T>> {
 
     /** {@inheritDoc} */
-    public com.google.common.base.Predicate convert(final java.util.function.Predicate source) {
+    public com.google.common.base.Predicate<T> convert(final java.util.function.Predicate<T> source) {
         DeprecationSupport.warn(ObjectType.CLASS, com.google.common.base.Predicate.class.getName(), null,
                 java.util.function.Predicate.class.getName());
         return source::test;

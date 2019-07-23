@@ -83,7 +83,7 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
      * 
      * @param type output type
      */
-    public void setOutputType(@Nullable final Class type) {
+    public void setOutputType(@Nullable final Class<U> type) {
         outputType = type;
     }
 

@@ -38,13 +38,13 @@ import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext, ServiceableComponent<T>> {
 
     /** The class we are looking for. */
-    @Nonnull private final Class<? extends ServiceableComponent> serviceClaz;
+    @Nonnull private final Class<? extends ServiceableComponent<T>> serviceClaz;
 
     /**
      * Constructor.
      */
     public ClassBasedServiceStrategy() {
-        this(ServiceableComponent.class);
+        serviceClaz = (Class<? extends ServiceableComponent<T>>) ServiceableComponent.class;
     }
 
     /**
@@ -53,13 +53,14 @@ public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext
      * @param serviceableClaz what to look for.
      */
     public ClassBasedServiceStrategy(
-            @ParameterName(name="serviceableClaz") final Class<? extends ServiceableComponent> serviceableClaz) {
+            @ParameterName(name="serviceableClaz") final Class<? extends ServiceableComponent<T>> serviceableClaz) {
         serviceClaz = Constraint.isNotNull(serviceableClaz, "Serviceable Class cannot be null");
     }
 
     /** {@inheritDoc} */
     @Nullable public ServiceableComponent<T> apply(@Nullable final ApplicationContext appContext) {
-        final Collection<? extends ServiceableComponent> components = appContext.getBeansOfType(serviceClaz).values();
+        final Collection<? extends ServiceableComponent<T>> components =
+                appContext.getBeansOfType(serviceClaz).values();
 
         if (components.size() == 0) {
             throw new ServiceException("Reload did not produce any bean of type " + serviceClaz.getName());

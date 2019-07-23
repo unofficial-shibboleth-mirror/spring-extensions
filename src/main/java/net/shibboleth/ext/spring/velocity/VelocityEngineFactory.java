@@ -96,7 +96,7 @@ public class VelocityEngineFactory {
     
     /** Constructor. */
     public VelocityEngineFactory() {
-        velocityProperties = new HashMap<String, Object>();
+        velocityProperties = new HashMap<>();
         resourceLoader = new DefaultResourceLoader();
         preferFileSystemAccess = true;
     }

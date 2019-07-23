@@ -34,7 +34,7 @@ public class SpringExpressionTest {
      
     @Test public void testPredicates() {
         
-        SpringExpressionPredicate predicate = new SpringExpressionPredicate<>("#input.getValue99() == 99");
+        SpringExpressionPredicate<SpringExpressionTest> predicate = new SpringExpressionPredicate<>("#input.getValue99() == 99");
         
         Assert.assertTrue(predicate.test(this));
         
@@ -46,12 +46,12 @@ public class SpringExpressionTest {
 
     @Test public void testFunction() {
         
-        SpringExpressionFunction<Object, SpringExpressionTest> func = new SpringExpressionFunction<>("#input");
+        SpringExpressionFunction<Object,SpringExpressionTest> func = new SpringExpressionFunction<>("#input");
         Assert.assertNull(func.apply(null));
 
         Assert.assertEquals(func.apply(this), this);
 
-        Assert.assertEquals((int) new SpringExpressionFunction<SpringExpressionTest, Integer>("#input.getValue99()").apply(this), 99);
+        Assert.assertEquals((int) new SpringExpressionFunction<>("#input.getValue99()").apply(this), 99);
 
     }
 }

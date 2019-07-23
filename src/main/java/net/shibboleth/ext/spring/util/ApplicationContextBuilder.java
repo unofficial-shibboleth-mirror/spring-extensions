@@ -87,7 +87,7 @@ public class ApplicationContextBuilder {
     @Nullable @NonnullElements private List<BeanPostProcessor> postProcessors;
     
     /** List of property sources to add. */
-    @Nullable @NonnullElements private List<PropertySource> propertySources;
+    @Nullable @NonnullElements private List<PropertySource<?>> propertySources;
     
     /** Bean profiles to enable. */
     @Nullable @NonnullElements private Collection<String> beanProfiles;
@@ -156,7 +156,7 @@ public class ApplicationContextBuilder {
      * @return this builder
      */
     @Nonnull public ApplicationContextBuilder setPropertySources(
-            @Nonnull @NonnullElements final List<PropertySource> sources) {
+            @Nonnull @NonnullElements final List<PropertySource<?>> sources) {
         propertySources = new ArrayList<>(Collections2.filter(sources, Predicates.notNull()));
         
         return this;
@@ -306,8 +306,8 @@ public class ApplicationContextBuilder {
                     new StringBooleanToPredicateConverter(),
                     new StringToResourceConverter(),
                     new StringToDurationConverter(),
-                    new PredicateToPredicateConverter(),
-                    new FunctionToFunctionConverter())));
+                    new PredicateToPredicateConverter<>(),
+                    new FunctionToFunctionConverter<>())));
             service.afterPropertiesSet();
             context.getBeanFactory().setConversionService(service.getObject());
         }

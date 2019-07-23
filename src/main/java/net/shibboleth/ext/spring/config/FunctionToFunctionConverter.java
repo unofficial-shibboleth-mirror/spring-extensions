@@ -24,12 +24,15 @@ import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.Object
 
 /**
  * Auto-converts standard Java functions to Guava's version for legacy compatibility.
+ * 
+ * @param <T> input type
+ * @param <R> return type
  */
-public class FunctionToFunctionConverter
-        implements Converter<java.util.function.Function,com.google.common.base.Function> {
+public class FunctionToFunctionConverter<T,R>
+        implements Converter<java.util.function.Function<T,R>,com.google.common.base.Function<T,R>> {
 
     /** {@inheritDoc} */
-    public com.google.common.base.Function convert(final java.util.function.Function source) {
+    public com.google.common.base.Function<T,R> convert(final java.util.function.Function<T,R> source) {
         DeprecationSupport.warn(ObjectType.CLASS, com.google.common.base.Function.class.getName(), null,
                 java.util.function.Function.class.getName());
         return source::apply;

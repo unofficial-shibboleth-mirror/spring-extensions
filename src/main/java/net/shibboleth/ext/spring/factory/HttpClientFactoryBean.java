@@ -69,9 +69,9 @@ public class HttpClientFactoryBean extends HttpClientBuilder implements FactoryB
             
             singletonInstance = buildClient();
             return singletonInstance;
-        } else {
-            return buildClient();
         }
+        
+        return buildClient();
     }
     
 }

@@ -425,7 +425,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
 
         /** {@inheritDoc} */
         @Override
-        public void mark(final int readLimit) {
+        public synchronized void mark(final int readLimit) {
             stream.mark(readLimit);
         }
 

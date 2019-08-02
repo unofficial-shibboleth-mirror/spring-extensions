@@ -126,9 +126,9 @@ public class PKCS11PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
         if (provider == null) {
             final ClassLoader loader = PKCS11PrivateKeyFactoryBean.class.getClassLoader();
             try {
-                final Class<Provider> providerClass = (Class<Provider>) loader.loadClass(PROVIDER_CLASS_NAME);
-                final Constructor<Provider> providerConstructor = providerClass.getConstructor(String.class);
-                provider = providerConstructor.newInstance(pkcs11Config);
+                final Class<?> providerClass = loader.loadClass(PROVIDER_CLASS_NAME);
+                final Constructor<?> providerConstructor = providerClass.getConstructor(String.class);
+                provider = (Provider) providerConstructor.newInstance(pkcs11Config);
                 Security.addProvider(provider);
             } catch (final ClassNotFoundException e) {
                 throw new NoSuchProviderException("unable to load keystore provider class " + PROVIDER_CLASS_NAME);

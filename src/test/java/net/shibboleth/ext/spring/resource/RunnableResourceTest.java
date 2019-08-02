@@ -62,15 +62,8 @@ public class RunnableResourceTest {
     }
     
     private byte getValue(final Resource resource) throws IOException {
-        InputStream io = null;
-        try {
-            io = resource.getInputStream();
+        try (final InputStream io = resource.getInputStream()) {
             return (byte) io.read();
-        }
-        finally {
-            if ( null != io) {
-                io.close();
-            }
         }
     }
     
@@ -177,10 +170,7 @@ public class RunnableResourceTest {
         }
         
         public void update() throws IOException {
-            FileOutputStream io = null;
-            try {
-                io = new FileOutputStream(theFile);
-    
+            try (final FileOutputStream io = new FileOutputStream(theFile)) {
                 io.write(count);
                 
                 if (count == 127 ) {
@@ -188,10 +178,6 @@ public class RunnableResourceTest {
                 }
                 count++;
                 updated = true;
-            } finally {
-                if (null != io) {
-                    io.close();
-                }
             }
         }
         

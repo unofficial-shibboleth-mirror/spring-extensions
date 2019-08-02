@@ -145,8 +145,7 @@ public class FileBackedHTTPResource extends HTTPResource {
      */
 
     protected InputStream saveAndClone(final InputStream input) throws IOException {
-        final FileOutputStream out = new FileOutputStream(backingResource.getFile());
-        try {
+        try (final FileOutputStream out = new FileOutputStream(backingResource.getFile())) {
             log.debug("{}: Copying file.", getDescription());
             ByteStreams.copy(input, out);
             log.debug("{}: Copy done.", getDescription());
@@ -157,7 +156,6 @@ public class FileBackedHTTPResource extends HTTPResource {
             throw e;
         } finally {
             input.close();
-            out.close();
         }
         return new FileInputStream(backingResource.getFile());
     }

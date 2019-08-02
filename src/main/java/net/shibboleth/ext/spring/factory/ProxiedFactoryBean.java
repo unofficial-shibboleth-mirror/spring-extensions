@@ -134,9 +134,9 @@ public class ProxiedFactoryBean<T> extends AbstractFactoryBean<T> {
                     }
                     throw e;
                 }
-            } else {
-                return component.getComponent().getBean(beanType);
             }
+            
+            return component.getComponent().getBean(beanType);
         } finally {
             component.unpinComponent();
         }

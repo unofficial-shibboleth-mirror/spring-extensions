@@ -32,10 +32,10 @@ public class StringToDurationConverter implements Converter<String,Duration> {
     public Duration convert(final String source) {
         if (source.startsWith("P") || source.startsWith("-P")) {
             return DOMTypeSupport.stringToDuration(source.trim());
-        } else {
-            // Treat as milliseconds.
-            return Duration.ofMillis(Long.valueOf(source));
         }
+        
+        // Treat as milliseconds.
+        return Duration.ofMillis(Long.valueOf(source));
     }
 
 }

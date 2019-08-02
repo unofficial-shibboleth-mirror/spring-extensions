@@ -65,9 +65,9 @@ public class ReloadableSpringServiceTest {
     }
 
     private void overwriteFileWith(final String newDataPath) throws IOException {
-        final OutputStream stream = new FileOutputStream(testFile);
-        ByteStreams.copy(new ClassPathResource(newDataPath).getInputStream(), stream);
-        stream.close();
+        try (final OutputStream stream = new FileOutputStream(testFile)) {
+            ByteStreams.copy(new ClassPathResource(newDataPath).getInputStream(), stream);
+        }
     }
 
     @Test(enabled=true) public void reloadableService() throws IOException, InterruptedException {
@@ -247,16 +247,13 @@ public class ReloadableSpringServiceTest {
 
         final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        final GenericApplicationContext appCtx = new ApplicationContextBuilder()
+        try (final GenericApplicationContext appCtx = new ApplicationContextBuilder()
                 .setName("appCtx")
                 .setServiceConfigurations(Collections.singletonList(parentResource))
-                .build();
-        try {
+                .build()) {
             final ReloadableSpringService<?> service = appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
     
             Assert.assertNotNull(service.getParentContext(), "Parent context should not be null");
-        } finally {
-            appCtx.close();
         }
     }
     
@@ -264,11 +261,10 @@ public class ReloadableSpringServiceTest {
 
         final Resource parentResource = new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableSpringService.xml");
 
-        final GenericApplicationContext appCtx = new ApplicationContextBuilder()
+        try (final GenericApplicationContext appCtx = new ApplicationContextBuilder()
                 .setName("appCtx")
                 .setServiceConfigurations(Collections.singletonList(parentResource))
-                .build();
-        try {
+                .build()) {
             final ReloadableSpringService<?> service1 =
                     appCtx.getBean("testReloadableSpringService", ReloadableSpringService.class);
             Assert.assertEquals(service1.getId(), "testReloadableSpringService");
@@ -276,8 +272,6 @@ public class ReloadableSpringServiceTest {
             final ReloadableSpringService<?> service2 =
                     appCtx.getBean("testReloadableSpringServiceWithCustomID", ReloadableSpringService.class);
             Assert.assertEquals(service2.getId(), "CustomID");
-        } finally {
-            appCtx.close();
         }
     }
 

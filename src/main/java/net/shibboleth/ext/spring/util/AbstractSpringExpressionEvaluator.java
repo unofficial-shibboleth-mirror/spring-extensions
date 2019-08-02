@@ -174,10 +174,19 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
             prepareContext(context, input);
             final Object output = parser.parseExpression(springExpression).getValue(context);
 
-            if (null != getOutputType() && null != output && !getOutputType().isInstance(output)) {
-                log.error("Output of type {} was not of type {}", output.getClass(), getOutputType());
-                return returnOnError;
+            if (output == null) {
+                return null;
             }
+            
+            if (null != getOutputType()) {
+                if (!getOutputType().isInstance(output)) {
+                    log.error("Output of type {} was not of type {}", output.getClass(), getOutputType());
+                    return returnOnError;
+                }
+                
+                return getOutputType().cast(output);
+            }
+            
             return (U) output;
         } catch (final ParseException|EvaluationException e) {
             log.error("Error evaluating Spring expression", e);

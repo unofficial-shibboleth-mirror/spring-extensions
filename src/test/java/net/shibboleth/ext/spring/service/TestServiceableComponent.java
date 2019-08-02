@@ -42,8 +42,8 @@ public class TestServiceableComponent extends AbstractServiceableComponent<TestS
     /**
      * @param theValue The theValue to set.
      */
-    public void setTheValue(final String theValue) {
-        this.theValue = theValue;
+    public void setTheValue(final String value) {
+        theValue = value;
     }
 
 }

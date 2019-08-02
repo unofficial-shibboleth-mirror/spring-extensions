@@ -55,9 +55,9 @@ public class ErrorRaisingController {
         log.error("Propagating exception thrown by request to {}", uri);
         if (e.getCause() != null) {
             throw e.getCause();
-        } else {
-            throw e;
         }
+        
+        throw e;
     }
     // Checkstyle: IllegalThrows ON
     

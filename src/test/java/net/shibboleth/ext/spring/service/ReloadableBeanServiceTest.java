@@ -35,19 +35,18 @@ public class ReloadableBeanServiceTest {
 
     @Test public void reloadableService() throws IOException, InterruptedException {
         
-        final GenericApplicationContext appCtx = new ApplicationContextBuilder()
+        try (final GenericApplicationContext appCtx = new ApplicationContextBuilder()
                 .setName("appCtx")
                 .setServiceConfigurations(Collections.<Resource>singletonList(
                         new ClassPathResource("net/shibboleth/ext/spring/service/ReloadableBeans1.xml")))
-                .build();
-
-        try {
+                .build()) {
             final NonReloadableTestBean bean = appCtx.getBean("nonReloadableBean", NonReloadableTestBean.class);
             Assert.assertEquals(10, bean.getValue());
             
             final ReloadableTestBean child1 = bean.getChild();
             
-            final ReloadableService<ApplicationContext> embedded = (ReloadableService<ApplicationContext>) appCtx.getBean("reloadableBeanService");
+            final ReloadableService<ApplicationContext> embedded =
+                    appCtx.getBean("reloadableBeanService", ReloadableService.class);
             
             final ServiceableComponent<ApplicationContext> component = embedded.getServiceableComponent();
             try {
@@ -61,9 +60,6 @@ public class ReloadableBeanServiceTest {
             final ReloadableTestBean child2 = bean.getChild();
 
             Assert.assertNotSame(child1, child2);
-            
-        } finally {
-            appCtx.close();
         }
     }
 

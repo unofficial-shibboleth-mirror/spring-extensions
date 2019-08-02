@@ -312,9 +312,9 @@ public class VelocityView extends AbstractTemplateView {
         // cache templates in this class is a minor optimization only.
         if (isCacheTemplate() && template != null) {
             return template;
-        } else {
-            return getTemplate(getUrl());
         }
+        
+        return getTemplate(getUrl());
     }
 
     /**

@@ -70,9 +70,9 @@ public class InMemoryCachingHttpClientFactoryBean extends InMemoryCachingHttpCli
             
             singletonInstance = buildClient();
             return singletonInstance;
-        } else {
-            return buildClient();
         }
+        
+        return buildClient();
     }
 
 }

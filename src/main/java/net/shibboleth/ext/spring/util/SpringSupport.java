@@ -228,9 +228,9 @@ public final class SpringSupport {
                             XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getPrefix() + ':'
                                     + XMLConstants.XSI_SCHEMA_LOCATION_ATTRIB_NAME.getLocalPart(), schemaLoc);
                     break;
-                } else {
-                    parent = parent.getParentNode();
                 }
+                
+                parent = parent.getParentNode();
             }
         }
 

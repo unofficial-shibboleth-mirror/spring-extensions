@@ -188,7 +188,7 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
             }
             
             return (U) output;
-        } catch (final ParseException|EvaluationException e) {
+        } catch (final Exception e) {
             log.error("Error evaluating Spring expression", e);
             if (hideExceptions) {
                 return returnOnError;

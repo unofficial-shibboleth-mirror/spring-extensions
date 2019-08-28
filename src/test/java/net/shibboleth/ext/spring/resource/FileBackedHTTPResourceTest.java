@@ -30,7 +30,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.env.MockPropertySource;
 import org.testng.Assert;
@@ -66,19 +65,18 @@ public class FileBackedHTTPResourceTest {
         }
     }
 
-    @SuppressWarnings("deprecation") @Test public void existsTest() throws IOException {
+    @Test public void existsTest() throws IOException {
         final Resource existsResource = new FileBackedHTTPResource(existsFile, client, existsURL);
         final Resource notExistsResource =
-                new FileBackedHTTPResource(client, nonExistsURL, new FileSystemResource(existsFile + "ZZZ"));
+                new FileBackedHTTPResource(existsFile + "ZZZ", client, nonExistsURL);
 
         Assert.assertTrue(existsResource.exists());
         Assert.assertFalse(notExistsResource.exists());
     }
 
-    @SuppressWarnings("deprecation") @Test public void testCompare() throws IOException {
-
-        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(client, existsURL,
-                new FileSystemResource(existsFile)), new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
+    @Test public void testCompare() throws IOException {
+        Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(existsFile, client, existsURL),
+                new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
         // With that done compare via the backup
         Assert.assertTrue(ResourceTestHelper.compare(new FileBackedHTTPResource(existsFile, client, nonExistsURL),
                 new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
@@ -114,25 +112,6 @@ public class FileBackedHTTPResourceTest {
 
         return context;
 
-    }
-
-    @Test public void testParsingOld() throws IOException {
-
-        try (final GenericApplicationContext context = getContext("net/shibboleth/ext/spring/resource/oldStyle.xml")) {
-
-            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedString", FileBackedHTTPResource.class),
-                    new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedFileString",
-                    FileBackedHTTPResource.class), new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("namedURL", FileBackedHTTPResource.class),
-                    new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-            Assert.assertTrue(ResourceTestHelper.compare(context
-                    .getBean("numberedString", FileBackedHTTPResource.class),
-                    new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-            Assert.assertTrue(ResourceTestHelper.compare(context.getBean("numberedURL", FileBackedHTTPResource.class),
-                    new ClassPathResource("net/shibboleth/ext/spring/resource/document.xml")));
-
-        }
     }
 
     @Test public void testParsingNew() throws IOException {

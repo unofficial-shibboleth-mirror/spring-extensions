@@ -29,8 +29,6 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
-import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -55,51 +53,6 @@ public class FileBackedHTTPResource extends HTTPResource {
 
     /** Backing resource file. */
     @Nonnull private final Resource backingResource;
-
-    /**
-     * Constructor.
-     * 
-     * @param client the client we use to connect with.
-     * @param url URL to the remote data
-     * @param resource the file to use as backing store
-     * @throws IOException if the URL was badly formed
-     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, String)}
-     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
-            @NotEmpty @Nonnull @ParameterName(name="url") final String url,
-            @Nonnull  @ParameterName(name="resource") final Resource resource) throws IOException {
-        super(client, url);
-        backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
-        if (null == resource.getFile()) {
-            throw new IOException("Backing resource has to be file backed");
-        }
-        
-        DeprecationSupport.warn(ObjectType.METHOD, "FileBackedHTTPResource constructor with resource argument", null,
-                "FileBackedHTTPResource constructor with backingFile argument");
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param client the client we use to connect with.
-     * @param url URL to the remote data
-     * @param resource the file to use as backing store
-     * @throws IOException if the URL was badly formed
-     * @deprecated use {@link #FileBackedHTTPResource(String, HttpClient, URL)}
-     */
-    @Deprecated public FileBackedHTTPResource(@Nonnull @ParameterName(name="client") final HttpClient client, 
-            @Nonnull @NotEmpty @ParameterName(name="url") final URL url, 
-            @Nonnull @ParameterName(name="resource") final Resource resource)
-            throws IOException {
-        super(client, url);
-        backingResource = Constraint.isNotNull(resource, "Backing resource must not be null");
-        if (null == resource.getFile()) {
-            throw new IOException("Backing resource has to be file backed");
-        }
-        
-        DeprecationSupport.warn(ObjectType.METHOD, "FileBackedHTTPResource constructor with resource argument", null,
-                "FileBackedHTTPResource constructor with backingFile argument");
-    }
 
     /**
      * Constructor.

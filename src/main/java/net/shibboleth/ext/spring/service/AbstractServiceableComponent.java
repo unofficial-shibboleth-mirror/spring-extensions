@@ -131,7 +131,11 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentifiab
     /** {@inheritDoc} */
     @Override protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
-        if (applicationContext != null && !(applicationContext instanceof ConfigurableApplicationContext)) {
+        if (applicationContext == null) {
+            throw new ComponentInitializationException(getId()
+                    + ": Application context not set ConfigurableApplicationContext");
+        }
+        if (!(applicationContext instanceof ConfigurableApplicationContext)) {
             throw new ComponentInitializationException(getId()
                     + ": Application context did not implement ConfigurableApplicationContext");
         }

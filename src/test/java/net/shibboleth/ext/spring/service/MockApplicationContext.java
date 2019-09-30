@@ -44,7 +44,7 @@ import org.springframework.core.io.Resource;
  * Placeholder, which can be set on test {@link AbstractServiceableComponent}s to stop the
  * "must be null" test firing.
  */
-public class MockApplicationContext implements ConfigurableApplicationContext{
+public class MockApplicationContext implements ConfigurableApplicationContext {
 
     /** {@inheritDoc} */
     public String getId() {
@@ -102,6 +102,12 @@ public class MockApplicationContext implements ConfigurableApplicationContext{
 
     /** {@inheritDoc} */
     public String[] getBeanNamesForType(ResolvableType type) {
+        fail();
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public String[] getBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
         fail();
         return null;
     }
@@ -225,6 +231,12 @@ public class MockApplicationContext implements ConfigurableApplicationContext{
 
     /** {@inheritDoc} */
     public Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+        fail();
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
         fail();
         return null;
     }

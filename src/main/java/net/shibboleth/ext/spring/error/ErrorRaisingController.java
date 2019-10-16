@@ -22,11 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * MVC controller for responding to errors by dispatching them to the MVC error handling umbrella.
  */
+@Controller
 public class ErrorRaisingController {
 
     /** Class logger. */
@@ -39,7 +41,7 @@ public class ErrorRaisingController {
      * 
      * @throws Throwable 
      */
-    @RequestMapping
+    @RequestMapping(value = "/RaiseError")
     // Checkstyle: IllegalThrows OFF
     public void raiseError(@Nonnull final HttpServletRequest httpRequest) throws Throwable {
         

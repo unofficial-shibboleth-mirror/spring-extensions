@@ -48,11 +48,14 @@ public final class ResourceHelper implements net.shibboleth.utilities.java.suppo
     }
 
     /**
-     * Return a {@link Resource} that does all the work of the provided {@link Resource}<br/>
-     * If the input implements {@link Resource} then it is cast to the output, other a shim class is generated.
+     * Return a {@link net.shibboleth.utilities.java.support.resource.Resource} that does all the work of the
+     * provided {@link Resource}.
+     * 
+     * <p>If the input implements {@link net.shibboleth.utilities.java.support.resource.Resource} then it is cast
+     * to the output, other a shim class is generated.</p>
      * 
      * @param springResource the input
-     * @return a {@link Resource} which reflects what the Spring one does
+     * @return a {@link net.shibboleth.utilities.java.support.resource.Resource} which reflects what the Spring one does
      */
     @Nonnull public static net.shibboleth.utilities.java.support.resource.Resource
                  of(@ParameterName(name="springResource") final Resource springResource) {

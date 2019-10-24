@@ -17,7 +17,6 @@
 
 package net.shibboleth.ext.spring.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,9 +51,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
 
 /**
  * Fluent builder for a {@link FilesystemGenericApplicationContext} equipped with various standard features,
@@ -143,7 +139,7 @@ public class ApplicationContextBuilder {
      */
     @Nonnull public ApplicationContextBuilder setServiceConfigurations(
             @Nonnull @NonnullElements final Collection<Resource> configs) {
-        configurationResources = new ArrayList<>(Collections2.filter(configs, Predicates.notNull()));
+        configurationResources = List.copyOf(Constraint.isNotNull(configs, "Service configurations cannot be null"));
         
         return this;
     }
@@ -157,7 +153,7 @@ public class ApplicationContextBuilder {
      */
     @Nonnull public ApplicationContextBuilder setPropertySources(
             @Nonnull @NonnullElements final List<PropertySource<?>> sources) {
-        propertySources = new ArrayList<>(Collections2.filter(sources, Predicates.notNull()));
+        propertySources = List.copyOf(Constraint.isNotNull(sources, "Property sources cannot be null"));
         
         return this;
     }
@@ -191,7 +187,7 @@ public class ApplicationContextBuilder {
     @Nonnull public ApplicationContextBuilder setContextInitializers(
             @Nonnull @NonnullElements
             final List<ApplicationContextInitializer<? super FilesystemGenericApplicationContext>> initializers) {
-        contextInitializers = new ArrayList<>(Collections2.filter(initializers, Predicates.notNull()));
+        contextInitializers = List.copyOf(Constraint.isNotNull(initializers, "Context initializers cannot be null"));
         
         return this;
     }
@@ -221,8 +217,10 @@ public class ApplicationContextBuilder {
      * @return this builder
      */
     @Nonnull public ApplicationContextBuilder setBeanFactoryPostProcessors(
-            @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
-        factoryPostProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
+            @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {        
+        Constraint.isNotNull(processors, "BeanFactoryPostProcessor collection cannot be null");
+
+        factoryPostProcessors = List.copyOf(processors);
         
         return this;
     }
@@ -250,8 +248,10 @@ public class ApplicationContextBuilder {
      * @return this builder
      */
     @Nonnull public ApplicationContextBuilder setBeanPostProcessors(
-            @Nonnull @NonnullElements final List<BeanPostProcessor> processors) {
-        postProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
+            @Nonnull @NonnullElements final List<BeanPostProcessor> processors) {        
+        Constraint.isNotNull(processors, "BeanPostProcessor collection cannot be null");
+
+        postProcessors = List.copyOf(processors);
         
         return this;
     }

@@ -19,7 +19,6 @@ package net.shibboleth.ext.spring.service;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -54,10 +53,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.Resource;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 /**
  * This class provides a reloading interface to a {@link ServiceableComponent} via Spring.
@@ -183,8 +178,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
 
-        serviceConfigurations =
-                ImmutableList.<Resource> builder().addAll(Iterables.filter(configs, Predicates.notNull())).build();
+        serviceConfigurations = List.copyOf(Constraint.isNotNull(configs, "Service configurations cannot be null"));
         if (!serviceConfigurations.isEmpty()) {
             resourceLastModifiedTimes = new Instant[serviceConfigurations.size()];
 
@@ -228,8 +222,9 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
             @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        Constraint.isNotNull(processors, "BeanFactoryPostProcessor collection cannot be null");
 
-        factoryPostProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
+        factoryPostProcessors = List.copyOf(processors);
     }
 
     /**
@@ -240,8 +235,9 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     public void setBeanPostProcessors(@Nonnull @NonnullElements final List<BeanPostProcessor> processors) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        Constraint.isNotNull(processors, "BeanPostProcessor collection cannot be null");
 
-        postProcessors = new ArrayList<>(Collections2.filter(processors, Predicates.notNull()));
+        postProcessors = List.copyOf(processors);
     }
     
     /**

@@ -66,7 +66,7 @@ public class ProxiedFactoryBean<T> extends AbstractFactoryBean<T> {
             @Nonnull @ParameterName(name="type") final Class<T> type) {
         
         beanType = Constraint.isNotNull(type, "Bean type cannot be null");
-        contextService = Constraint.isNotNull(service, "FlowDescriptorResolver component cannot be null");
+        contextService = Constraint.isNotNull(service, "Managed ApplicationContext service component cannot be null");
     }
 
     /**

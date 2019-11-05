@@ -35,6 +35,7 @@ import net.shibboleth.utilities.java.support.service.ServiceableComponent;
  * 
  * @param <T> the service type to look for; defaults to {@link ServiceableComponent}
  */
+@SuppressWarnings("rawtypes")
 public class ClassBasedServiceStrategy<T> implements Function<ApplicationContext, ServiceableComponent<T>> {
 
     /** The class we are looking for. */

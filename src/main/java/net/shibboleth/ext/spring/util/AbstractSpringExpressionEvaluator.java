@@ -20,19 +20,17 @@ package net.shibboleth.ext.spring.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.EvaluationException;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.ParseException;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * A component that evaluates a Spring EL expression against a set of inputs
@@ -157,6 +155,7 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
      * @param input input over which to evaluate the expression
      * @return result of applying the expression to the provided input
      */
+    @SuppressWarnings("unchecked")
     protected U evaluate(@Nullable final T input) {
 
         // Try outside the try so as to preserve derived semantics

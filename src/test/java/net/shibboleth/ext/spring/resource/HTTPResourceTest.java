@@ -39,7 +39,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Sets;
 
 import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
@@ -204,7 +203,7 @@ public class HTTPResourceTest {
         File theDir = null;
         GenericApplicationContext context = null;
         try {
-            final Set<PosixFilePermission> prot = Sets.newHashSet(PosixFilePermission.values());
+            final Set<PosixFilePermission> prot = Set.of(PosixFilePermission.values());
             final Path p = Files.createTempDirectory("HTTPResourceTest", PosixFilePermissions.asFileAttribute(prot));
             theDir = p.toFile();
             context = getContext("classpath:net/shibboleth/ext/spring/resource/MemBackedHTTPBean.xml", null);

@@ -30,8 +30,8 @@ import org.springframework.core.io.ResourceLoader;
 
 /**
  * Allows setting {@link Resource} properties using a string representing a Spring resource. The Spring resource is
- * retrieved by the application context. If the application context is null, then a {@link DefaultResourceLoader} is
- * used instead to get the resource.
+ * retrieved by the application context. If the application context is null, then a
+ * {@link PreferFileSystemResourceLoader} is used instead to get the resource.
  */
 public class StringToResourceConverter implements Converter<String, Resource>, ApplicationContextAware {
 

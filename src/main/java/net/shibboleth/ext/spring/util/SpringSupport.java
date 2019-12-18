@@ -139,11 +139,13 @@ public final class SpringSupport {
         }
     }
     
-    /** Root method for all parsing.
+    /**
+     * Root method for all parsing.
      * 
-     * @param element the element to parse.<br/>This works in two scoping modes.  If the parent builder is
+     * @param element the element to parse.
+     * <p>This works in two scoping modes.  If the parent builder is
      * null then this bean is to be inserted into the provided parser context, in this case the parent builder is null.
-     * If the parent builder is provided then the scope is limited and the bean definition is returned.
+     * If the parent builder is provided then the scope is limited and the bean definition is returned.</p>
      * @param parserContext current parsing context
      * @param parentBuilder the parent builder (for nested building).
      * @param lazyInit whether this is lazy initialized;

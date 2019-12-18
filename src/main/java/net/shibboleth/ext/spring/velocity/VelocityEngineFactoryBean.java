@@ -49,7 +49,7 @@ import org.springframework.context.ResourceLoaderAware;
  * @see #setConfigLocation
  * @see #setVelocityProperties
  * @see #setResourceLoaderPath
- * @see org.springframework.web.servlet.view.velocity.VelocityConfigurer
+ * @see VelocityConfigurer
  * 
  * @since 6.0.0
  */

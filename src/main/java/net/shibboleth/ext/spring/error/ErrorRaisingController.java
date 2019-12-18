@@ -39,7 +39,7 @@ public class ErrorRaisingController {
      * 
      * @param httpRequest the HTTP request
      * 
-     * @throws Throwable 
+     * @throws Throwable if something goes wrong
      */
     @RequestMapping(value = "/RaiseError")
     // Checkstyle: IllegalThrows OFF

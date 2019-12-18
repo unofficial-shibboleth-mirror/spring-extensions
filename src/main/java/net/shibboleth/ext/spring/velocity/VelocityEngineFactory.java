@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
  * Factory that configures a VelocityEngine. Can be used standalone,
  * but typically you will either use {@link VelocityEngineFactoryBean}
  * for preparing a VelocityEngine as bean reference, or
- * {@link org.springframework.web.servlet.view.velocity.VelocityConfigurer}
+ * {@link VelocityConfigurer}
  * for web views.
  *
  * <p>The optional "configLocation" property sets the location of the Velocity
@@ -54,10 +54,6 @@ import org.springframework.util.StringUtils;
  * resource loader path via Spring's Resource abstraction, possibly relative
  * to the Spring application context.
  *
- * <p>If "overrideLogging" is true (the default), the VelocityEngine will be
- * configured to log via Commons Logging, that is, using
- * {@link CommonsLogLogChute} as log system.
- *
  * <p>The simplest way to use this class is to specify a
  * {@link #setResourceLoaderPath(String) "resourceLoaderPath"}; the
  * VelocityEngine typically then does not need any further configuration.
@@ -66,10 +62,9 @@ import org.springframework.util.StringUtils;
  * @see #setConfigLocation
  * @see #setVelocityProperties
  * @see #setResourceLoaderPath
- * @see #setOverrideLogging
  * @see #createVelocityEngine
  * @see VelocityEngineFactoryBean
- * @see org.springframework.web.servlet.view.velocity.VelocityConfigurer
+ * @see VelocityConfigurer
  * @see org.apache.velocity.app.VelocityEngine
  * 
  * @since 6.0.0

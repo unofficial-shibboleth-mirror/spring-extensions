@@ -51,7 +51,7 @@ import org.springframework.web.context.ServletContextAware;
  *
  * <p>Note that you can also refer to a pre-configured VelocityEngine
  * instance via the "velocityEngine" property, e.g. set up by
- * {@link org.springframework.ui.velocity.VelocityEngineFactoryBean},
+ * {@link VelocityEngineFactoryBean},
  * This allows to share a VelocityEngine for web and email usage, for example.
  *
  * <p>This configurer registers the "spring.vm" Velocimacro library for web views
@@ -96,7 +96,6 @@ public class VelocityConfigurer extends VelocityEngineFactory
      * Initialize VelocityEngineFactory's VelocityEngine
      * if not overridden by a pre-configured VelocityEngine.
      * @see #createVelocityEngine
-     * @see #setVelocityEngine
      */
     @Override
     public void afterPropertiesSet() throws IOException, VelocityException {

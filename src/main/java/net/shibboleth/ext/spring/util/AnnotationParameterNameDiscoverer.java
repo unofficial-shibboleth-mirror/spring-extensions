@@ -62,8 +62,9 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
     }
 
     /**
-     * {@inheritDoc} <br/>
-     * If we cannot do anything pass to the default discoverer.
+     * {@inheritDoc}
+     *
+     * <p>If we cannot do anything pass to the default discoverer.</p>
      */
     @Override public String[] getParameterNames(final Constructor<?> ctor) {
 

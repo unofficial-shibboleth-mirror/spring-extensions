@@ -57,7 +57,7 @@ import org.springframework.core.io.Resource;
 /**
  * This class provides a reloading interface to a {@link ServiceableComponent} via Spring.
  * This class extends {@link org.springframework.context.Lifecycle}. and thus 
- * It acts as the bridge between this interface and
+ * it acts as the bridge between this interface and
  * {@link net.shibboleth.utilities.java.support.component.InitializableComponent} and
  * {@link net.shibboleth.utilities.java.support.component.DestructableComponent}
 
@@ -203,8 +203,11 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
         }
     }
     
-    /** Set the strategy by which the Service can locate the resources it needs to know about.
-     * <br/> Not implemented
+    /**
+     * Set the strategy by which the Service can locate the resources it needs to know about.
+     *
+     * <p>Not implemented.</p>
+     *
      * @param strategy the way to get the resources.  Precise details are tbd.
      */
     public void setServiceConfigurationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {

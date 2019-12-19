@@ -123,7 +123,7 @@ public class RunnableFileSystemResource extends FileSystemResource
         try {
             theRunnable.run();
         } catch (final Exception ex) {
-            log.error("{} : Runnable failed", thePrefix, ex);
+            log.error("{} : Runnable failed: {}", thePrefix, ex.getMessage());
             throw new IOException(ex);
         }
     }

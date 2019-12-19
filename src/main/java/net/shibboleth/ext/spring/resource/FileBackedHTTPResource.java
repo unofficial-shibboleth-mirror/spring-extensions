@@ -105,7 +105,7 @@ public class FileBackedHTTPResource extends HTTPResource {
         } catch (final IOException e) {
             // try to tidy up
             backingResource.getFile().delete();
-            log.error("{}: Copy failed", getDescription(), e);
+            log.error("{}: Copy failed: {}", getDescription(), e.getMessage());
             throw e;
         } finally {
             input.close();
@@ -124,7 +124,8 @@ public class FileBackedHTTPResource extends HTTPResource {
             try {
                 return new FileInputStream(backingResource.getFile());
             } catch (final IOException e) {
-                log.error("FileBackedHTTPResource {}: Could not read backing file", getDescription(), e);
+                log.error("FileBackedHTTPResource {}: Could not read backing file: {}", getDescription(),
+                        e.getMessage());
                 throw e;
             }
         }

@@ -19,9 +19,6 @@ package net.shibboleth.ext.spring.service;
 
 import javax.annotation.Nonnull;
 
-/**
- *
- */
 public class TestServiceableComponent extends AbstractServiceableComponent<TestServiceableComponent> {
 
     private String theValue;
@@ -40,7 +37,7 @@ public class TestServiceableComponent extends AbstractServiceableComponent<TestS
     }
 
     /**
-     * @param theValue The theValue to set.
+     * @param value The theValue to set.
      */
     public void setTheValue(final String value) {
         theValue = value;

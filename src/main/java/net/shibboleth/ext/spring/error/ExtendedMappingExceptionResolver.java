@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 
 import net.shibboleth.utilities.java.support.codec.HTMLEncoder;
-import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -64,8 +63,8 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
      *
      * @param extender function to obtain extensions to view model
      */
-    public ExtendedMappingExceptionResolver(@Nonnull final Function<HttpServletRequest,Map<String,Object>> extender) {
-        viewModelExtenderFunction = Constraint.isNotNull(extender, "Extender function cannot be null");
+    public ExtendedMappingExceptionResolver(@Nullable final Function<HttpServletRequest,Map<String,Object>> extender) {
+        viewModelExtenderFunction = extender;
     }
     
     /** {@inheritDoc} */

@@ -133,7 +133,7 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentifiab
         super.doInitialize();
         if (applicationContext == null) {
             throw new ComponentInitializationException(getId()
-                    + ": Application context not set ConfigurableApplicationContext");
+                    + ": Application context not set");
         }
         if (!(applicationContext instanceof ConfigurableApplicationContext)) {
             throw new ComponentInitializationException(getId()

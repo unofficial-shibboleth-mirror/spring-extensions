@@ -7,12 +7,12 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent</artifactId>
-        <version>11.0.0-beta1</version>
+        <version>11.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>net.shibboleth.ext</groupId>
     <artifactId>spring-extensions</artifactId>
-    <version>6.0.0-beta1</version>
+    <version>6.0.0-SNAPSHOT</version>
 
     <name>Spring Framework Extension</name>
     <description>
@@ -22,7 +22,7 @@
 
     <properties>
         <automatic.module.name>net.shibboleth.ext.spring</automatic.module.name>
-        <java-support.version>8.0.0-beta1</java-support.version>
+        <java-support.version>8.0.0-SNAPSHOT</java-support.version>
     </properties>
 
     <repositories>

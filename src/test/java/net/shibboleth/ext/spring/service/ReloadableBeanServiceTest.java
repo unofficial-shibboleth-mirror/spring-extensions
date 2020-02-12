@@ -31,6 +31,7 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("javadoc")
 public class ReloadableBeanServiceTest {
 
     @Test public void reloadableService() throws IOException, InterruptedException {

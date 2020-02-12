@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 /**
  * Test for the {@link SpringExpressionPredicate} and {@link SpringExpressionFunction}.
  */
+@SuppressWarnings("javadoc")
 public class SpringExpressionTest {
 
     /** Helper function to use this as the bean to test.

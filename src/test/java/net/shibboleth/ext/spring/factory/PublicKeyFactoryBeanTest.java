@@ -26,6 +26,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @ContextConfiguration({"PublicKeyFactoryBean-config.xml"})
+@SuppressWarnings("javadoc")
 public class PublicKeyFactoryBeanTest extends AbstractTestNGSpringContextTests {
 
     @Test public void testFactory() {

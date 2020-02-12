@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.service;
 
 import javax.annotation.Nonnull;
 
+@SuppressWarnings("javadoc")
 public class TestServiceableComponent extends AbstractServiceableComponent<TestServiceableComponent> {
 
     private String theValue;

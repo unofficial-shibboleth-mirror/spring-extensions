@@ -30,6 +30,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 /**
  * Test bean to canary out behavior of reloadable bean service.
  */
+@SuppressWarnings("javadoc")
 public class NonReloadableTestBean extends AbstractInitializableComponent {
 
     @Nonnull private final Logger log = LoggerFactory.getLogger(NonReloadableTestBean.class);

@@ -40,6 +40,7 @@ import org.testng.annotations.Test;
 import com.google.common.io.ByteStreams;
 
 /** {@link ReloadableSpringService} unit test. */
+@SuppressWarnings("javadoc")
 public class ReloadableSpringServiceTest {
 
     private static final Duration RELOAD_DELAY = Duration.ofMillis(100);

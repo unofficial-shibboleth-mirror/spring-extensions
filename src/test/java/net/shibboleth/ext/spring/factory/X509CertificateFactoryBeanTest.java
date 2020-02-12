@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @ContextConfiguration({"X509CertificateFactoryBean-config.xml"})
+@SuppressWarnings("javadoc")
 public class X509CertificateFactoryBeanTest extends AbstractTestNGSpringContextTests {
 
     @Test public void testFactory() {

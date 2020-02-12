@@ -25,6 +25,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /** {@link AnnotationParameterNameDiscoverer} unit test. */
+@SuppressWarnings("javadoc")
 public class ParameterNameAnnotationTest {
 
     @Test public void testNoAnnotationFilter() {

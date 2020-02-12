@@ -42,6 +42,7 @@ import net.shibboleth.utilities.java.support.scripting.ScriptedRunnable;
 /**
  *
  */
+@SuppressWarnings("javadoc")
 public class RunnableResourceTest {
     
     private String fileName;

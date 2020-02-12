@@ -48,6 +48,7 @@ import net.shibboleth.utilities.java.support.httpclient.InMemoryCachingHttpClien
 /**
  * Test for HTTPResource.
  */
+@SuppressWarnings("javadoc")
 public class HTTPResourceTest {
 
     private final String existsURL =

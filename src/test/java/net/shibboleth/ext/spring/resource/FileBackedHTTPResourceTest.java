@@ -40,6 +40,7 @@ import org.testng.annotations.Test;
 /**
  * Test for FileBackedHTTPResource.
  */
+@SuppressWarnings("javadoc")
 public class FileBackedHTTPResourceTest {
 
     private final String existsURL =

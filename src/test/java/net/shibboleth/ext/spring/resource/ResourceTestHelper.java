@@ -27,6 +27,7 @@ import com.google.common.io.Closeables;
 /**
  *
  */
+@SuppressWarnings("javadoc")
 public class ResourceTestHelper {
 
     static public boolean compare(final Resource first, final Resource second) throws IOException {

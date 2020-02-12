@@ -35,6 +35,7 @@ import org.testng.annotations.Test;
  * A test for {@link IdentifiableBeanPostProcessor}.
  */
 @ContextConfiguration({"identifiableBeanPostProcessorTest.xml"})
+@SuppressWarnings("javadoc")
 public class IdentifiableBeanPostProcessorTest extends AbstractTestNGSpringContextTests {
 
     @Test(expectedExceptions = {ComponentInitializationException.class, BeanCreationException.class,}) public void

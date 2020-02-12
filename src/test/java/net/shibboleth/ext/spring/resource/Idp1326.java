@@ -35,9 +35,7 @@ import org.testng.annotations.Test;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 
-/**
- *
- */
+@SuppressWarnings("javadoc")
 public class Idp1326{
     
     private String parentAsString;

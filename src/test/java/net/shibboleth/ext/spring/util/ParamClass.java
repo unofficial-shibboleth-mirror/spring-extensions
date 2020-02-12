@@ -22,6 +22,7 @@ import net.shibboleth.utilities.java.support.annotation.ParameterName;
 /**
  * simple bean.
  */
+@SuppressWarnings("javadoc")
 public class ParamClass {
 
     private final String p1;

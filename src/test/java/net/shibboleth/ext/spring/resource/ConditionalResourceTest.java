@@ -38,6 +38,7 @@ import org.testng.annotations.Test;
 /**
  * Test for {@link ConditionalResource}.
  */
+@SuppressWarnings("javadoc")
 public class ConditionalResourceTest {
 
     private final String existsURL = RepositorySupport.buildHTTPResourceURL("spring-extensions", "src/test/resources/net/shibboleth/ext/spring/resource/document.xml",false);

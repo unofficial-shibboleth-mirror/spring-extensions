@@ -107,16 +107,14 @@ public class FileBackedHTTPResource extends HTTPResource {
             backingResource.getFile().delete();
             log.error("{}: Copy failed: {}", getDescription(), e.getMessage());
             throw e;
-        } finally {
-            input.close();
         }
+
         return new FileInputStream(backingResource.getFile());
     }
 
     /** {@inheritDoc} */
     @Override @Nonnull public InputStream getInputStream() throws IOException {
-        try {
-            final InputStream stream = super.getInputStream();
+        try (final InputStream stream = super.getInputStream()) {
             return saveAndClone(stream);
         } catch (final IOException ex) {
             log.debug("{} Error obtaining HTTPResource InputStream or creating backing file", getDescription(), ex);

@@ -12,7 +12,7 @@
 
     <groupId>net.shibboleth.ext</groupId>
     <artifactId>spring-extensions</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.0-beta2</version>
 
     <name>Spring Framework Extension</name>
     <description>
@@ -22,7 +22,7 @@
 
     <properties>
         <automatic.module.name>net.shibboleth.ext.spring</automatic.module.name>
-        <java-support.version>8.0.0-SNAPSHOT</java-support.version>
+        <java-support.version>8.0.0-beta2</java-support.version>
     </properties>
 
     <repositories>

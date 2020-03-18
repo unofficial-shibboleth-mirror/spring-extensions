@@ -204,8 +204,7 @@ public class HTTPResourceTest {
         File theDir = null;
         GenericApplicationContext context = null;
         try {
-            final Set<PosixFilePermission> prot = Set.of(PosixFilePermission.values());
-            final Path p = Files.createTempDirectory("HTTPResourceTest", PosixFilePermissions.asFileAttribute(prot));
+            final Path p = Files.createTempDirectory("HTTPResourceTest");
             theDir = p.toFile();
             context = getContext("classpath:net/shibboleth/ext/spring/resource/MemBackedHTTPBean.xml", null);
             final Collection<TestHTTPResource> beans = context.getBeansOfType(TestHTTPResource.class).values();

@@ -6,7 +6,7 @@
     
     <bean id="shibboleth.IdentifiableBeanPostProcessor" class="net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessor" />
     
-    <bean id="Script" class="net.shibboleth.utilities.java.support.scripting.EvaluableScript" c:_0="
+    <bean id="Script" class="net.shibboleth.utilities.java.support.scripting.EvaluableScript" init-method="initialize" p:script="
     var i = 22;
     var j = 7;
     var pi = i/j;

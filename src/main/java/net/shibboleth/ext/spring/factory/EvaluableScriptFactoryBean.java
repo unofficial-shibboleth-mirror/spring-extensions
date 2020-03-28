@@ -141,14 +141,19 @@ public class EvaluableScriptFactoryBean extends AbstractComponentAwareFactoryBea
                 script = StringSupport.inputStreamToString(is, null);
             }
         }
-        log.debug("{} Script: {}", sourceId, script);
+        log.debug("{} Language: {} Script: {} ", sourceId, engineName==null ? "<default>" : engineName, script);
 
-        if (null == engineName) {
-            log.debug("{} default language", sourceId);
-            return new EvaluableScript(script);
+        final EvaluableScript evaluableScript = new EvaluableScript();
+        evaluableScript.setScript(script);
+
+        if (engineName != null) {
+            evaluableScript.setEngineName(engineName);
         }
-        log.debug("{} language : {}", sourceId, engineName);
-        return new EvaluableScript(engineName, script);
+        //
+        // Initialize for compatibility reasons
+        //
+        evaluableScript.initialize();
+        return evaluableScript;
     }
 
 }

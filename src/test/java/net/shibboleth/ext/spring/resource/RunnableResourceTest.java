@@ -86,7 +86,9 @@ public class RunnableResourceTest {
     
     
     @Test public void testRunnable() throws ScriptException, ComponentInitializationException {
-        final EvaluableScript script = new EvaluableScript("custom.update();");
+        final EvaluableScript script = new EvaluableScript();
+        script.setScript("custom.update();");
+        script.initialize();
         final ScriptedRunnable runnable = new ScriptedRunnable();
         runnable.setCustomObject(object);
         runnable.setScript(script);
@@ -108,7 +110,9 @@ public class RunnableResourceTest {
     @Test public void testResource() throws ScriptException, ComponentInitializationException, IOException, InterruptedException {
         
         final long now = new File(fileName).lastModified();
-        final EvaluableScript script = new EvaluableScript("custom.update();");
+        final EvaluableScript script = new EvaluableScript();
+        script.setScript("custom.update();");
+        script.initialize();
         final ScriptedRunnable runnable = new ScriptedRunnable();
         runnable.setCustomObject(object);
         runnable.setScript(script);

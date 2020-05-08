@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientContextHandler;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -343,7 +344,14 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         } else {
             path = relativePath;
         }
-        return new HTTPResource(httpClient, new URL(resourceURL, path));
+        final HTTPResource result = new HTTPResource(httpClient, new URL(resourceURL, path));
+        try {
+            result.setId(getId()+"_"+relativePath);
+            result.initialize();
+        } catch (final ComponentInitializationException e) {
+            throw new IOException(e);
+        }
+        return result;
     }
 
     /** {@inheritDoc} */

@@ -23,6 +23,7 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.shibboleth.utilities.java.support.codec.HTMLEncoder;
 
@@ -43,6 +44,9 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
 
     /** Model attribute carrying {@link HttpServletRequest}. */
     @Nonnull private static final String MODEL_ATTR_REQUEST = "request";
+
+    /** Model attribute carrying {@link HttpServletResponse}. */
+    @Nonnull private static final String MODEL_ATTR_RESPONSE = "response";
 
     /** Model attribute carrying {@link WebApplicationContext}. */
     @Nonnull private static final String MODEL_ATTR_SPRINGCONTEXT = "springContext";
@@ -68,8 +72,21 @@ public class ExtendedMappingExceptionResolver extends SimpleMappingExceptionReso
     }
     
     /** {@inheritDoc} */
-    @Override protected ModelAndView getModelAndView(final String viewName,
-            final Exception ex, final HttpServletRequest request) {
+    @Override
+    protected ModelAndView doResolveException(final HttpServletRequest request, final HttpServletResponse response,
+            final Object handler, final Exception ex) {
+        
+        final ModelAndView view = super.doResolveException(request, response, handler, ex);
+        if (view != null) {
+            view.addObject(MODEL_ATTR_RESPONSE, response);
+        }
+        return view;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected ModelAndView getModelAndView(final String viewName, final Exception ex,
+            final HttpServletRequest request) {
         
         LoggerFactory.getLogger(ex.getClass()).error("", ex);
         

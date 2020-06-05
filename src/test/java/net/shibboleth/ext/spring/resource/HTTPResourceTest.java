@@ -123,7 +123,7 @@ public class HTTPResourceTest {
         // Chose a file unlikely to change. Do not use the svn thing because the date will not be there
 
         final HTTPResource parent =
-                new HTTPResource(client, "http://test.shibboleth.net/downloads/identity-provider/2.0.0/");
+                new HTTPResource(client, "http://test.shibboleth.net/downloads/identity-provider/archive/2.0.0/");
         final HTTPResource child = parent.createRelative("shibboleth-idp-2.0.0-bin.zip");
 
         final long when = child.lastModified();

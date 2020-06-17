@@ -33,9 +33,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.core.io.Resource;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+
 
 /**
  * A wrapper that guards a {@link Resource} that may be absent by returning an empty bean file instead.
@@ -46,7 +49,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         implements Resource, BeanNameAware, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Dummy content. */
-    @Nonnull @NotEmpty private static final String EMPTY_RESOURCE =
+    @Nonnull @NotEmpty private static final String DEFAULT_EMPTY_RESOURCE =
             "<beans xmlns=\"http://www.springframework.org/schema/beans\""
                     + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
                     + " xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
@@ -62,6 +65,9 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     /** Resource to wrap. */
     @Nonnull private final Resource wrappedResource;
     
+    /** Content to return if the resource is missing. */
+    @NonnullAfterInit private String emptyResource; 
+    
     /**
      * Constructor.
      *
@@ -69,15 +75,31 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      */
     public ConditionalResource(@Nonnull final Resource wrapped) {
         wrappedResource = Constraint.isNotNull(wrapped, "Wrapped resource cannot be null");
+        emptyResource = DEFAULT_EMPTY_RESOURCE;
     }
     
     /** {@inheritDoc} */
-    @Override public void setId(@Nonnull @NotEmpty final String id) {
+    @Override public synchronized void setId(@Nonnull @NotEmpty final String id) {
         super.setId(id);
+    }
+    
+    /**
+     * Set the default content to return if the underlying resource is absent.
+     * 
+     * @param content default "empty" content
+     * 
+     * @since 6.1.0
+     */
+    public void setEmptyResource(@Nonnull final String content) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
+        emptyResource = Constraint.isNotEmpty(content, "Empty content cannot be null");
     }
 
     /** {@inheritDoc} */
     @Nonnull public InputStream getInputStream() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.getInputStream();
         } catch (final IOException e) {
@@ -86,7 +108,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
             } else {
                 log.debug("{} getInputStream failed on wrapped resource", getLogPrefix());
             }
-            return new ByteArrayInputStream(EMPTY_RESOURCE.getBytes(StandardCharsets.UTF_8));
+            return new ByteArrayInputStream(emptyResource.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -94,6 +116,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     public net.shibboleth.utilities.java.support.resource.Resource createRelativeResource(final String relativePath)
             throws IOException {
         
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
         final Resource relative = wrappedResource.createRelative(relativePath);
         if (relative instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) relative;
@@ -109,6 +132,8 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean exists() {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         if (!wrappedResource.exists()) {
             log.debug("{} Wrapped resource does not exist", getLogPrefix());
         }
@@ -117,16 +142,22 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean isReadable() {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         return true;
     }
 
     /** {@inheritDoc} */
     public boolean isOpen() {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         return wrappedResource.isOpen();
     }
 
     /** {@inheritDoc} */
     public URL getURL() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.getURL();
         } catch (final IOException e) {
@@ -139,6 +170,8 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public URI getURI() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.getURI();
         } catch (final IOException e) {
@@ -151,6 +184,8 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public File getFile() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.getFile();
         } catch (final IOException e) {
@@ -163,18 +198,22 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public long contentLength() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.contentLength();
         } catch (final IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug("{} contentLength failed on wrapped resource", getLogPrefix(), e);
             }
-            return EMPTY_RESOURCE.length();
+            return emptyResource.length();
         }
     }
 
     /** {@inheritDoc} */
     public long lastModified() throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         try {
             return wrappedResource.lastModified();
         } catch (final IOException e) {
@@ -187,16 +226,22 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public Resource createRelative(final String relativePath) throws IOException {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         return wrappedResource.createRelative(relativePath);
     }
 
     /** {@inheritDoc} */
     public String getFilename() {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         return wrappedResource.getFilename();
     }
 
     /** {@inheritDoc} */
     public String getDescription() {
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        
         return wrappedResource.getDescription();
     }
 

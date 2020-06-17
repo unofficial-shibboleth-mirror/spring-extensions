@@ -38,7 +38,6 @@ import org.testng.annotations.Test;
 /**
  * Test for {@link ConditionalResource}.
  */
-@SuppressWarnings("javadoc")
 public class ConditionalResourceTest {
 
     private final String existsURL = RepositorySupport.buildHTTPResourceURL("spring-extensions", "src/test/resources/net/shibboleth/ext/spring/resource/document.xml",false);
@@ -118,10 +117,12 @@ public class ConditionalResourceTest {
                 "net/shibboleth/ext/spring/resource/document.xml")));
     }
     
-    @Test public void testBeanExists() {
+    @Test public void testBeanExists() throws ComponentInitializationException {
         final ClassPathResource existsCPResource =
                 new ClassPathResource("net/shibboleth/ext/spring/resource/conditional.xml");
         final ConditionalResource existsResource = new ConditionalResource(existsCPResource);
+        existsResource.setId("test");
+        existsResource.initialize();
         
         final GenericApplicationContext parentContext = new GenericApplicationContext();
         parentContext.refresh(); // THIS IS REQUIRED
@@ -136,10 +137,12 @@ public class ConditionalResourceTest {
         Assert.assertEquals(context.getBean("testBean"), "foo");
     }
     
-    @Test public void testBeanMissing() {
+    @Test public void testBeanMissing() throws ComponentInitializationException {
         final ClassPathResource missingCPResource =
                 new ClassPathResource("net/shibboleth/ext/spring/resource/missing.xml");
         final ConditionalResource missingResource = new ConditionalResource(missingCPResource);
+        missingResource.setId("test");
+        missingResource.initialize();
         
         final GenericApplicationContext parentContext = new GenericApplicationContext();
         parentContext.refresh(); // THIS IS REQUIRED

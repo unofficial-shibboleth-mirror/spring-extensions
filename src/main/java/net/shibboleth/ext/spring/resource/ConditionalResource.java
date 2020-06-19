@@ -49,7 +49,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         implements Resource, BeanNameAware, net.shibboleth.utilities.java.support.resource.Resource {
 
     /** Dummy content. */
-    @Nonnull @NotEmpty private static final String DEFAULT_EMPTY_RESOURCE =
+    @Nonnull @NotEmpty private static final String DEFAULT_CONTENT =
             "<beans xmlns=\"http://www.springframework.org/schema/beans\""
                     + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
                     + " xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
@@ -66,7 +66,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     @Nonnull private final Resource wrappedResource;
     
     /** Content to return if the resource is missing. */
-    @NonnullAfterInit private String emptyResource; 
+    @NonnullAfterInit private String defaultContent;
     
     /**
      * Constructor.
@@ -75,7 +75,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      */
     public ConditionalResource(@Nonnull final Resource wrapped) {
         wrappedResource = Constraint.isNotNull(wrapped, "Wrapped resource cannot be null");
-        emptyResource = DEFAULT_EMPTY_RESOURCE;
+        defaultContent = DEFAULT_CONTENT;
     }
     
     /** {@inheritDoc} */
@@ -90,10 +90,10 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      * 
      * @since 6.1.0
      */
-    public void setEmptyResource(@Nonnull final String content) {
+    public void setDefaultContent(@Nonnull final String content) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
-        emptyResource = Constraint.isNotEmpty(content, "Empty content cannot be null");
+        defaultContent = Constraint.isNotEmpty(content, "Empty content cannot be null");
     }
 
     /** {@inheritDoc} */
@@ -108,7 +108,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
             } else {
                 log.debug("{} getInputStream failed on wrapped resource", getLogPrefix());
             }
-            return new ByteArrayInputStream(emptyResource.getBytes(StandardCharsets.UTF_8));
+            return new ByteArrayInputStream(defaultContent.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -206,7 +206,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
             if (log.isDebugEnabled()) {
                 log.debug("{} contentLength failed on wrapped resource", getLogPrefix(), e);
             }
-            return emptyResource.length();
+            return defaultContent.length();
         }
     }
 

@@ -83,6 +83,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <!-- Required for command line classes. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>${spring.groupId}</groupId>
             <artifactId>spring-context</artifactId>
             <!-- Required for ApplicationContext classes. -->

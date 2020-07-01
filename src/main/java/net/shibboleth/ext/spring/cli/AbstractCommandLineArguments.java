@@ -40,8 +40,6 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     @Parameter
     @Nonnull private List<String> otherArgs = new ArrayList<>();
     
-    // Logging
-    
     /**
      * Verbose logging has been requested.
      */
@@ -59,8 +57,6 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
      */
     @Parameter(names = "--logConfig")
     @Nullable private String logConfig;
-
-    // Help
     
     /**
      * Help has been requested.
@@ -68,14 +64,16 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     @Parameter(names = "--help", help=true)
     private boolean help;
 
-    // Version
-
     /**
      * Version has been requested.
      */
     @Parameter(names = "--version")
     private boolean version;
 
+    /** Spring property sources. */
+    @Parameter(names = "--propertyFiles")
+    @Nonnull private List<String> propertySources = new ArrayList<>();
+    
     /** {@inheritDoc} */
     public boolean isVerboseOutput() {
         return verbose;
@@ -102,6 +100,11 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     }
     
     /** {@inheritDoc} */
+    @Nonnull @Unmodifiable @NotLive public List<String> getPropertyFiles() {
+        return propertySources;
+    }
+    
+    /** {@inheritDoc} */
     @Nonnull @Unmodifiable @NotLive public List<String> getOtherArgs() {
         return otherArgs;
     }
@@ -120,12 +123,12 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
         out.println();
         out.println(String.format("  --%-20s %s", "help", "Prints this help information"));
         out.println(String.format("  --%-20s %s", "version", "Prints version"));
+        out.println(String.format("  --%-20s %s", "propertyFiles", "Comma-separated list of Spring property files"));
         out.println();
 
         out.println("Logging Options - these options are mutually exclusive");
         out.println(String.format("  --%-20s %s", "verbose", "Turn on verbose messages."));
-        out.println(String.format("  --%-20s %s", "quiet",
-                "Restrict output messages to errors and warnings."));
+        out.println(String.format("  --%-20s %s", "quiet", "Restrict output messages to errors and warnings."));
         out.println();
         out.println(String.format("  --%-20s %s", "logConfig",
                 "Specifies a logback configuration file to use to configure logging."));

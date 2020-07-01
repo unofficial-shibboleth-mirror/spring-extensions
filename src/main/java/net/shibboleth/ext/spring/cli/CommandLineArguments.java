@@ -66,6 +66,13 @@ public interface CommandLineArguments {
     boolean isVersion();
 
     /**
+     * Get list of property filenames to load.
+     * 
+     * @return property filenames
+     */
+    @Nonnull @Unmodifiable @NotLive public List<String> getPropertyFiles();
+    
+    /**
      * Get unparsed arguments.
      * 
      * @return unparsed arguments

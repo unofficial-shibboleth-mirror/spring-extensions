@@ -17,20 +17,30 @@
 
 package net.shibboleth.ext.spring.cli;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.core.io.support.ResourcePropertySource;
 
 import com.beust.jcommander.JCommander;
 
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * A simple driver for a Spring-based CLI.
@@ -135,6 +145,30 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     }
 
     /**
+     * Merge in properties from the resource.
+     * 
+     * @param sink if non-null use this instance as the target
+     * @param resource the resource
+     * @return properties loaded from the resource or {@code  null} if loading failed
+     */
+    @Nullable public Properties loadProperties(@Nullable final Properties sink, @Nonnull final Resource resource) {
+        Constraint.isNotNull(resource, "Resource cannot be null");
+        try {
+            final Properties properties;
+            if (sink != null) {
+                properties = sink;
+            } else {
+                properties = new Properties();
+            }
+            PropertiesLoaderUtils.fillProperties(properties, resource);
+            return properties;
+        } catch (final IOException e) {
+            getLogger().warn("Unable to load properties from resource '{}'", resource, e);
+            return null;
+        }
+    }
+
+    /**
      * The execution method to override.
      * 
      * The default implementation handles Spring context creation.
@@ -145,11 +179,30 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
      */
     protected int doRun(@Nonnull final T args) {
         try {
-            final Resource config = new PreferFileSystemResourceLoader().getResource(args.getOtherArgs().get(0));
+            final ResourceLoader loader = new PreferFileSystemResourceLoader();
+            final Resource config = loader.getResource(args.getOtherArgs().get(0));
             
             getLogger().debug("Initializing Spring context with configuration file {}", config.getURI());
+
+            final List<Resource> resources =
+                    args.getPropertyFiles().stream().map(loader::getResource).collect(Collectors.toUnmodifiableList());
+            final List<PropertySource<?>> propertySources = new ArrayList<>(resources.size());
+            resources.forEach(r -> {
+                try {
+                    propertySources.add(new ResourcePropertySource(r));
+                } catch (final IOException e) {
+                    if (args.isVerboseOutput()) {
+                        getLogger().error("Unable to load properties from {}", r, e);
+                    } else {
+                        getLogger().error("Unable to load properties from {}", r, e.getMessage());
+                    }
+                }
+            });
             
-            applicationContext = new ApplicationContextBuilder().setServiceConfiguration(config).build();
+            applicationContext = new ApplicationContextBuilder()
+                    .setServiceConfiguration(config)
+                    .setPropertySources(propertySources)
+                    .build();
             
             // Register a shutdown hook for the context, so that beans will be
             // correctly destroyed before the CLI exits.

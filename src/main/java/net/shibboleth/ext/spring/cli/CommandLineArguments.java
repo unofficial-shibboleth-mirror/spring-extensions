@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 
-/** Command line arguments interface for the {@link CLI} command line tool. */
+/** Command line arguments interface for command line tools. */
 public interface CommandLineArguments {
 
     /**

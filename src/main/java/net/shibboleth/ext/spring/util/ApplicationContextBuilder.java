@@ -271,7 +271,7 @@ public class ApplicationContextBuilder {
     }
     
     /**
-     * Set a custom {@link ConversionService} to use.
+     * Set the parent context.
      * 
      * @param context parent context
      * 
@@ -283,9 +283,8 @@ public class ApplicationContextBuilder {
         return this;
     }
     
-// Checkstyle: CyclomaticComplexity OFF
     /**
-     * Build the context.
+     * Build a {@link GenericApplicationContext} context.
      * 
      * @return the built context, initialized and loaded
      */
@@ -344,6 +343,5 @@ public class ApplicationContextBuilder {
         context.refresh();
         return context;
     }
-// Checkstyle: CyclomaticComplexity ON
     
 }

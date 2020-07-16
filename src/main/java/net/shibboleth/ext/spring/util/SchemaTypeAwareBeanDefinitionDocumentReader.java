@@ -17,9 +17,15 @@
 
 package net.shibboleth.ext.spring.util;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader;
 import org.springframework.beans.factory.xml.XmlReaderContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -27,6 +33,41 @@ import org.w3c.dom.Element;
  * {@link SchemaTypeAwareBeanDefinitionParserDelegate} delegate for processing bean definitions.
  */
 public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefinitionDocumentReader {
+
+    /**
+     * {@inheritDoc}
+     * 
+     * This override prevents the default behavior from kicking in if the original resource location
+     * is directly usable by the installed {@link ResourceLoader}.
+     */
+    @Override
+    protected void importBeanDefinitionResource(final Element ele) {
+        String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+        if (!StringUtils.hasText(location)) {
+            getReaderContext().error("Resource location must not be empty", ele);
+            return;
+        }
+
+        // Resolve system properties: e.g. "${user.dir}"
+        location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
+
+        final Set<Resource> actualResources = new LinkedHashSet<>(4);
+
+        final Resource r = getReaderContext().getResourceLoader().getResource(location);
+        if (r.exists()) {
+            final int importCount = getReaderContext().getReader().loadBeanDefinitions(r);
+            actualResources.add(r);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Imported " + importCount + " bean definitions from location [" + location + "]");
+            }
+            final Resource[] actResArray = actualResources.toArray(new Resource[0]);
+            getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
+            return;
+        }
+        
+        logger.info("Resource location [" + location + "] does not exist, delegating to default behavior");
+        super.importBeanDefinitionResource(ele);
+    }
 
     /** {@inheritDoc} */
     @Override protected BeanDefinitionParserDelegate createDelegate(final XmlReaderContext readerContext,

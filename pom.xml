@@ -152,13 +152,19 @@
         </dependency>
 
         <dependency>
+            <groupId>net.shibboleth.idp.plugin.scripting</groupId>
+            <artifactId>idp-plugin-nashorn-impl</artifactId>
+            <version>${nashorn.engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
             <version>${java-support.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 

@@ -65,7 +65,7 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
             return;
         }
         
-        logger.info("Resource location [" + location + "] does not exist, delegating to default behavior");
+        logger.debug("Resource location [" + location + "] does not exist, delegating to default behavior");
         super.importBeanDefinitionResource(ele);
     }
 

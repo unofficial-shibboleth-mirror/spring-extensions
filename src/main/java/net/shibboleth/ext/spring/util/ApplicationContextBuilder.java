@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +68,7 @@ public class ApplicationContextBuilder {
     @Nullable @NotEmpty private String contextName;
     
     /** Configuration resources for this service. */
-    @Nullable @NonnullElements private Collection<Resource> configurationResources;
+    @Nullable @NonnullElements private List<Resource> configurationResources;
 
     /** Conversion service to use. */
     @Nullable private ConversionService conversionService;
@@ -283,6 +284,7 @@ public class ApplicationContextBuilder {
         return this;
     }
     
+// Checkstyle: CyclomaticComplexity OFF
     /**
      * Build a {@link GenericApplicationContext} context.
      * 
@@ -332,8 +334,19 @@ public class ApplicationContextBuilder {
         final SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
 
-        if (configurationResources != null) {
-            beanDefinitionReader.loadBeanDefinitions(configurationResources.toArray(new Resource[] {}));
+        if (configurationResources != null && !configurationResources.isEmpty()) {
+            final List<Resource> filtered = configurationResources.stream()
+                .filter(r -> {
+                    if (r.exists()) {
+                        return true;
+                    }
+                    log.warn("Skipping non-existent resource: {}", r);
+                    return false;
+                })
+                .collect(Collectors.toUnmodifiableList());
+            if (!filtered.isEmpty()) {
+                beanDefinitionReader.loadBeanDefinitions(filtered.toArray(new Resource[] {}));
+            }
         }
 
         if (contextInitializers != null) {
@@ -343,5 +356,5 @@ public class ApplicationContextBuilder {
         context.refresh();
         return context;
     }
-    
+// Checkstyle: CyclomaticComplexity ON    
 }

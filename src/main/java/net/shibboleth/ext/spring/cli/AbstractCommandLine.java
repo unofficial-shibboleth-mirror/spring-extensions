@@ -20,6 +20,7 @@ package net.shibboleth.ext.spring.cli;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -40,6 +41,8 @@ import com.beust.jcommander.JCommander;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
@@ -84,6 +87,14 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
             throw new IllegalStateException("No application context installed");
         }
         return applicationContext;
+    }
+
+    /** Return any additional resources that should be prepended to that
+     * supplied by the user.
+     * @return the resources.
+     */
+    @Nonnull @Unmodifiable @NotLive protected List<Resource> getAdditionalSpringResources() {
+        return Collections.emptyList();
     }
 
     /**
@@ -181,7 +192,12 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
         try {
             final ResourceLoader loader = new PreferFileSystemResourceLoader();
             final Resource config = loader.getResource(args.getOtherArgs().get(0));
-            
+            final List<Resource> additionalConfigs = getAdditionalSpringResources();
+            final List<Resource> configs = new ArrayList<>(1+additionalConfigs.size());
+
+            configs.addAll(additionalConfigs);
+            configs.add(config);
+
             getLogger().debug("Initializing Spring context with configuration file {}", config.getURI());
 
             final List<Resource> resources =
@@ -200,7 +216,7 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
             });
             
             applicationContext = new ApplicationContextBuilder()
-                    .setServiceConfiguration(config)
+                    .setServiceConfigurations(configs)
                     .setPropertySources(propertySources)
                     .build();
             

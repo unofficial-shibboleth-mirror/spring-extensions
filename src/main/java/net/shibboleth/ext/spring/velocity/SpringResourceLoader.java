@@ -61,10 +61,10 @@ public class SpringResourceLoader extends ResourceLoader {
     @Nonnull @NotEmpty public static final String NAME = "spring";
 
     /** Constant identifying resource loader class name. */
-    @Nonnull @NotEmpty public static final String SPRING_RESOURCE_LOADER_CLASS = "spring.resource.loader.class";
+    @Nonnull @NotEmpty public static final String SPRING_RESOURCE_LOADER_CLASS = "resource.loader.spring.class";
 
     /** Constant identifying caching property. */
-    @Nonnull @NotEmpty public static final String SPRING_RESOURCE_LOADER_CACHE = "spring.resource.loader.cache";
+    @Nonnull @NotEmpty public static final String SPRING_RESOURCE_LOADER_CACHE = "resource.loader.spring.cache";
 
     /** Constant identifying {@link ResourceLoader} instance. */
     @Nonnull @NotEmpty public static final String SPRING_RESOURCE_LOADER = "spring.resource.loader";

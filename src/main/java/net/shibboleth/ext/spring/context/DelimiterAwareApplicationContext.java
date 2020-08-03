@@ -17,9 +17,17 @@
 
 package net.shibboleth.ext.spring.context;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.xml.ResourceEntityResolver;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.util.StringUtils;
+
+import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 
 /**
  * Version of {@link DeferPlaceholderFileSystemXmlWebApplicationContext} which does not necessarily assume that file
@@ -40,4 +48,29 @@ public class DelimiterAwareApplicationContext extends DeferPlaceholderFileSystem
     @Nonnull protected String getDelimiters() {
         return ",;\t\n";
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * The override is necessary to replace the bean definition reader with a non-broken version that honors
+     * the context's ResourceLoader instead of supplanting it.
+     */
+    @Override
+    protected void loadBeanDefinitions(final DefaultListableBeanFactory beanFactory)
+            throws BeansException, IOException {
+        // Create a new XmlBeanDefinitionReader for the given BeanFactory.
+        final XmlBeanDefinitionReader beanDefinitionReader = new SchemaTypeAwareXMLBeanDefinitionReader(beanFactory);
+
+        // Configure the bean definition reader with this context's
+        // resource loading environment.
+        beanDefinitionReader.setEnvironment(getEnvironment());
+        beanDefinitionReader.setResourceLoader(this);
+        beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
+
+        // Allow a subclass to provide custom initialization of the reader,
+        // then proceed with actually loading the bean definitions.
+        initBeanDefinitionReader(beanDefinitionReader);
+        loadBeanDefinitions(beanDefinitionReader);
+    }
+
 }

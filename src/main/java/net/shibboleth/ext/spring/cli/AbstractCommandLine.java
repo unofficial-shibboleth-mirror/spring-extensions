@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
@@ -38,6 +39,7 @@ import org.springframework.core.io.support.ResourcePropertySource;
 
 import com.beust.jcommander.JCommander;
 
+import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -73,10 +75,21 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
 
     /** Return code indicating an unknown error occurred, {@value} . */
     public static final int RC_UNKNOWN = -1;
-    
+
     /** Spring context. */
     @Nullable private GenericApplicationContext applicationContext;
-        
+
+    /** Optional Context initialized. */
+    @Nullable private ApplicationContextInitializer<? super FilesystemGenericApplicationContext> contextInitializer;
+    
+    /** Set the context Initializer.
+     * @param initializer what to set.
+     */
+    protected void setContextInitializer(
+            @Nonnull final ApplicationContextInitializer<? super FilesystemGenericApplicationContext> initializer) {
+        contextInitializer = Constraint.isNotNull(initializer, "Injected ContextInitializer should not be null");
+    }
+
     /**
      * Get the Spring context.
      * 
@@ -215,11 +228,15 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
                 }
             });
             
-            applicationContext = new ApplicationContextBuilder()
+            final ApplicationContextBuilder builder = new ApplicationContextBuilder()
                     .setServiceConfigurations(configs)
-                    .setPropertySources(propertySources)
-                    .build();
-            
+                    .setPropertySources(propertySources);
+
+            if (contextInitializer != null) {
+                builder.setContextInitializer(contextInitializer);
+            }
+            applicationContext = builder.build();
+
             // Register a shutdown hook for the context, so that beans will be
             // correctly destroyed before the CLI exits.
             applicationContext.registerShutdownHook();

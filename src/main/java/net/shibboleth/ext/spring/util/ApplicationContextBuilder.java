@@ -35,6 +35,7 @@ import net.shibboleth.ext.spring.config.StringToDurationConverter;
 import net.shibboleth.ext.spring.config.StringToIPRangeConverter;
 import net.shibboleth.ext.spring.config.StringToResourceConverter;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
+import net.shibboleth.ext.spring.resource.ConditionalResourceResolver;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
@@ -295,7 +296,9 @@ public class ApplicationContextBuilder {
         final FilesystemGenericApplicationContext context = new FilesystemGenericApplicationContext(parentContext);
         context.setDisplayName("ApplicationContext:" + (contextName != null ? contextName : "anonymous"));
         
-        context.setResourceLoader(new PreferFileSystemResourceLoader());
+        final PreferFileSystemResourceLoader loader = new PreferFileSystemResourceLoader();
+        loader.addProtocolResolver(new ConditionalResourceResolver());
+        context.setResourceLoader(loader);
         
         if (conversionService != null) {
             context.getBeanFactory().setConversionService(conversionService);

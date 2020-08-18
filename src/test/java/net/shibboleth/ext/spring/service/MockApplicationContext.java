@@ -377,4 +377,9 @@ public class MockApplicationContext implements ConfigurableApplicationContext {
         fail();
         return null;
     }
+
+    /** {@inheritDoc} */
+    public void setClassLoader(ClassLoader classLoader) {
+        fail();
+    }
 }

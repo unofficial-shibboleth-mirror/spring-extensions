@@ -49,9 +49,12 @@ public class IdentifiedComponentManager<T extends IdentifiedComponent> {
     /** Class logger. */
     @Nonnull private Logger log = LoggerFactory.getLogger(IdentifiedComponentManager.class);
     
+    /** Initial component list. */
+    @Nonnull @NonnullElements private Collection<T> initialComponents;
+
     /** Underlying collection. */
     @Nonnull @NonnullElements private Collection<T> components;
-    
+
     /**
      * Auto-wiring point for free-standing objects.
      * 
@@ -59,10 +62,11 @@ public class IdentifiedComponentManager<T extends IdentifiedComponent> {
      */
     public IdentifiedComponentManager(@Nullable @NonnullElements final Collection<T> freeObjects) {
         if (freeObjects != null) {
-            components = List.copyOf(freeObjects);
+            initialComponents = List.copyOf(freeObjects);
         } else {
-            components = Collections.emptyList();
+            initialComponents = Collections.emptyList();
         }
+        components = initialComponents;
     }
     
     /**
@@ -77,7 +81,7 @@ public class IdentifiedComponentManager<T extends IdentifiedComponent> {
         if (additionalObjects != null) {
             final Collection<T> holder = new LinkedHashSet<>(additionalObjects);
             holder.addAll(
-                    components.stream()
+                    initialComponents.stream()
                         .filter(obj -> {
                             if (holder.contains(obj)) {
                                 log.info("Replacing auto-wired component: {}", obj.getId());
@@ -87,6 +91,8 @@ public class IdentifiedComponentManager<T extends IdentifiedComponent> {
                         })
                         .collect(Collectors.toUnmodifiableList()));
             components = List.copyOf(holder);
+        } else {
+            components = initialComponents;
         }
     }
     

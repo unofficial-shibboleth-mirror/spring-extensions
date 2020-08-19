@@ -43,6 +43,8 @@ import net.shibboleth.utilities.java.support.component.IdentifiedComponent;
  * constructor to receive the free-standing objects.</p>
  * 
  * @param <T> descriptor type
+ * 
+ * @since 6.1.0
  */
 public class IdentifiedComponentManager<T extends IdentifiedComponent> {
 

@@ -19,7 +19,6 @@ package net.shibboleth.ext.spring.config;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.ext.spring.config.IdentifiableBeanPostProcessor;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;

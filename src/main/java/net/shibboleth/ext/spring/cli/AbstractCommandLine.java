@@ -22,7 +22,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.core.io.support.ResourcePropertySource;
 
 import com.beust.jcommander.JCommander;
@@ -42,6 +40,7 @@ import com.beust.jcommander.JCommander;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
@@ -82,12 +81,14 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     /** Optional Context initialized. */
     @Nullable private ApplicationContextInitializer<? super FilesystemGenericApplicationContext> contextInitializer;
     
-    /** Set the context Initializer.
-     * @param initializer what to set.
+    /**
+     * Set a context initializer.
+     * 
+     * @param initializer what to set
      */
     protected void setContextInitializer(
             @Nonnull final ApplicationContextInitializer<? super FilesystemGenericApplicationContext> initializer) {
-        contextInitializer = Constraint.isNotNull(initializer, "Injected ContextInitializer should not be null");
+        contextInitializer = Constraint.isNotNull(initializer, "Injected ContextInitializer cannot be null");
     }
 
     /**
@@ -102,11 +103,12 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
         return applicationContext;
     }
 
-    /** Return any additional resources that should be prepended to that
-     * supplied by the user.
-     * @return the resources.
+    /**
+     * Return any additional resources that should be prepended to that supplied by the caller.
+     * 
+     * @return the resources
      */
-    @Nonnull @Unmodifiable @NotLive protected List<Resource> getAdditionalSpringResources() {
+    @Nonnull @NonnullElements @Unmodifiable @NotLive protected List<Resource> getAdditionalSpringResources() {
         return Collections.emptyList();
     }
 
@@ -132,11 +134,6 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
             } else if (argObject.isVersion()) {
                 System.out.println(getVersion());
                 return RC_OK;
-            }
-            
-            if (argObject.getOtherArgs().size() == 0) {
-                error("Missing Spring config argument");
-                return RC_INIT;
             }
             
             initLogging(argObject);
@@ -169,30 +166,6 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     }
 
     /**
-     * Merge in properties from the resource.
-     * 
-     * @param sink if non-null use this instance as the target
-     * @param resource the resource
-     * @return properties loaded from the resource or {@code  null} if loading failed
-     */
-    @Nullable public Properties loadProperties(@Nullable final Properties sink, @Nonnull final Resource resource) {
-        Constraint.isNotNull(resource, "Resource cannot be null");
-        try {
-            final Properties properties;
-            if (sink != null) {
-                properties = sink;
-            } else {
-                properties = new Properties();
-            }
-            PropertiesLoaderUtils.fillProperties(properties, resource);
-            return properties;
-        } catch (final IOException e) {
-            getLogger().warn("Unable to load properties from resource '{}'", resource, e);
-            return null;
-        }
-    }
-
-    /**
      * The execution method to override.
      * 
      * The default implementation handles Spring context creation.
@@ -204,14 +177,15 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     protected int doRun(@Nonnull final T args) {
         try {
             final ResourceLoader loader = new PreferFileSystemResourceLoader();
-            final Resource config = loader.getResource(args.getOtherArgs().get(0));
             final List<Resource> additionalConfigs = getAdditionalSpringResources();
+
             final List<Resource> configs = new ArrayList<>(1+additionalConfigs.size());
-
+            if (args.getOtherArgs().size() > 0) {
+                configs.add(loader.getResource(args.getOtherArgs().get(0)));
+            }
             configs.addAll(additionalConfigs);
-            configs.add(config);
 
-            getLogger().debug("Initializing Spring context with configuration file {}", config.getURI());
+            getLogger().debug("Initializing Spring context with {}", configs);
 
             final List<Resource> resources =
                     args.getPropertyFiles().stream().map(loader::getResource).collect(Collectors.toUnmodifiableList());

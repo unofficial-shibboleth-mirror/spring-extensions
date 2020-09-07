@@ -80,7 +80,7 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
      * This has to be lazy-instantiated otherwise the auto-logging-level fails.
      * @return The logger to use
      */
-    public abstract Logger getLog();
+    @Nonnull public abstract Logger getLog();
 
     /** {@inheritDoc} */
     public boolean isVerboseOutput() {

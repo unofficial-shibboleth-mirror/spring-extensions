@@ -24,6 +24,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+
 import com.beust.jcommander.Parameter;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
@@ -74,6 +76,12 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     @Parameter(names = "--propertyFiles")
     @Nonnull private List<String> propertySources = new ArrayList<>();
     
+    /** Get the logger for this class.
+     * This has to be lazy-instantiated otherwise the auto-logging-level fails.
+     * @return The logger to use
+     */
+    public abstract Logger getLog();
+
     /** {@inheritDoc} */
     public boolean isVerboseOutput() {
         return verbose;

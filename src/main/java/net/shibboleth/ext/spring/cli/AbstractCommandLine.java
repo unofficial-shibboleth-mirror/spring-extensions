@@ -75,6 +75,54 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     /** Return code indicating an unknown error occurred, {@value} . */
     public static final int RC_UNKNOWN = -1;
 
+    /** ANSI color codes. */
+    public enum ANSIColors {
+        
+        /** ANSI reset. */
+        ANSI_RESET("\u001B[0m"),
+
+        /** ANSI black. */
+        ANSI_BLACK("\u001B[30m"),
+        
+        /** ANSI red. */
+        ANSI_RED("\u001B[31m"),
+        
+        /** ANSI red. */
+        ANSI_GREEN("\u001B[32m"),
+        
+        /** ANSI red. */
+        ANSI_YELLOW("\u001B[33m"),
+        
+        /** ANSI red. */
+        ANSI_BLUE("\u001B[34m"),
+        
+        /** ANSI red. */
+        ANSI_PURPLE("\u001B[35m"),
+        
+        /** ANSI red. */
+        ANSI_CYAN("\u001B[36m"),
+        
+        /** ANSI red. */
+        ANSI_WHITE("\u001B[37m");
+        
+        /** Code string. */
+        @Nonnull @NotEmpty private final String codestring;
+        
+        /**
+         * Constructor.
+         *
+         * @param s code string
+         */
+        ANSIColors(@Nonnull @NotEmpty final String s) {
+            codestring = s;
+        }
+        
+        /** {@inheritDoc} */
+        public String toString() {
+            return codestring;
+        }
+    };
+    
     /** Spring context. */
     @Nullable private GenericApplicationContext applicationContext;
 

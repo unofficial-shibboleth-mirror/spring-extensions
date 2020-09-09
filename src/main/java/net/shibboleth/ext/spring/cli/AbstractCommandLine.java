@@ -197,19 +197,42 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     }
     
     /**
+     * Set the logback configuration to a specific location.
+     * 
+     * <p>
+     * Note that this <strong>must</strong> be done before the
+     * first logger is retrieved.
+     * </p>
+     *
+     * @param value logback configuration location to set
+     */
+    private void setLoggingProperty(@Nonnull final String value) {
+        System.setProperty("logback.configurationFile", value);
+    }
+    
+    /**
+     * Set the logback configuration to a specific package-local resource.
+     *
+     * @param value name of resource to use as the logback configuration file
+     */
+    private void setLoggingToLocalResource(@Nonnull final String value) {
+        setLoggingProperty("net/shibboleth/ext/spring/cli/" + value);
+    }
+
+    /**
      * Initialize the logging subsystem.
      * 
      * @param args command line arguments
      */
     protected void initLogging(@Nonnull final T args) {
         if (args.getLoggingConfiguration() != null) {
-            System.setProperty("logback.configurationFile", args.getLoggingConfiguration());
+            setLoggingProperty(args.getLoggingConfiguration());
         } else if (args.isVerboseOutput()) {
-            System.setProperty("logback.configurationFile", "logger-verbose.xml");
+            setLoggingToLocalResource("logger-verbose.xml");
         } else if (args.isQuietOutput()) {
-            System.setProperty("logback.configurationFile", "logger-quiet.xml");
+            setLoggingToLocalResource("logger-quiet.xml");
         } else {
-            System.setProperty("logback.configurationFile", "logger-normal.xml");
+            setLoggingToLocalResource("logger-normal.xml");
         }
     }
 

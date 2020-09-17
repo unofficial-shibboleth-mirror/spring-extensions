@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.resource;
 
 import java.io.IOException;
 
+import net.shibboleth.ext.spring.testing.ResourceTestHelper;
 import net.shibboleth.ext.spring.util.SchemaTypeAwareXMLBeanDefinitionReader;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;

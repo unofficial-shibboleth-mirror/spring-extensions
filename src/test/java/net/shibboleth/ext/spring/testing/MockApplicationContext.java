@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.ext.spring.service;
+package net.shibboleth.ext.spring.testing;
 import static org.testng.Assert.fail;
 
 import java.io.IOException;
@@ -39,6 +39,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.ProtocolResolver;
 import org.springframework.core.io.Resource;
+
+import net.shibboleth.ext.spring.service.AbstractServiceableComponent;
 
 /**
  * Placeholder, which can be set on test {@link AbstractServiceableComponent}s to stop the

@@ -193,6 +193,7 @@
                     <archive>
                         <manifestEntries>
                             <Automatic-Module-Name>${automatic.module.name}</Automatic-Module-Name>
+                            <Sealed>true</Sealed>
                         </manifestEntries>
                     </archive>
                 </configuration>

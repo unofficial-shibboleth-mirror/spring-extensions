@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.ext.spring.resource;
+package net.shibboleth.ext.spring.testing;
 
 import java.io.IOException;
 import java.io.InputStream;

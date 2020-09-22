@@ -19,6 +19,7 @@ package net.shibboleth.ext.spring.cli;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale.LanguageRange;
 
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.base.Strings;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
@@ -124,6 +126,9 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
      * @return language ranges
      */
     @Nonnull @NonnullElements @Unmodifiable @NotLive public List<LanguageRange> getLanguageRanges() {
+        if (Strings.isNullOrEmpty(languageRanges)) {
+            return Collections.emptyList();
+        }
         return List.copyOf(LanguageRange.parse(languageRanges));
     }
     

@@ -20,6 +20,7 @@ package net.shibboleth.ext.spring.cli;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale.LanguageRange;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 
 import com.beust.jcommander.Parameter;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 
@@ -74,7 +76,11 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
 
     /** Spring property sources. */
     @Parameter(names = "--propertyFiles")
-    @Nonnull private List<String> propertySources = new ArrayList<>();
+    @Nonnull @NonnullElements private List<String> propertySources = new ArrayList<>();
+    
+    /** RFC4647 language ranges. */
+    @Parameter(names = "--lang")
+    @Nullable private String languageRanges; 
     
     /** Get the logger for this class.
      * This has to be lazy-instantiated otherwise the auto-logging-level fails.
@@ -108,8 +114,17 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     }
     
     /** {@inheritDoc} */
-    @Nonnull @Unmodifiable @NotLive public List<String> getPropertyFiles() {
+    @Nonnull @NonnullElements @Unmodifiable @NotLive public List<String> getPropertyFiles() {
         return propertySources;
+    }
+    
+    /**
+     * Get the specified RFC4647 language ranges.
+     * 
+     * @return language ranges
+     */
+    @Nonnull @NonnullElements @Unmodifiable @NotLive public List<LanguageRange> getLanguageRanges() {
+        return List.copyOf(LanguageRange.parse(languageRanges));
     }
     
     /** {@inheritDoc} */
@@ -131,6 +146,7 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
         out.println();
         out.println(String.format("  --%-20s %s", "help", "Prints this help information"));
         out.println(String.format("  --%-20s %s", "version", "Prints version"));
+        out.println(String.format("  --%-20s %s", "lang", "Language range for i18n"));
         out.println(String.format("  --%-20s %s", "propertyFiles", "Comma-separated list of Spring property files"));
         out.println();
 

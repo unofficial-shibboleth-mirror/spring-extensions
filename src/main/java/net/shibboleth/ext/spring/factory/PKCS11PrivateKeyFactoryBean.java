@@ -17,7 +17,6 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import java.lang.reflect.Constructor;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
@@ -39,8 +38,8 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class PKCS11PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
 
-    /** The class name for the PKCS#11 provider class. */
-    private static final String PROVIDER_CLASS_NAME = "sun.security.pkcs11.SunPKCS11";
+    /** The name for the base PKCS#11 provider. */
+    private static final String UNCONFIGURED_PROVIDER_NAME = "SunPKCS11";
 
     /** Singleton {@link Provider} for all instances of this factory. */
     private static Provider provider;
@@ -124,18 +123,12 @@ public class PKCS11PrivateKeyFactoryBean implements FactoryBean<PrivateKey> {
      */
     private Provider getProvider() throws Exception {
         if (provider == null) {
-            final ClassLoader loader = PKCS11PrivateKeyFactoryBean.class.getClassLoader();
-            try {
-                final Class<?> providerClass = loader.loadClass(PROVIDER_CLASS_NAME);
-                final Constructor<?> providerConstructor = providerClass.getConstructor(String.class);
-                provider = (Provider) providerConstructor.newInstance(pkcs11Config);
-                Security.addProvider(provider);
-            } catch (final ClassNotFoundException e) {
-                throw new NoSuchProviderException("unable to load keystore provider class " + PROVIDER_CLASS_NAME);
-            } catch (final NoSuchMethodException e) {
-                throw new NoSuchProviderException("keystore provider class " + PROVIDER_CLASS_NAME
-                        + " does not provide a String-argument constructor ");
+            final var baseProvider = Security.getProvider(UNCONFIGURED_PROVIDER_NAME);
+            if (baseProvider == null) {
+                throw new NoSuchProviderException("could not acquire PKCS#11 bridge: " + UNCONFIGURED_PROVIDER_NAME);
             }
+            provider = baseProvider.configure(pkcs11Config);
+            Security.addProvider(provider);
         }
         return provider;
     }

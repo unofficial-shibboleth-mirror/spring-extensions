@@ -19,10 +19,14 @@ package net.shibboleth.ext.spring.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale.LanguageRange;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.slf4j.Logger;
@@ -37,6 +41,7 @@ import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,7 +51,9 @@ import com.google.common.base.Strings;
 
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.net.HttpServletSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.SerializeSupport;
 import net.shibboleth.utilities.java.support.xml.XMLConstants;
@@ -316,4 +323,20 @@ public final class SpringSupport {
         return result;
     }
 
+    /** Return the {@link LanguageRange} associated with this request prepended with
+     * the Spring preferred locale.  This allows external (non browser) control of
+     * the language.
+     * @param request the request to process
+     * @return The range returned from {@link HttpServletSupport#getLanguageRange(HttpServletRequest)}
+     * with the Locale from {@link RequestContextUtils#getLocale(HttpServletRequest)} prepended
+     */
+    @Nonnull @NonnullElements @Unmodifiable
+    public static List<LanguageRange> getLanguageRange(final HttpServletRequest request) {
+        final List<LanguageRange> fromBrowser = HttpServletSupport.getLanguageRange(request);
+        final List<LanguageRange> outList = new ArrayList<>(1+fromBrowser.size());
+
+        outList.add(new LanguageRange(RequestContextUtils.getLocale(request).getLanguage()));
+        outList.addAll(fromBrowser);
+        return List.copyOf(outList);        
+    }
 }

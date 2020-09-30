@@ -67,7 +67,7 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     /**
      * Help has been requested.
      */
-    @Parameter(names = "--help", help=true)
+    @Parameter(names = {"-?", "--help"}, help=true)
     private boolean help;
 
     /**

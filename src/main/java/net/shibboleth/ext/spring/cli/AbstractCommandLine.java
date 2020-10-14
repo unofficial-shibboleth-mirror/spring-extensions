@@ -75,51 +75,57 @@ public abstract class AbstractCommandLine<T extends CommandLineArguments> {
     /** Return code indicating an unknown error occurred, {@value} . */
     public static final int RC_UNKNOWN = -1;
 
-    /** ANSI color codes. */
-    public enum ANSIColors {
+    /** Terminal codes. */
+    public enum TerminalCodes {
         
-        /** ANSI reset. */
-        ANSI_RESET("\u001B[0m"),
+        /** Reset. */
+        RESET("\u001B[0m"),
 
-        /** ANSI black. */
-        ANSI_BLACK("\u001B[30m"),
+        /** Black. */
+        BLACK("\u001B[30m"),
         
-        /** ANSI red. */
-        ANSI_RED("\u001B[31m"),
+        /** Red. */
+        RED("\u001B[31m"),
         
-        /** ANSI red. */
-        ANSI_GREEN("\u001B[32m"),
+        /** Green. */
+        GREEN("\u001B[32m"),
         
-        /** ANSI red. */
-        ANSI_YELLOW("\u001B[33m"),
+        /** Yellow. */
+        YELLOW("\u001B[33m"),
         
-        /** ANSI red. */
-        ANSI_BLUE("\u001B[34m"),
+        /** Blue. */
+        BLUE("\u001B[34m"),
         
-        /** ANSI red. */
-        ANSI_PURPLE("\u001B[35m"),
+        /** Purple. */
+        PURPLE("\u001B[35m"),
         
-        /** ANSI red. */
-        ANSI_CYAN("\u001B[36m"),
+        /** Cyan. */
+        CYAN("\u001B[36m"),
         
-        /** ANSI red. */
-        ANSI_WHITE("\u001B[37m");
+        /** White. */
+        WHITE("\u001B[37m");
         
         /** Code string. */
-        @Nonnull @NotEmpty private final String codestring;
+        @Nonnull @NotEmpty private final String ansicode;
         
         /**
          * Constructor.
          *
-         * @param s code string
+         * @param ansi ANSI code string
          */
-        ANSIColors(@Nonnull @NotEmpty final String s) {
-            codestring = s;
+        TerminalCodes(@Nonnull @NotEmpty final String ansi) {
+            ansicode = ansi;
         }
         
-        /** {@inheritDoc} */
-        public String toString() {
-            return codestring;
+        /**
+         * Gets the relevant code for the enum value.
+         * 
+         * @param args CLI arguments
+         * 
+         * @return code string value
+         */
+        public String code(@Nonnull final CommandLineArguments args) {
+            return args.isANSI() ? ansicode : "";
         }
     };
     

@@ -61,9 +61,16 @@ public interface CommandLineArguments {
     /**
      * Indicates the presence of the <code>--version</code> option.
      *
-     * @return <code>true</code> if the user requested the version be printed.
+     * @return <code>true</code> if the user requested the version be printed
      */
     boolean isVersion();
+
+    /**
+     * Indicates the presence of the <code>--ansi</code> option.
+     * 
+     * @return <code>true</code> if the user requested the ANSI code option
+     */
+    boolean isANSI();
 
     /**
      * Get list of property filenames to load.

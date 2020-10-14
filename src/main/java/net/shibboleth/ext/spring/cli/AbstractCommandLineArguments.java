@@ -76,6 +76,10 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     @Parameter(names = "--version")
     private boolean version;
 
+    /** Use ANSI color codes. */
+    @Parameter(names = "--ansi")
+    private boolean ansi;
+    
     /** Spring property sources. */
     @Parameter(names = "--propertyFiles")
     @Nonnull @NonnullElements private List<String> propertySources = new ArrayList<>();
@@ -116,6 +120,11 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
     }
     
     /** {@inheritDoc} */
+    public boolean isANSI() {
+        return ansi;
+    }
+    
+    /** {@inheritDoc} */
     @Nonnull @NonnullElements @Unmodifiable @NotLive public List<String> getPropertyFiles() {
         return propertySources;
     }
@@ -151,6 +160,7 @@ public abstract class AbstractCommandLineArguments implements CommandLineArgumen
         out.println();
         out.println(String.format("  --%-20s %s", "help", "Prints this help information"));
         out.println(String.format("  --%-20s %s", "version", "Prints version"));
+        out.println(String.format("  --%-20s %s", "ansi", "Use ANSI color codes"));
         out.println(String.format("  --%-20s %s", "lang", "Language range for i18n"));
         out.println(String.format("  --%-20s %s", "propertyFiles", "Comma-separated list of Spring property files"));
         out.println();

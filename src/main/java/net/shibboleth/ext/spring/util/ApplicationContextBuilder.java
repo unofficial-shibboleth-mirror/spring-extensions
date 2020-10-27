@@ -343,7 +343,7 @@ public class ApplicationContextBuilder {
                     if (r.exists()) {
                         return true;
                     }
-                    log.warn("Skipping non-existent resource: {}", r);
+                    log.info("Skipping non-existent resource: {}", r);
                     return false;
                 })
                 .collect(Collectors.toUnmodifiableList());

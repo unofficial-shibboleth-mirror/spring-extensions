@@ -39,6 +39,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.ProtocolResolver;
 import org.springframework.core.io.Resource;
+import org.springframework.core.metrics.ApplicationStartup;
 
 import net.shibboleth.ext.spring.service.AbstractServiceableComponent;
 
@@ -383,5 +384,28 @@ public class MockApplicationContext implements ConfigurableApplicationContext {
     /** {@inheritDoc} */
     public void setClassLoader(ClassLoader classLoader) {
         fail();
+    }
+
+    /** {@inheritDoc} */
+    public <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType, boolean allowEagerInit) {
+        fail();
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType, boolean allowEagerInit) {
+        fail();
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public void setApplicationStartup(ApplicationStartup applicationStartup) {
+        fail();
+    }
+
+    /** {@inheritDoc} */
+    public ApplicationStartup getApplicationStartup() {
+        fail();
+        return null;
     }
 }

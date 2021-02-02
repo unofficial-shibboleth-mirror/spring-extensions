@@ -17,6 +17,10 @@
 
 package net.shibboleth.ext.spring.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 
 /**
@@ -27,4 +31,18 @@ import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
  */
 public class AbstractCustomBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
+    /** Logger. */
+    private final Logger log = LoggerFactory.getLogger(AbstractCustomBeanDefinitionParser.class);
+
+    /** {@inheritDoc}
+     * The override is to warn if there is an ID clash within the same context.
+     * */
+    protected void registerBeanDefinition(final BeanDefinitionHolder definition,
+                                          final BeanDefinitionRegistry registry) {
+        if (registry.containsBeanDefinition(definition.getBeanName())) {
+            final String claz = definition.getBeanDefinition().getBeanClassName();
+            log.warn("Duplicate Definition '{}' of type '{}'", definition.getBeanName(), claz);
+        }
+        super.registerBeanDefinition(definition, registry);
+    }
 }

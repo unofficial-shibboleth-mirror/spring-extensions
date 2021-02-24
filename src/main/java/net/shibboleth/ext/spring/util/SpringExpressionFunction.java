@@ -22,6 +22,10 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.expression.EvaluationContext;
+
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 
@@ -33,9 +37,15 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
  * 
  * @since 5.4.0
  */
-public class SpringExpressionFunction<T,U> extends AbstractSpringExpressionEvaluator<T, U> 
+public class SpringExpressionFunction<T,U> extends AbstractSpringExpressionEvaluatorEx
             implements Function<T,U> {
-    
+
+    /** Class logger. */
+    @Nonnull private final Logger log = LoggerFactory.getLogger(SpringExpressionFunction.class);
+
+    /** The input type. */
+    @Nullable private Class<T> inputType;
+
     /**
      * Constructor.
      *
@@ -45,9 +55,60 @@ public class SpringExpressionFunction<T,U> extends AbstractSpringExpressionEvalu
         super(expression);
     }
 
+    /**
+     * Get the input type to be enforced.
+     *
+     * @return input type
+     */
+    @Nullable public  Class<T> getInputType() {
+        return inputType;
+    }
+
+    /**
+     * Set the input type to be enforced.
+     *
+     * @param type input type
+     */
+    public void setInputType(@Nullable final Class<T> type) {
+        inputType = type;
+    }
+
+    /**
+     * Set the output type to be enforced.
+     *
+     * @param type output type
+     */
+    public void setOutputType(@Nullable final Class<?> type) {
+        super.setOutputType(type);
+    }
+
+    /**
+     * Set value to return if an error occurs.
+     *
+     * @param value value to return
+     */
+    @Override public void setReturnOnError(@Nullable final Object value) {
+        super.setReturnOnError(value);
+    }
+
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public U apply(@Nullable final T input) {
-        return evaluate(input);
+        
+        // Try outside the try so as to preserve derived semantics
+        if (null != input && null != getInputType() && !getInputType().isInstance(input)) {
+            log.error("Input was type {} which is not an instance of {}",  input.getClass(), getInputType());
+            throw new ClassCastException("Input was type " + input.getClass() + " which is not an instance of "
+                    + getInputType());
+        }
+
+        return (U) evaluate(input);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void prepareContext(@Nonnull final EvaluationContext context, @Nullable final Object... input) {
+        context.setVariable("input", input[0]);
     }
     
 }

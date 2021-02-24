@@ -20,9 +20,14 @@ package net.shibboleth.ext.spring.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.expression.EvaluationContext;
+
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Predicate;
+import net.shibboleth.utilities.java.support.logic.ScriptedPredicate;
 
 /**
  * Predicate whose condition is defined by an Spring EL expression.
@@ -31,9 +36,15 @@ import net.shibboleth.utilities.java.support.logic.Predicate;
  * 
  * @since 5.4.0
  */
-public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvaluator<T, Boolean> 
+public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvaluatorEx 
             implements Predicate<T> {
     
+    /** Class logger. */
+    @Nonnull private final Logger log = LoggerFactory.getLogger(ScriptedPredicate.class);
+
+    /** Input type. */
+    @Nullable private Class<T> inputTypeClass;
+
     /**
      * Constructor.
      *
@@ -45,6 +56,28 @@ public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvalua
     }
 
     /**
+     * Get the input type to be enforced.
+     *
+     * @return input type
+     * 
+     * @since 6.1.0
+     */
+    @Nullable public Class<T> getInputType() {
+        return inputTypeClass;
+    }
+
+    /**
+     * Set the input type to be enforced.
+     *
+     * @param type input type
+     * 
+     * @since 6.1.0
+     */
+    public void setInputType(@Nullable final Class<T> type) {
+        inputTypeClass = type;
+    }
+    
+    /**
      * Set value to return if an error occurs (default is false).
      * 
      * @param flag flag to set
@@ -55,7 +88,19 @@ public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvalua
 
     /** {@inheritDoc} */
     public boolean test(@Nullable final T input) {
-        return evaluate(input);
+        if (null != getInputType() && null != input && !getInputType().isInstance(input)) {
+            log.error("Input of type {} was not of type {}", input.getClass(), getInputType());
+            return (boolean) getReturnOnError();
+        }
+
+        final Object result = evaluate(input);
+        return (boolean) (result != null ? result : getReturnOnError());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void prepareContext(@Nonnull final EvaluationContext context, @Nullable final Object... input) {
+        context.setVariable("input", input[0]);
     }
     
 }

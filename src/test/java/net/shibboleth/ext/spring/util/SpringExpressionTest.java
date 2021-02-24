@@ -36,18 +36,20 @@ public class SpringExpressionTest {
     @Test public void testPredicates() {
         
         SpringExpressionPredicate<SpringExpressionTest> predicate = new SpringExpressionPredicate<>("#input.getValue99() == 99");
+        predicate.setInputType(SpringExpressionTest.class);
         
         Assert.assertTrue(predicate.test(this));
         
         predicate = new SpringExpressionPredicate<>("#input.getValue99() == #custom");
         predicate.setCustomObject(99);
         Assert.assertTrue(predicate.test(this));
-
     }
 
     @Test public void testFunction() {
         
         SpringExpressionFunction<Object,SpringExpressionTest> func = new SpringExpressionFunction<>("#input");
+        func.setOutputType(SpringExpressionTest.class);
+        
         Assert.assertNull(func.apply(null));
 
         Assert.assertEquals(func.apply(this), this);

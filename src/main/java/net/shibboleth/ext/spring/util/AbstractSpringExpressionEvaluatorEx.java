@@ -36,17 +36,12 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * A component that evaluates a Spring EL expression against a set of inputs
  * and returns the result.
  * 
- * @param <T> type of input
- * @param <U> type of output
- * 
- * @since 5.4.0
- * @deprecated
+ * @since 6.1.0
  */
-@Deprecated(forRemoval=true, since="6.1.0")
-public abstract class AbstractSpringExpressionEvaluator<T, U> {
+public abstract class AbstractSpringExpressionEvaluatorEx {
     
     /** Class logger. */
-    @Nonnull private final Logger log = LoggerFactory.getLogger(AbstractSpringExpressionEvaluator.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(AbstractSpringExpressionEvaluatorEx.class);
 
     /** SpEL expression to evaluate. */
     @Nullable private String springExpression;
@@ -55,63 +50,50 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
     @Nullable private Object customObject;
     
     /** The output type. */
-    @Nullable private Class<U> outputType;
-
-    /** The input type. */
-    @Nullable private Class<T> inputType;
-
+    @Nullable private Class<?> outputType;
 
     /** Whether to raise runtime exceptions if expression fails. */
     private boolean hideExceptions;
     
     /** Value to return from predicate when an error occurs. */
-    @Nullable private U returnOnError;
+    @Nullable private Object returnOnError;
 
     /**
      * Constructor.
      *
      * @param expression the expression to evaluate
      */
-    public AbstractSpringExpressionEvaluator(
+    public AbstractSpringExpressionEvaluatorEx(
             final @Nonnull @NotEmpty @ParameterName(name="expression") String expression) {
         springExpression = Constraint.isNotNull(StringSupport.trimOrNull(expression),
                 "Expression cannot be null or empty");
     }
     
     /**
-     * Set the output type to be enforced.
-     * 
-     * @param type output type
-     */
-    public void setOutputType(@Nullable final Class<U> type) {
-        outputType = type;
-    }
-
-    /**
      * Get the output type to be enforced.
      * 
      * @return output type
      */
-    @Nullable protected Class<U> getOutputType() {
+    @Nullable protected Class<?> getOutputType() {
         return outputType;
     }
 
     /**
-     * Get the input type to be enforced.
-     *
-     * @return input type
+     * Set the output type to be enforced.
+     * 
+     * @param type output type
      */
-    @Nullable public  Class<T> getInputType() {
-        return inputType;
+    protected void setOutputType(@Nullable final Class<?> type) {
+        outputType = type;
     }
 
     /**
-     * Set the input type to be enforced.
+     * Get the custom (externally provided) object.
      *
-     * @param type input type
+     * @return the custom object
      */
-    public void setInputType(@Nullable final Class<T> type) {
-        inputType = type;
+    @Nullable protected Object getCustomObject() {
+        return customObject;
     }
 
     /**
@@ -124,16 +106,6 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
     }
 
     /**
-     * Get the custom (externally provided) object.
-     *
-     * @return the custom object
-     */
-    public Object getCustomObject() {
-        return customObject;
-    }
-
-
-    /**
      * Set whether to hide exceptions in expression execution (default is false).
      * 
      * @param flag flag to set
@@ -143,35 +115,36 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
     }
 
     /**
-     * Set value to return if an error occurs (default is false).
+     * Get value to return if an error occurs.
      * 
-     * @param what value to set
+     * @return value to return
      */
-    public void setReturnOnError(final U what) {
-        returnOnError = what;
+    @Nullable protected Object getReturnOnError() {
+        return returnOnError;
+    }
+    
+    /**
+     * Set value to return if an error occurs.
+     * 
+     * @param value value to return
+     */
+    protected void setReturnOnError(@Nullable final Object value) {
+        returnOnError = value;
     }
 
     /**
      * Evaluate the Spring expression on the provided input.
      *
-     * @param input input over which to evaluate the expression
-     * @return result of applying the expression to the provided input
+     * @param input input arguments
+     * 
+     * @return result of applying the expression to the provided inputs
      */
-    @SuppressWarnings("unchecked")
-    protected U evaluate(@Nullable final T input) {
-
-        // Try outside the try so as to preserve derived semantics
-        if (null != input && null != getInputType() && !getInputType().isInstance(input)) {
-            log.error("Input was type {} which is not an instance of {}",  input.getClass(), getInputType());
-            throw new ClassCastException("Input was type " + input.getClass() + " which is not an instance of "
-                    + getInputType());
-        }
+    @Nullable protected Object evaluate(@Nullable final Object... input) {
 
         try {
             final ExpressionParser parser = new SpelExpressionParser();
             final StandardEvaluationContext context = new StandardEvaluationContext();
             context.setVariable("custom", customObject);
-            context.setVariable("input", input);
             prepareContext(context, input);
             final Object output = parser.parseExpression(springExpression).getValue(context);
 
@@ -188,7 +161,7 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
                 return getOutputType().cast(output);
             }
             
-            return (U) output;
+            return output;
         } catch (final Exception e) {
             log.error("Error evaluating Spring expression", e);
             if (hideExceptions) {
@@ -199,13 +172,11 @@ public abstract class AbstractSpringExpressionEvaluator<T, U> {
     }
     
     /**
-     * Decorate the expression context with any additional content.
+     * Pre-process the script context before execution.
      * 
-     * @param context expression context
-     * @param input to predicate
+     * @param context the expression context
+     * @param input the inputs
      */
-     protected void prepareContext(@Nonnull final EvaluationContext context, @Nullable final T input) {
-        
-    }
+     protected abstract void prepareContext(@Nonnull final EvaluationContext context, @Nullable final Object... input);
 
 }

@@ -27,7 +27,6 @@ import org.springframework.expression.EvaluationContext;
 import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Predicate;
-import net.shibboleth.utilities.java.support.logic.ScriptedPredicate;
 
 /**
  * Predicate whose condition is defined by an Spring EL expression.
@@ -40,7 +39,7 @@ public class SpringExpressionPredicate<T> extends AbstractSpringExpressionEvalua
             implements Predicate<T> {
     
     /** Class logger. */
-    @Nonnull private final Logger log = LoggerFactory.getLogger(ScriptedPredicate.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(SpringExpressionPredicate.class);
 
     /** Input type. */
     @Nullable private Class<T> inputTypeClass;

@@ -44,11 +44,8 @@ public class SpringExpressionBiPredicate<T,U> extends AbstractSpringExpressionEv
     /** Class logger. */
     @Nonnull private final Logger log = LoggerFactory.getLogger(SpringExpressionBiPredicate.class);
 
-    /** Input type 1. */
-    @Nullable private Class<T> inputTypeClass1;
-
-    /** Input type 2. */
-    @Nullable private Class<U> inputTypeClass2;
+    /** Input types. */
+    @Nullable private Pair<Class<T>,Class<U>> inputTypes;
 
     /**
      * Constructor.
@@ -67,18 +64,20 @@ public class SpringExpressionBiPredicate<T,U> extends AbstractSpringExpressionEv
      * @return input type
      */
     @Nullable public Pair<Class<T>,Class<U>> getInputTypes() {
-        return new Pair<>(inputTypeClass1, inputTypeClass2);
+        return inputTypes;
     }
 
     /**
-     * Set the input type to be enforced.
+     * Set the input types to be enforced.
      *
-     * @param type1 first input type
-     * @param type2 second input type
+     * @param types the input types
      */
-    public void setInputTypes(@Nullable final Class<T> type1, @Nullable final Class<U> type2) {
-        inputTypeClass1 = type1;
-        inputTypeClass2 = type2;
+    public void setInputTypes(@Nullable final Pair<Class<T>,Class<U>> types) {
+        if (types != null && types.getFirst() != null && types.getSecond() != null) {
+            inputTypes = types;
+        } else {
+            inputTypes = null;
+        }
     }
     
     /**

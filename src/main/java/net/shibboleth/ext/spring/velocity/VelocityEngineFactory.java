@@ -311,6 +311,15 @@ public class VelocityEngineFactory {
 
             for (int i = 0; i < paths.length; i++) {
                 final String path = paths[i];
+                
+                // Fix for JSE-44, don't check classpath: locations, they're not file-based.
+                // Some containers will expand jars and trigger false positives.
+                if (path.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
+                    log.debug("Using SpringResourceLoader for '{}'", path);
+                    nonFilePaths.add(path);
+                    continue;
+                }
+                
                 try {
                     final Resource resource = resourceLoader.getResource(path);
                     

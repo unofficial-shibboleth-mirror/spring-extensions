@@ -17,12 +17,15 @@
 
 package net.shibboleth.ext.spring.config;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.ext.spring.resource.PreferFileSystemResourceLoader;
 import net.shibboleth.ext.spring.resource.ResourceHelper;
 import net.shibboleth.utilities.java.support.resource.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.converter.Converter;
@@ -38,11 +41,21 @@ public class StringToResourceConverter implements Converter<String, Resource>, A
     /** Application context. */
     @Nullable private ApplicationContext applicationContext;
 
+    /** Log.  */
+    @Nonnull private final Logger log = LoggerFactory.getLogger(StringToResourceConverter.class);
+
     /** {@inheritDoc} */
     public Resource convert(final String source) {
         final ResourceLoader loader =
                 applicationContext == null ? new PreferFileSystemResourceLoader() : applicationContext;
-        return ResourceHelper.of(loader.getResource(source));
+        if (source.endsWith(" ")) {
+            log.warn("Path '{}' ends with a space", source);
+        }
+        final Resource result = ResourceHelper.of(loader.getResource(source));
+        if (log.isDebugEnabled() && !result.exists()) {
+            log.debug("Resource at '{}' does not exist", source);
+        }
+        return result;
     }
 
     /** {@inheritDoc} */

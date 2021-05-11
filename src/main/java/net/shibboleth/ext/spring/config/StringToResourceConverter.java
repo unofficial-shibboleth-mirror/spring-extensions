@@ -48,12 +48,17 @@ public class StringToResourceConverter implements Converter<String, Resource>, A
     public Resource convert(final String source) {
         final ResourceLoader loader =
                 applicationContext == null ? new PreferFileSystemResourceLoader() : applicationContext;
-        if (source.endsWith(" ")) {
-            log.warn("Path '{}' ends with a space", source);
-        }
         final Resource result = ResourceHelper.of(loader.getResource(source));
-        if (log.isDebugEnabled() && !result.exists()) {
-            log.debug("Resource at '{}' does not exist", source);
+        
+        if (source.endsWith(" ") || log.isDebugEnabled()) {
+            if (!result.exists()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Resource at '{}' does not exist", source);
+                }
+                if (source.endsWith(" ")) {
+                    log.warn("Missing path '{}' ends with a space, check for stray characters", source);
+                }
+            }
         }
         return result;
     }

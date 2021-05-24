@@ -12,7 +12,7 @@
 
     <groupId>net.shibboleth.ext</groupId>
     <artifactId>spring-extensions</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
+    <version>6.1.1</version>
 
     <name>Spring Framework Extension</name>
     <description>

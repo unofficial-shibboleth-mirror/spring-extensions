@@ -210,7 +210,7 @@
     <distributionManagement>
         <site>
             <id>site</id>
-            <url>dav:${shibboleth.site.url}${project.artifactId}/${project.version}/</url>
+            <url>scp:${shibboleth.site.deploy.url}${project.artifactId}/${project.version}/</url>
         </site>
     </distributionManagement>
 

@@ -323,12 +323,13 @@ public final class SpringSupport {
         return result;
     }
 
-    /** Return the {@link LanguageRange} associated with this request prepended with
+    /**
+     * Return the {@link LanguageRange} associated with this request prepended with
      * the Spring preferred locale.  This allows external (non browser) control of
      * the language.
+     * 
      * @param request the request to process
-     * @return The range returned from {@link HttpServletSupport#getLanguageRange(HttpServletRequest)}
-     * with the Locale from {@link RequestContextUtils#getLocale(HttpServletRequest)} prepended
+     * @return range returned from the browser request with the active Spring locale prepended
      */
     @Nonnull @NonnullElements @Unmodifiable
     public static List<LanguageRange> getLanguageRange(final HttpServletRequest request) {

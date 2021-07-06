@@ -216,6 +216,12 @@ public class VelocityView extends AbstractTemplateView {
      * 
      * <p>Output is directed to the servlet response.
      * This method can be overridden if custom behavior is needed.</p>
+     *
+     * @param model the model Map, containing the model attributes to be exposed to the view
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * 
+     * @throws Exception if there's a fatal error while rendering the model
      */
     @Override
     protected void renderMergedTemplateModel(final Map<String,Object> model,

@@ -31,6 +31,10 @@ import org.w3c.dom.Element;
 /**
  * An extension to the standard {@link DefaultBeanDefinitionDocumentReader} that uses a
  * {@link SchemaTypeAwareBeanDefinitionParserDelegate} delegate for processing bean definitions.
+ * 
+ * <p>This class was extended, per IDP-1640, to hijack another bug in Spring's reader class that
+ * prevents imports that don't start with file:// from being handled as absolute file paths
+ * if they exist.</p>
  */
 public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefinitionDocumentReader {
 

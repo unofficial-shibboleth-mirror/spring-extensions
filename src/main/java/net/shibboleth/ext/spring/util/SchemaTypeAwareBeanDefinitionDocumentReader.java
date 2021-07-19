@@ -58,7 +58,15 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
         final Set<Resource> actualResources = new LinkedHashSet<>(4);
 
         final Resource r = getReaderContext().getResourceLoader().getResource(location);
-        if (r.exists()) {
+        
+        boolean exists = false;
+        try {
+            exists = r.exists();
+        } catch (final Exception e) {
+            // In case exists() throws.
+        }
+        
+        if (exists) {
             final int importCount = getReaderContext().getReader().loadBeanDefinitions(r);
             actualResources.add(r);
             if (logger.isTraceEnabled()) {
@@ -66,11 +74,10 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
             }
             final Resource[] actResArray = actualResources.toArray(new Resource[0]);
             getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
-            return;
+        } else {
+            logger.debug("Resource location [" + location + "] does not exist, delegating to default behavior");
+            super.importBeanDefinitionResource(ele);
         }
-        
-        logger.debug("Resource location [" + location + "] does not exist, delegating to default behavior");
-        super.importBeanDefinitionResource(ele);
     }
 
     /** {@inheritDoc} */

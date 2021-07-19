@@ -134,8 +134,12 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     public boolean exists() {
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
         
-        if (!wrappedResource.exists()) {
-            log.debug("{} Wrapped resource does not exist", getLogPrefix());
+        try {
+            if (!wrappedResource.exists()) {
+                log.debug("{} Wrapped resource does not exist", getLogPrefix());
+            }
+        } catch (final Exception e) {
+            log.debug("{} Wrapped resource does not exist", getLogPrefix(), e);
         }
         return true;
     }

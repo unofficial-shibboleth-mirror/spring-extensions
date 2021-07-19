@@ -86,9 +86,13 @@ public class FilesystemGenericWebApplicationContext extends GenericWebApplicatio
      * </p>
      */
     @Override protected Resource getResourceByPath(final String path) {
-        final Resource r = new FileSystemResource(path);
-        if (r.exists()) {
-            return r;
+        try {
+            final Resource r = new FileSystemResource(path);
+            if (r.exists()) {
+                return r;
+            }
+        } catch (final Exception e) {
+            // May happen if resource wrapper throws during exists() call.
         }
         return super.getResourceByPath(path);
     }

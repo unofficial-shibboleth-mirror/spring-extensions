@@ -25,6 +25,7 @@
         <java-support.version>8.2.1</java-support.version>
         <!-- TODO: Remove when parent POM updated. -->
         <spring.version>5.3.9</spring.version>
+        <shibboleth.site.deploy.url>//shibboleth.net/home/javasites/staging/</shibboleth.site.deploy.url>
     </properties>
 
     <repositories>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent</artifactId>
-        <version>11.2.1</version>
+        <version>11.2.2-SNAPSHOT</version>
     </parent>
 
     <groupId>net.shibboleth.ext</groupId>
@@ -26,6 +26,7 @@
         <!-- TODO: Remove when parent POM updated. -->
         <spring.version>5.3.9</spring.version>
         <shibboleth.site.deploy.url>//shibboleth.net/home/javasites/staging/</shibboleth.site.deploy.url>
+	<jdk.version>15.3</jdk.version>
     </properties>
 
     <repositories>
@@ -157,27 +158,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.graalvm.sdk</groupId>
-            <artifactId>graal-sdk</artifactId>
-            <version>${graalvm.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <version>${graalvm.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.shibboleth.idp.plugin.scripting</groupId>
-            <artifactId>idp-plugin-nashorn-impl</artifactId>
-            <version>${nashorn.engine.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
             <version>${java-support.version}</version>
@@ -186,6 +166,28 @@
         </dependency>
 
     </dependencies>
+
+        <profiles>
+        <!--
+            Pull in a Javascript engine for testing in Java
+            versions where the JDK doesn't provide one.
+        -->
+        <profile>
+            <id>get-nashorn</id>
+            <activation>
+                <jdk>[15,</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+		    <groupId>org.openjdk.nashorn</groupId>
+		    <artifactId>nashorn-core</artifactId>
+		    <version>${nashorn.jdk.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 
     <build>
         <plugins>

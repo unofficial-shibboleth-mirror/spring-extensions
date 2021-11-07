@@ -12,6 +12,10 @@
 
     <groupId>net.shibboleth.ext</groupId>
     <artifactId>spring-extensions</artifactId>
+    <!-- If you change the version you *MUST* provoke a jenkins 'site'
+         build (to populate the javadoc, which is consumed by the
+         Jenkins 'nightly' builds).
+    -->
     <version>6.2.0-SNAPSHOT</version>
 
     <name>Spring Framework Extension</name>

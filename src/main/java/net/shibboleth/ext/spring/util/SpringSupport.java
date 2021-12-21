@@ -26,7 +26,6 @@ import java.util.Locale.LanguageRange;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.slf4j.Logger;
@@ -49,6 +48,7 @@ import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.shibboleth.ext.spring.context.FilesystemGenericApplicationContext;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;

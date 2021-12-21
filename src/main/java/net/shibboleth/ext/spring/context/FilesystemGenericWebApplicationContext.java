@@ -20,12 +20,12 @@ package net.shibboleth.ext.spring.context;
 import net.shibboleth.ext.spring.resource.ConditionalResourceResolver;
 import net.shibboleth.ext.spring.util.AnnotationParameterNameDiscoverer;
 
-import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.support.GenericWebApplicationContext;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * An extension of {@link GenericWebApplicationContext} that is biased in favor of the filesystem such that bare

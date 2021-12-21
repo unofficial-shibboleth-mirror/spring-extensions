@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.shibboleth</groupId>
         <artifactId>parent</artifactId>
-        <version>11.2.2-SNAPSHOT</version>
+        <version>17.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>net.shibboleth.ext</groupId>
@@ -16,7 +16,7 @@
          build (to populate the javadoc, which is consumed by the
          Jenkins 'nightly' builds).
     -->
-    <version>6.2.0-SNAPSHOT</version>
+    <version>7.0.0-SNAPSHOT</version>
 
     <name>Spring Framework Extension</name>
     <description>
@@ -26,11 +26,9 @@
 
     <properties>
         <automatic.module.name>net.shibboleth.ext.spring</automatic.module.name>
-        <java-support.version>8.2.1</java-support.version>
+        <java-support.version>9.0.0-SNAPSHOT</java-support.version>
         <!-- TODO: Remove when parent POM updated. -->
-        <spring.version>5.3.9</spring.version>
         <shibboleth.site.deploy.url>//shibboleth.net/home/javasites/staging/</shibboleth.site.deploy.url>
-        <jdk.version>15.3</jdk.version>
     </properties>
 
     <repositories>
@@ -133,8 +131,8 @@
 
         <!-- Provided dependencies -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
             <!-- Required for error handling classes. -->
             <optional>true</optional>

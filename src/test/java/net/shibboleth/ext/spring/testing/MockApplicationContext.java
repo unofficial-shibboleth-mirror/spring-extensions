@@ -408,4 +408,11 @@ public class MockApplicationContext implements ConfigurableApplicationContext {
         fail();
         return null;
     }
+
+    /** {@inheritDoc} */
+    public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType,
+            boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
+        fail();
+        return null;
+    }
 }

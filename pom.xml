@@ -230,7 +230,7 @@
                                 <jarEnforcer implementation="net.shibboleth.mvn.enforcer.impl.JarEnforcer">
                                     <dataGroupId>net.shibboleth.maven.enforcer.rules</dataGroupId>
                                     <dataArtifactId>maven-dist-enforcer-data</dataArtifactId>
-                                    <dataVersion>1.0.0</dataVersion>
+                                    <dataVersion>1.0.1-SNAPSHOTCD</dataVersion>
                                     <dataKeyRing>${basedir}/src/main/enforcer/shibbolethKeys.gpg</dataKeyRing>
                                     <parentPomDir>.</parentPomDir>
                                     <zipFiles/>

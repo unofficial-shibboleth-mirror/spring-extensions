@@ -235,7 +235,7 @@
                                     <tgzFiles/>
                                     <checkSignatures>false</checkSignatures>
                                     <checkDependencies>false</checkDependencies>
-                    <compileRuntimeArtifactFatal>false</compileRuntimeArtifactFatal>
+                                    <compileRuntimeArtifactFatal>false</compileRuntimeArtifactFatal>
                                     <listJarSources>false</listJarSources>
                                     <checkM2>${net.shibboleth.maven.enforcer.rules.checkM2}</checkM2>
                                 </jarEnforcer>

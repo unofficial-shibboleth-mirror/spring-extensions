@@ -17,6 +17,9 @@
 
 package net.shibboleth.ext.spring.util;
 
+import java.util.HashMap;
+
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -56,5 +59,29 @@ public class SpringExpressionTest {
 
         Assert.assertEquals((int) new SpringExpressionFunction<>("#input.getValue99()").apply(this), 99);
 
+    }
+
+    /**
+     * <p>Canary test for an issue reported to us as IDP-1901.</p>
+     * 
+     * <p>This is a bug in Spring Framework which we reported as GitHub issue 27995.</p>
+     * 
+     * <p>The upstream bug was fixed in Spring Framework 5.3.16; this is a canary test to
+     * make sure we are aware if it reappears.</p>
+     *
+     * @throws Exception if the bad thing happens
+     * 
+     * @see <a href='https://shibboleth.atlassian.net/browse/IDP-1901'>IDP-1901</a>
+     * @see <a href='https://github.com/spring-projects/spring-framework/issues/27995'>
+     *   GitHub issue 27995</a>
+     */
+    @Test public void idp1901Canary() throws Exception {
+        var map = new HashMap<String, String>();
+        map.put("key", "value");
+        var iter = map.entrySet().iterator();
+        Assert.assertTrue(iter.hasNext());
+        var output = new SpelExpressionParser().parseExpression("hasNext()").getValue(iter, Boolean.class);
+        Assert.assertNotNull(output);
+        Assert.assertTrue(output);
     }
 }

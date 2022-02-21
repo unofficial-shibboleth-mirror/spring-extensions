@@ -156,7 +156,7 @@ public class IdentifiedComponentManagerTest {
         /**
          * Constructor.
          *
-         * @param freeObjects
+         * @param freeObjects free-standing objects
          */
         @Autowired
         public MockComponentManager(@Nonnull @NonnullElements final Collection<MockComponent> freeObjects) {

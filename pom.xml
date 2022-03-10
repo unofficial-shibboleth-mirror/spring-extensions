@@ -244,18 +244,6 @@
                     </execution>
                 </executions>
             </plugin>
-             <!-- TODO: Remove when parent POM updated. -->
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
-                        <version>3.4.3</version>
-                    </dependency>
-                </dependencies>
-             </plugin>
         </plugins>
     </build>
 

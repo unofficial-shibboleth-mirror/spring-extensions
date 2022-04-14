@@ -16,7 +16,7 @@
          build (to populate the javadoc, which is consumed by the
          Jenkins 'nightly' builds).
     -->
-    <version>6.2.0-SNAPSHOT</version>
+    <version>6.2.0</version>
 
     <name>Spring Framework Extension</name>
     <description>

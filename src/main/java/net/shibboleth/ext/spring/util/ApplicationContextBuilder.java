@@ -17,6 +17,7 @@
 
 package net.shibboleth.ext.spring.util;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,6 +69,9 @@ public class ApplicationContextBuilder {
     /** Context name. */
     @Nullable @NotEmpty private String contextName;
     
+    /** Unresolved configuration sources for this service. */
+    @Nullable @NonnullElements private List<String> configurationSources;
+
     /** Configuration resources for this service. */
     @Nullable @NonnullElements private List<Resource> configurationResources;
 
@@ -92,6 +96,9 @@ public class ApplicationContextBuilder {
 
     /** Application context owning this engine. */
     @Nullable private ApplicationContext parentContext;
+    
+    /** Whether to install a JVM shutdown hook. */
+    private boolean installShutdownHook;
     
     /**
      * Set the name of the context.
@@ -131,7 +138,25 @@ public class ApplicationContextBuilder {
         
         return this;
     }
-    
+
+    /**
+     * Set the unresolved configurations for this context.
+     * 
+     * <p>This method is used to allow the context to resolve the resources.</p>
+     * 
+     * @param configs unresolved configurations for this context
+     * 
+     * @return this builder
+     * 
+     * @since 7.0.0
+     */
+    @Nonnull public ApplicationContextBuilder setUnresolvedServiceConfigurations(
+            @Nonnull @NonnullElements final Collection<String> configs) {
+        configurationSources = List.copyOf(Constraint.isNotNull(configs, "Service configurations cannot be null"));
+        
+        return this;
+    }
+
     /**
      * Set the configurations for this context.
      * 
@@ -285,7 +310,24 @@ public class ApplicationContextBuilder {
         return this;
     }
     
-// Checkstyle: CyclomaticComplexity OFF
+    /**
+     * Set whether to install a JVM shutdown hook.
+     * 
+     * <p>Defaults to false.</p>
+     * 
+     * @param flag flag to set
+     * 
+     * @return this builder
+     * 
+     * @since 7.0.0
+     */
+    @Nonnull public ApplicationContextBuilder installShutdownHook(final boolean flag) {
+        installShutdownHook = flag;
+        
+        return this;
+    }
+    
+// Checkstyle: CyclomaticComplexity|MethodLength OFF
     /**
      * Build a {@link GenericApplicationContext} context.
      * 
@@ -333,9 +375,31 @@ public class ApplicationContextBuilder {
             context.getEnvironment().setPlaceholderPrefix("%{");
             context.getEnvironment().setPlaceholderSuffix("}");
         }
+        
+        if (installShutdownHook) {
+            context.registerShutdownHook();
+        }
 
         final SchemaTypeAwareXMLBeanDefinitionReader beanDefinitionReader =
                 new SchemaTypeAwareXMLBeanDefinitionReader(context);
+        
+        if (configurationSources != null && !configurationSources.isEmpty()) {
+            configurationSources.stream().forEachOrdered(
+                    s -> {
+                        try {
+                            final Resource[] loaded = context.getResources(s);
+                            if (loaded != null && loaded.length > 0) {
+                                log.debug("Resolved resources: {}", Arrays.asList(loaded));
+                                beanDefinitionReader.loadBeanDefinitions(loaded);
+                            } else {
+                                log.debug("No resources resolved from {}", s);
+                            }
+                        } catch (final IOException e) {
+                            log.warn("Error loading beans from {}", s, e);
+                        }
+                    }
+                );
+        }
 
         if (configurationResources != null && !configurationResources.isEmpty()) {
             final List<Resource> filtered = configurationResources.stream()
@@ -351,7 +415,7 @@ public class ApplicationContextBuilder {
                 beanDefinitionReader.loadBeanDefinitions(filtered.toArray(new Resource[] {}));
             }
         }
-
+        
         if (contextInitializers != null) {
             contextInitializers.forEach(i -> i.initialize(context));
         }
@@ -359,5 +423,5 @@ public class ApplicationContextBuilder {
         context.refresh();
         return context;
     }
-// Checkstyle: CyclomaticComplexity ON    
+// Checkstyle: CyclomaticComplexity|MethodLength ON    
 }

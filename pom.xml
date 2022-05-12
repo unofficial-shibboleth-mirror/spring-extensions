@@ -26,7 +26,7 @@
 
     <properties>
         <automatic.module.name>net.shibboleth.ext.spring</automatic.module.name>
-        <java-support.version>8.3.1</java-support.version>
+        <java-support.version>8.3.2-SNAPSHOT</java-support.version>
         <shibboleth.site.deploy.url>//shibboleth.net/home/javasites/staging/</shibboleth.site.deploy.url>
         <jdk.version>15.3</jdk.version>
     </properties>
@@ -128,6 +128,20 @@
             <!-- Required if you're using classes from the velocity package -->
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>compile</scope><!-- normally runtime -->
+            <!-- Required if you're using the LogginService implementation. -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope><!-- normally runtime -->
+            <!-- Required if you're using the LogginService implementation. -->
+            <optional>true</optional>
+        </dependency>
 
         <!-- Provided dependencies -->
         <dependency>
@@ -144,12 +158,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
         

@@ -54,7 +54,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 
 /**
@@ -236,7 +235,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
         try {
             return resourceURL.toURI();
         } catch (final URISyntaxException ex) {
-            throw new NestedIOException("Invalid URI [" + resourceURL + "]", ex);
+            throw new IOException("Invalid URI [" + resourceURL + "]", ex);
         }
     }
 

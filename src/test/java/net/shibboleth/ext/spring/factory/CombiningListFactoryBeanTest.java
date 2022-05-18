@@ -36,9 +36,9 @@ public class CombiningListFactoryBeanTest {
     @Test
     public void test() {
         
-        Resource r = new ClassPathResource("net/shibboleth/ext/spring/factory/lists.xml");
+        final Resource r = new ClassPathResource("net/shibboleth/ext/spring/factory/lists.xml");
   
-        GenericApplicationContext ctx = new ApplicationContextBuilder()
+        final GenericApplicationContext ctx = new ApplicationContextBuilder()
                 .setName("appCtx")
                 .setServiceConfigurations(Collections.singletonList(r))
                 .build();
@@ -51,14 +51,17 @@ public class CombiningListFactoryBeanTest {
         assertTrue(list.contains("b"));
         assertTrue(list.contains("parent"));
         assertTrue(list.contains("child"));
+        
+        final List<?> empty = (List<?>) ctx.getBean("nulls");
+        assertEquals(empty.size(), 0);
     }
     
     @Test
     public void resourceTest() {
         
-        Resource r = new ClassPathResource("net/shibboleth/ext/spring/factory/resourceLists.xml");
+        final Resource r = new ClassPathResource("net/shibboleth/ext/spring/factory/resourceLists.xml");
   
-        GenericApplicationContext ctx = new ApplicationContextBuilder()
+        final GenericApplicationContext ctx = new ApplicationContextBuilder()
                 .setName("appCtx")
                 .setServiceConfigurations(Collections.singletonList(r))
                 .build();
@@ -69,4 +72,5 @@ public class CombiningListFactoryBeanTest {
         assertEquals(bean.getResources().size(), 2);
         
     }
+
 }

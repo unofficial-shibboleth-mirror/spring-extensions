@@ -21,28 +21,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.ListFactoryBean;
 
-import net.shibboleth.utilities.java.support.logic.Constraint;
-
 /**
- * A factory which extends {@link ListFactoryBean} by requiring two
- * lists as input.
+ * A factory which extends {@link ListFactoryBean} by requiring two lists as input.
  */
 public class CombiningListFactoryBean extends ListFactoryBean {
 
     /** First list to combine. */
-    private List<?> firstList = Collections.emptyList();
+    @Nullable private List<?> firstList = Collections.emptyList();
  
     /** Second list to combine. */
-    private List<?> secondList = Collections.emptyList();
+    @Nullable private List<?> secondList = Collections.emptyList();
  
     /** {@inheritDoc} */
     @Override public void setSourceList(final List<?> sourceList) {
-        throw new BeanCreationException("Call setFirstList() amnd setSecondList");
+        throw new BeanCreationException("Call setFirstList() amnd setSecondList()");
     }
 
     /** Set the first list to combine.
@@ -55,8 +52,8 @@ public class CombiningListFactoryBean extends ListFactoryBean {
     /** Get the first list to combine.
      * @param list The firstList to set.
      */
-    public void setFirstList(@Nonnull final List<?> list) {
-        firstList = Constraint.isNotNull(list, "First list must be nonnull");
+    public void setFirstList(@Nullable final List<?> list) {
+        firstList = list;
     }
 
     /** Set the second list to combine.
@@ -69,15 +66,19 @@ public class CombiningListFactoryBean extends ListFactoryBean {
     /** Get the second list to combine.
      * @param list The secondList to set.
      */
-    public void setSecondList(@Nonnull final List<?> list) {
-        secondList = Constraint.isNotNull(list, "Second list must be nonnull");
+    public void setSecondList(@Nullable final List<?> list) {
+        secondList = list;
     }
     
     /** {@inheritDoc} */
     @Override protected List<Object> createInstance() {
-        final ArrayList<Object> combined = new ArrayList<>(firstList.size() + secondList.size());
-        combined.addAll(firstList);
-        combined.addAll(secondList);
+        final ArrayList<Object> combined = new ArrayList<>();
+        if (firstList != null) {
+            combined.addAll(firstList);
+        }
+        if (secondList != null) {
+            combined.addAll(secondList);
+        }
         super.setSourceList(combined);
         return super.createInstance();
     }

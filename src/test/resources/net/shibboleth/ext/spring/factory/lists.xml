@@ -34,4 +34,6 @@
     <bean id="combined" class="net.shibboleth.ext.spring.factory.CombiningListFactoryBean"
      p:firstList-ref="list" p:secondList-ref="child"/>
 
+    <bean id="nulls" class="net.shibboleth.ext.spring.factory.CombiningListFactoryBean"/>
+
 </beans>

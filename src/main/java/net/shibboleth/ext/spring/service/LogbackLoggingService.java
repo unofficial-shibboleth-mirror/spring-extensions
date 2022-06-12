@@ -39,7 +39,6 @@ import ch.qos.logback.core.status.StatusManager;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
@@ -77,8 +76,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
 
     /** {@inheritDoc} */
     public void setLoggingConfiguration(@Nonnull final Resource configuration) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-
+        throwSetterPreconditionExceptions();
         configurationResource = Constraint.isNotNull(configuration, "Logging configuration resource cannot be null");
     }
     
@@ -88,8 +86,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
      * @param fallback fallback configuration resouurce
      */
     public void setFallbackConfiguration(@Nonnull final Resource fallback) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         fallbackConfiguration = Constraint.isNotNull(fallback, "Logging configuration falback resource cannot be null");
     }
     
@@ -99,8 +96,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
      * @param name property name
      */
     public void setHomePropertyName(@Nullable @NotEmpty final String name) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
+        throwSetterPreconditionExceptions();
         homePropertyName = StringSupport.trimOrNull(name);
     }
 

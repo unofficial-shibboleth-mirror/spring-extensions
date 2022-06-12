@@ -17,14 +17,20 @@
 
 package net.shibboleth.ext.spring.factory;
 
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
+
 /**
- * A Factory bean which is aware of {@link net.shibboleth.utilities.java.support.component.DestructableComponent}.
+ * A Factory bean which is aware of {@link net.shibboleth.utiliti
+
+BeanCreationException;
+import org.springframework.beans.factory.config.AbstractFactoryBean;
+
+import net.shibboleth.utilities.java.support.component.Destrues.java.support.component.DestructableComponent}.
  * 
  * @param <T> The type to implement
  */
@@ -33,7 +39,9 @@ public abstract class AbstractComponentAwareFactoryBean<T> extends AbstractFacto
     /** {@inheritDoc}. Call our destroy method if aposite. */
     @Override protected void destroyInstance(final T instance) throws Exception {
         super.destroyInstance(instance);
-        ComponentSupport.destroy(instance);
+        if (instance instanceof DestructableComponent) {
+            ((DestructableComponent) instance).destroy();
+        }
     }
 
     /**
@@ -47,7 +55,9 @@ public abstract class AbstractComponentAwareFactoryBean<T> extends AbstractFacto
             throw new BeanCreationException("Do not use AbstractComponentAwareFactoryBean to create prototype beans");
         }
         final T theBean = doCreateInstance();
-        ComponentSupport.initialize(theBean);
+        if (theBean instanceof InitializableComponent) {
+            ((InitializableComponent) theBean).initialize();
+        }
         return theBean;
     }
 

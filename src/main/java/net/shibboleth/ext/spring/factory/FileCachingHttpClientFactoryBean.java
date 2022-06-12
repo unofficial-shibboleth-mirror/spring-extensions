@@ -19,12 +19,13 @@ package net.shibboleth.ext.spring.factory;
 
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.httpclient.FileCachingHttpClientBuilder;
-
 import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
+
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.utilities.java.support.httpclient.FileCachingHttpClientBuilder;
 
 /**
  * Factory bean version of {@link FileCachingHttpClientBuilder}.
@@ -51,14 +52,18 @@ public class FileCachingHttpClientFactoryBean extends FileCachingHttpClientBuild
     
     /** {@inheritDoc} */
     public void destroy() {
-        ComponentSupport.destroy(singletonInstance);
+        if (singletonInstance instanceof DestructableComponent) {
+            ((DestructableComponent) singletonInstance).destroy();
+        }
     }
 
     /** {@inheritDoc} */
     public HttpClient getObject() throws Exception {
         if (singletonInstance == null) {
             final HttpClient theBean = buildClient();
-            ComponentSupport.initialize(theBean);
+            if (theBean instanceof InitializableComponent) {
+                ((InitializableComponent) theBean).initialize();
+            }
             singletonInstance = theBean;
         }
         

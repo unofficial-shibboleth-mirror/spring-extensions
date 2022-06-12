@@ -36,7 +36,6 @@ import org.springframework.core.io.Resource;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiedInitializableComponent;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 
@@ -78,11 +77,13 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         defaultContent = DEFAULT_CONTENT;
     }
     
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * NOTE - this declaration makes the method public
+     */
     @Override public synchronized void setId(@Nonnull @NotEmpty final String id) {
         super.setId(id);
     }
-    
+
     /**
      * Set the default content to return if the underlying resource is absent.
      * 
@@ -91,14 +92,14 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      * @since 6.1.0
      */
     public void setDefaultContent(@Nonnull final String content) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
         
         defaultContent = Constraint.isNotEmpty(content, "Empty content cannot be null");
     }
 
     /** {@inheritDoc} */
     @Nonnull public InputStream getInputStream() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.getInputStream();
@@ -116,7 +117,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     public net.shibboleth.utilities.java.support.resource.Resource createRelativeResource(final String relativePath)
             throws IOException {
         
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         final Resource relative = wrappedResource.createRelative(relativePath);
         if (relative instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) relative;
@@ -132,7 +133,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean exists() {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             if (!wrappedResource.exists()) {
@@ -146,21 +147,21 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean isReadable() {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         return true;
     }
 
     /** {@inheritDoc} */
     public boolean isOpen() {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         return wrappedResource.isOpen();
     }
 
     /** {@inheritDoc} */
     public URL getURL() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.getURL();
@@ -174,7 +175,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public URI getURI() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.getURI();
@@ -188,7 +189,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public File getFile() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.getFile();
@@ -202,7 +203,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public long contentLength() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.contentLength();
@@ -216,7 +217,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public long lastModified() throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         try {
             return wrappedResource.lastModified();
@@ -230,21 +231,21 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public Resource createRelative(final String relativePath) throws IOException {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         return wrappedResource.createRelative(relativePath);
     }
 
     /** {@inheritDoc} */
     public String getFilename() {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         return wrappedResource.getFilename();
     }
 
     /** {@inheritDoc} */
     public String getDescription() {
-        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        throwComponentStateExceptions();
         
         return wrappedResource.getDescription();
     }
@@ -263,5 +264,4 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
         logPrefix = "ConditionalResource " + getId() + ":";
         return logPrefix;
     }
-    
 }

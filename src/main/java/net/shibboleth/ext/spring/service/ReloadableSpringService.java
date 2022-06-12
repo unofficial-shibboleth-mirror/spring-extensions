@@ -28,17 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
-import net.shibboleth.utilities.java.support.annotation.ParameterName;
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.service.AbstractReloadableService;
-import net.shibboleth.utilities.java.support.service.ServiceException;
-import net.shibboleth.utilities.java.support.service.ServiceableComponent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.FatalBeanException;
@@ -52,6 +41,16 @@ import org.springframework.context.Lifecycle;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.Resource;
+
+import net.shibboleth.ext.spring.util.ApplicationContextBuilder;
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.service.AbstractReloadableService;
+import net.shibboleth.utilities.java.support.service.ServiceException;
+import net.shibboleth.utilities.java.support.service.ServiceableComponent;
 
 
 /**
@@ -153,7 +152,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param context context that is the parent to this service's context, may be null
      */
     public void setParentContext(@Nullable final ApplicationContext context) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        throwSetterPreconditionExceptions();
 
         parentContext = context;
     }
@@ -175,8 +174,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param configs list of configurations for this service
      */
     public void setServiceConfigurations(@Nonnull @NonnullElements final List<Resource> configs) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
 
         serviceConfigurations = List.copyOf(Constraint.isNotNull(configs, "Service configurations cannot be null"));
         if (!serviceConfigurations.isEmpty()) {
@@ -211,8 +209,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param strategy the way to get the resources.  Precise details are tbd.
      */
     public void setServiceConfigurationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
         throw new UnsupportedOperationException("This UnsupportedOperationException method has not been implemented");
     }
 
@@ -223,8 +220,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      */
     public void setBeanFactoryPostProcessors(
             @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
         Constraint.isNotNull(processors, "BeanFactoryPostProcessor collection cannot be null");
 
         factoryPostProcessors = List.copyOf(processors);
@@ -236,8 +232,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param processors bean post processors to apply
      */
     public void setBeanPostProcessors(@Nonnull @NonnullElements final List<BeanPostProcessor> processors) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
         Constraint.isNotNull(processors, "BeanPostProcessor collection cannot be null");
 
         postProcessors = List.copyOf(processors);
@@ -251,8 +246,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @since 5.4.0
      */
     public void setBeanProfiles(@Nonnull @NonnullElements final Collection<String> profiles) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
         
         beanProfiles = StringSupport.normalizeStringCollection(profiles);
     }
@@ -265,8 +259,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @since 5.4.0
      */
     public void setConversionService(@Nullable final ConversionService service) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        throwSetterPreconditionExceptions();
 
         conversionService = service;
     }

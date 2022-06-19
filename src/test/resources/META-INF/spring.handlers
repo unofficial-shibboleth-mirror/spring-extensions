@@ -1,1 +1,2 @@
 urn\:mace\:shibboleth\:2.0\:naturestudy = net.shibboleth.ext.spring.naturestudy.NamespaceHandler
+urn\:mace\:shibboleth\:2.0\:nested = net.shibboleth.ext.spring.util.LowerParsersAndBean

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:ns="urn:mace:shibboleth:2.0:nested"
+        targetNamespace="urn:mace:shibboleth:2.0:nested"
+        elementFormDefault="qualified">
+
+    <complexType name="LowerType">
+        <attribute name="theMessage" type="string" use="required"/>
+        <attribute name="id" type="string" use="required"/>
+    </complexType>
+
+    <element name="LowerElement" type="ns:LowerType"/>
+
+    <complexType name="UpperType">
+        <attribute name="theSecondMessage" type="string" use="required"/>
+        <attribute name="id" type="string" use="required"/>
+    </complexType>
+
+    <element name="UpperElement" type="ns:UpperType"/>
+    
+
+    <complexType name="OuterType">
+        <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="ns:UpperElement"/>
+            <element ref="ns:LowerElement"/>
+        </choice>
+        
+    </complexType>
+    
+    <element name="OuterElement" type="ns:OuterType" />
+</schema>

@@ -1,1 +1,3 @@
 urn\:mace\:shibboleth\:2.0\:naturestudy = schema/nature-study.xsd
+urn\:mace\:shibboleth\:2.0\:nested = schema/nested.xsd
+http\://shibboleth.net/schema/nested.xsd = schema/nested.xsd

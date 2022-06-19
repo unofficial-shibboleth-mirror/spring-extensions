@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OuterElement xmlns="urn:mace:shibboleth:2.0:nested" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="urn:mace:shibboleth:2.0:nested http://shibboleth.net/schema/nested.xsd"
+>
+
+    <UpperElement id="1" theSecondMessage="2ndFirst"/>
+    <LowerElement id="2" theMessage="first"/>
+    <UpperElement id="3" theSecondMessage="2ndSecond"/>
+
+</OuterElement>

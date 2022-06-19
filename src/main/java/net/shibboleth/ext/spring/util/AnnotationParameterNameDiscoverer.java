@@ -75,7 +75,7 @@ public class AnnotationParameterNameDiscoverer extends DefaultParameterNameDisco
         }
 
         final String className = ctor.getDeclaringClass().getName();
-        final boolean isOurs = (className != null) && 
+        final boolean isOurs = className != null &&
                 (className.startsWith("org.opensaml") || className.startsWith("net.shibboleth"));
         if (!isOurs) {
             return super.getParameterNames(ctor);

@@ -101,7 +101,10 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
     /** {@inheritDoc} */
     public void init() {
         doInit();
-        initSecondaryHandlers();
+        
+        if (secondaryHandlerQualifier != null) {
+            initSecondaryHandlers();
+        }
     }
 
     /**

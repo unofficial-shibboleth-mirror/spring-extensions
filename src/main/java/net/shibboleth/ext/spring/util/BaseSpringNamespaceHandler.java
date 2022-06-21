@@ -23,15 +23,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -42,34 +44,68 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.xml.DOMTypeSupport;
 import net.shibboleth.utilities.java.support.xml.QNameSupport;
 
 /**
  * A base class for {@link NamespaceHandler} implementations.
  * 
- * This code is heavily based on Spring's <code>NamespaceHandlerSupport</code>. The largest difference is that bean
+ * <p>This code is heavily based on Spring's <code>NamespaceHandlerSupport</code>. The largest difference is that bean
  * definition parsers may be registered against either an elements name or schema type. During parser lookup the schema
- * type is preferred.
+ * type is preferred.</p>
+ * 
+ * <p>This code also now supports a notion of one or more "secondary" handlers that can be registered to supplement or
+ * override the mappings in the main subclass.</p> 
  */
 public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
 
     /**
      * The base location to look for the secondary mapping files. Can be present in multiple JAR files.
      */
+    @Nonnull @NotEmpty
     public static final String DEFAULT_SECONDARY_HANDLER_BASE_LOCATION = "META-INF/net/shibboleth/spring/handlers/";
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(BaseSpringNamespaceHandler.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(BaseSpringNamespaceHandler.class);
 
+    /** Qualifier to include in resource path when looking for secondary handlers. */
+    @Nullable @NotEmpty private final String secondaryHandlerQualifier;
+    
     /**
      * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Element Elements}
      * they handle.
      */
-    private Map<QName, BeanDefinitionParser> parsers = Collections.synchronizedMap(new HashMap<>());
+    @Nonnull @NonnullElements private final Map<QName,BeanDefinitionParser> parsers;
+
+    /** Constructor. */
+    public BaseSpringNamespaceHandler() {
+        this(null);
+    }
+    
+    /**
+     * Constructor.
+     *
+     * @param qualifier qualifier added to secondary handler resource path
+     * 
+     * @since 7.0.0
+     */
+    public BaseSpringNamespaceHandler(@Nullable @NotEmpty @ParameterName(name="qualifier") final String qualifier) {
+        parsers = new HashMap<>();
+        secondaryHandlerQualifier = StringSupport.trimOrNull(qualifier);
+    }
+
+    /** {@inheritDoc} */
+    public void init() {
+        doInit();
+        initSecondaryHandlers();
+    }
 
     /**
-     * A noop decorator.  Returns the input.
+     * A no-op decorator, returns the input.
      * 
      * @param node the node decorating a the given bean definition
      * @param definition the bean being decorated
@@ -95,6 +131,16 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
         return findParserForElement(element).parse(element, parserContext);
     }
 
+    /**
+     * Subclasses should override this method to allow for installation of {@link SecondaryNamespaceHandler}
+     * instances.
+     * 
+     * @since 7.0.0
+     */
+    protected void doInit() {
+        
+    }
+        
     /**
      * Locates the {@link BeanDefinitionParser} from the register implementations using the local name of the supplied
      * {@link Element}.
@@ -142,14 +188,16 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
         parsers.put(elementNameOrType, parser);
     }
 
-    /** Call back to initialize any registered secondary handlers.  This is added to the
-     * {@link #init()} call if the handler knows that there will be other handlers.
-     * @param name a unique name (derived from the namespace URN) to locate the classes to use
+    /**
+     * Initializes any registered secondary handlers.
+     * 
+     * <p>Subclasses that allow for this feature should override {@link #doInit()}, while existing/legacy
+     * handlers without this feature may continue to override {@link #init()}.</p>
      */
-    protected void initializeOtherHandlers(final String name) {
+    private void initSecondaryHandlers() {
         try {
             final Enumeration<URL> urls = ClassLoader.getSystemResources(
-                    DEFAULT_SECONDARY_HANDLER_BASE_LOCATION + name);
+                    DEFAULT_SECONDARY_HANDLER_BASE_LOCATION + secondaryHandlerQualifier);
             while (urls.hasMoreElements()) {
                 final URL url = urls.nextElement();
                 final URLConnection con = url.openConnection();
@@ -164,9 +212,11 @@ public abstract class BaseSpringNamespaceHandler implements NamespaceHandler {
                      namespaceHandler.init(parsers);
                 }
             }
-        } catch (final IOException | ClassNotFoundException e) {
-            log.error("Secondary initialization failed for namespace {}", name, e);
-            throw new BeanCreationException("Secondary initialization failed for namespace '"+ name +"", e);
+        } catch (final IOException|ClassNotFoundException|ClassCastException|BeanInstantiationException  e) {
+            log.error("Secondary initialization failed for namespace {}", secondaryHandlerQualifier, e);
+            throw new BeanCreationException("Secondary initialization failed for namespace '"
+                    + secondaryHandlerQualifier + "'", e);
         }
     }
+
 }

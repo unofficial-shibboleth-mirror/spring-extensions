@@ -19,27 +19,37 @@ package net.shibboleth.ext.spring.util;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.w3c.dom.Element;
 
-/** A secondary namespace handler to allow us to stack multiple parsers.  */
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+
+/**
+ * A secondary namespace handler to allow us to stack multiple parsers.
+ * 
+ * @since 7.0.0
+ */
 public abstract class SecondaryNamespaceHandler {
     
     /**
      * Stores the {@link BeanDefinitionParser} implementations keyed by the local name of the {@link Element Elements}
      * they handle.
      */
-    private Map<QName, BeanDefinitionParser> parsers; 
+    @Nullable @NonnullElements private Map<QName, BeanDefinitionParser> parsers; 
     
-    /** Initialize the handler, called when a {@link BaseSpringNamespaceHandler}
+    /**
+     * Initialize the handler, called when a {@link BaseSpringNamespaceHandler}
      * calls {@link BaseSpringNamespaceHandler#initializeOtherHandlers(String)}.
      *  
      * @param theParsers 
      */
-    protected void init(final Map<QName, BeanDefinitionParser> theParsers) {
-        parsers = theParsers;
+    protected void init(@Nonnull @NonnullElements final Map<QName, BeanDefinitionParser> theParsers) {
+        parsers = Constraint.isNotNull(theParsers, "Parser map cannot be null");
         doInit();
     }
     
@@ -55,8 +65,9 @@ public abstract class SecondaryNamespaceHandler {
     }
 
     /**
-     * Subclasses implement this call and in it register the {@link BeanDefinitionParser}s 
+     * Subclasses implement this method and in it register the {@link BeanDefinitionParser}s 
      * via calls to {@link #registerBeanDefinitionParser(QName, BeanDefinitionParser) }.
      */
     public abstract void doInit();
+
 }

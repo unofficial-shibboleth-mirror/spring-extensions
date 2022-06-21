@@ -18,6 +18,7 @@
 package net.shibboleth.ext.spring.util;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -26,14 +27,19 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.xml.AttributeSupport;
 import net.shibboleth.utilities.java.support.xml.ElementSupport;
 
 public class LowerParsersAndBean extends BaseSpringNamespaceHandler {
     
-    protected static final String NAMESPACE = "urn:mace:shibboleth:2.0:nested";
+    @Nonnull @NotEmpty protected static final String NAMESPACE = "urn:mace:shibboleth:2.0:nested";
     
-    private String message;
+    @Nullable private String message;
+    
+    public LowerParsersAndBean() {
+        super(NAMESPACE.replaceAll("\\:", "-"));
+    }
     
     public void setMessage(String theMessage) {
         message = theMessage;
@@ -44,11 +50,10 @@ public class LowerParsersAndBean extends BaseSpringNamespaceHandler {
     }
 
     /** {@inheritDoc} */
-    public void init() {
+    @Override
+    public void doInit() {
         registerBeanDefinitionParser(new QName(NAMESPACE, "LowerElement"), new LowerElementParser());
         registerBeanDefinitionParser(new QName(NAMESPACE, "OuterElement"), new OuterElementParser());
-        final String adjustedName=NAMESPACE.replaceAll("\\:", "-");  
-        initializeOtherHandlers(adjustedName);
     }
 
     static class LowerElementParser extends AbstractCustomBeanDefinitionParser {

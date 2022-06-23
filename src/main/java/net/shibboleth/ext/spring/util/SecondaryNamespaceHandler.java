@@ -43,10 +43,11 @@ public abstract class SecondaryNamespaceHandler {
     @Nullable @NonnullElements private Map<QName, BeanDefinitionParser> parsers; 
     
     /**
-     * Initialize the handler, called when a {@link BaseSpringNamespaceHandler}
-     * calls {@link BaseSpringNamespaceHandler#initializeOtherHandlers(String)}.
+     * Initialize the handler, called automatically as part of {@link BaseSpringNamespaceHandler#init()}
+     * if the secondary handler qualifier was specified during
+     * {@link BaseSpringNamespaceHandler#BaseSpringNamespaceHandler(String)}.
      *  
-     * @param theParsers 
+     * @param theParsers the parsers to use.
      */
     protected void init(@Nonnull @NonnullElements final Map<QName, BeanDefinitionParser> theParsers) {
         parsers = Constraint.isNotNull(theParsers, "Parser map cannot be null");

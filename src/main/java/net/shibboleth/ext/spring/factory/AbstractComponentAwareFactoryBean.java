@@ -25,12 +25,7 @@ import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 /**
- * A Factory bean which is aware of {@link net.shibboleth.utiliti
-
-BeanCreationException;
-import org.springframework.beans.factory.config.AbstractFactoryBean;
-
-import net.shibboleth.utilities.java.support.component.Destrues.java.support.component.DestructableComponent}.
+ * A Factory bean which is aware of the component lifecycle interfaces.
  * 
  * @param <T> The type to implement
  */

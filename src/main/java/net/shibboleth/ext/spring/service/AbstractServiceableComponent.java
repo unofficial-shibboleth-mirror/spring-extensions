@@ -60,7 +60,7 @@ public abstract class AbstractServiceableComponent<T> extends AbstractIdentifiab
     
     /** {@inheritDoc} */
     @Override public void setApplicationContext(final ApplicationContext context) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         applicationContext = context;
     }
 

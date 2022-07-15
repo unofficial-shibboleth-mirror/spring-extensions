@@ -152,7 +152,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param context context that is the parent to this service's context, may be null
      */
     public void setParentContext(@Nullable final ApplicationContext context) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         parentContext = context;
     }
@@ -174,7 +174,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param configs list of configurations for this service
      */
     public void setServiceConfigurations(@Nonnull @NonnullElements final List<Resource> configs) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         serviceConfigurations = List.copyOf(Constraint.isNotNull(configs, "Service configurations cannot be null"));
         if (!serviceConfigurations.isEmpty()) {
@@ -209,7 +209,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param strategy the way to get the resources.  Precise details are tbd.
      */
     public void setServiceConfigurationStrategy(@Nonnull final Function<?, List<Resource>> strategy) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         throw new UnsupportedOperationException("This UnsupportedOperationException method has not been implemented");
     }
 
@@ -220,7 +220,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      */
     public void setBeanFactoryPostProcessors(
             @Nonnull @NonnullElements final List<BeanFactoryPostProcessor> processors) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(processors, "BeanFactoryPostProcessor collection cannot be null");
 
         factoryPostProcessors = List.copyOf(processors);
@@ -232,7 +232,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @param processors bean post processors to apply
      */
     public void setBeanPostProcessors(@Nonnull @NonnullElements final List<BeanPostProcessor> processors) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         Constraint.isNotNull(processors, "BeanPostProcessor collection cannot be null");
 
         postProcessors = List.copyOf(processors);
@@ -246,7 +246,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @since 5.4.0
      */
     public void setBeanProfiles(@Nonnull @NonnullElements final Collection<String> profiles) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         
         beanProfiles = StringSupport.normalizeStringCollection(profiles);
     }
@@ -259,7 +259,7 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
      * @since 5.4.0
      */
     public void setConversionService(@Nullable final ConversionService service) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
 
         conversionService = service;
     }

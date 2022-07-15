@@ -76,7 +76,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
 
     /** {@inheritDoc} */
     public void setLoggingConfiguration(@Nonnull final Resource configuration) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         configurationResource = Constraint.isNotNull(configuration, "Logging configuration resource cannot be null");
     }
     
@@ -86,7 +86,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
      * @param fallback fallback configuration resouurce
      */
     public void setFallbackConfiguration(@Nonnull final Resource fallback) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         fallbackConfiguration = Constraint.isNotNull(fallback, "Logging configuration falback resource cannot be null");
     }
     
@@ -96,7 +96,7 @@ public class LogbackLoggingService extends AbstractReloadableService<Object>
      * @param name property name
      */
     public void setHomePropertyName(@Nullable @NotEmpty final String name) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         homePropertyName = StringSupport.trimOrNull(name);
     }
 

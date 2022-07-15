@@ -112,7 +112,7 @@ public class HTTPResource extends AbstractIdentifiedInitializableComponent imple
      * @since 5.4.0
      */
     public void setHttpClientContextHandler(@Nonnull final HttpClientContextHandler handler) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         
         httpClientContextHandler = handler;
     }

@@ -92,14 +92,14 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
      * @since 6.1.0
      */
     public void setDefaultContent(@Nonnull final String content) {
-        throwSetterPreconditionExceptions();
+        checkSetterPreconditions();
         
         defaultContent = Constraint.isNotEmpty(content, "Empty content cannot be null");
     }
 
     /** {@inheritDoc} */
     @Nonnull public InputStream getInputStream() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.getInputStream();
@@ -117,7 +117,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
     public net.shibboleth.utilities.java.support.resource.Resource createRelativeResource(final String relativePath)
             throws IOException {
         
-        throwComponentStateExceptions();
+        checkComponentActive();
         final Resource relative = wrappedResource.createRelative(relativePath);
         if (relative instanceof net.shibboleth.utilities.java.support.resource.Resource) {
             return (net.shibboleth.utilities.java.support.resource.Resource) relative;
@@ -133,7 +133,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean exists() {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             if (!wrappedResource.exists()) {
@@ -147,21 +147,21 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public boolean isReadable() {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         return true;
     }
 
     /** {@inheritDoc} */
     public boolean isOpen() {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         return wrappedResource.isOpen();
     }
 
     /** {@inheritDoc} */
     public URL getURL() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.getURL();
@@ -175,7 +175,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public URI getURI() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.getURI();
@@ -189,7 +189,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public File getFile() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.getFile();
@@ -203,7 +203,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public long contentLength() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.contentLength();
@@ -217,7 +217,7 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public long lastModified() throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         try {
             return wrappedResource.lastModified();
@@ -231,21 +231,21 @@ public class ConditionalResource extends AbstractIdentifiedInitializableComponen
 
     /** {@inheritDoc} */
     public Resource createRelative(final String relativePath) throws IOException {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         return wrappedResource.createRelative(relativePath);
     }
 
     /** {@inheritDoc} */
     public String getFilename() {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         return wrappedResource.getFilename();
     }
 
     /** {@inheritDoc} */
     public String getDescription() {
-        throwComponentStateExceptions();
+        checkComponentActive();
         
         return wrappedResource.getDescription();
     }

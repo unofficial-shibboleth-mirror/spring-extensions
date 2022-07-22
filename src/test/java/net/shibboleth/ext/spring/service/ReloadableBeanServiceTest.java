@@ -31,7 +31,6 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("javadoc")
 public class ReloadableBeanServiceTest {
 
     @Test public void reloadableService() throws IOException, InterruptedException {
@@ -49,11 +48,8 @@ public class ReloadableBeanServiceTest {
             final ReloadableService<ApplicationContext> embedded =
                     appCtx.getBean("reloadableBeanService", ReloadableService.class);
             
-            final ServiceableComponent<ApplicationContext> component = embedded.getServiceableComponent();
-            try {
+            try (final ServiceableComponent<ApplicationContext> component = embedded.getServiceableComponent()) {
                 Assert.assertFalse(component.getComponent().containsLocalBean("reloadableBeanService"));
-            } finally {
-                component.unpinComponent();
             }
             
             embedded.reload();

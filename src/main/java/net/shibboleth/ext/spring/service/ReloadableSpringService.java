@@ -353,11 +353,12 @@ public class ReloadableSpringService<T> extends AbstractReloadableService<T> imp
     /** {@inheritDoc} */
     @Override protected void doReload() {
         super.doReload();
-
         log.debug("{} Creating new ApplicationContext for service '{}'", getLogPrefix(), getId());
         log.debug("{} Reloading from {}", getLogPrefix(), getServiceConfigurations());
         final GenericApplicationContext appContext;
         try {
+            // Ignore the AutoClosable warning.  This appContext is passed to the
+            // ServiceableComponent which takes care of the closing bit.
             appContext = new ApplicationContextBuilder()
                 .setName(getId()).setParentContext(getParentContext())
                 .setServiceConfigurations(getServiceConfigurations())

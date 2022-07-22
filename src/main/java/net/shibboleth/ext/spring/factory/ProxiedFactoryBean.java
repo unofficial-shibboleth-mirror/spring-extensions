@@ -112,12 +112,11 @@ public class ProxiedFactoryBean<T> extends AbstractFactoryBean<T> {
     @Override
     protected T createInstance() throws Exception {
         
-        final ServiceableComponent<ApplicationContext> component = contextService.getServiceableComponent();
-        if (component == null) {
-            throw new BeanCreationException("ApplicationContext not available");
-        }
+        try (final ServiceableComponent<ApplicationContext> component = contextService.getServiceableComponent()) {
+            if (component == null) {
+                throw new BeanCreationException("ApplicationContext not available");
+            }
         
-        try {
             if (beanName != null) {
                 try {
                     final T bean = component.getComponent().getBean(beanName, beanType); 
@@ -137,8 +136,6 @@ public class ProxiedFactoryBean<T> extends AbstractFactoryBean<T> {
             }
             
             return component.getComponent().getBean(beanType);
-        } finally {
-            component.unpinComponent();
         }
     }
    

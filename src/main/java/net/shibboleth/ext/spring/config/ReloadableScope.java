@@ -60,11 +60,8 @@ public class ReloadableScope implements Scope {
     /** {@inheritDoc} */
     public Object get(final String name, final ObjectFactory<?> objectFactory) {
         log.debug("Accessing reloadable bean instance '{}'", name);
-        final ServiceableComponent<ApplicationContext> component = reloadableService.getServiceableComponent();
-        try {
+        try (final ServiceableComponent<ApplicationContext> component = reloadableService.getServiceableComponent()) {
             return component.getComponent().getBean(name);
-        } finally {
-            component.unpinComponent();
         }
     }
 

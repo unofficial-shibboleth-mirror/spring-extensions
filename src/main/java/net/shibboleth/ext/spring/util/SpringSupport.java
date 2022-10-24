@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Locale.LanguageRange;
 
 import javax.annotation.Nonnull;
@@ -336,7 +337,16 @@ public final class SpringSupport {
         final List<LanguageRange> fromBrowser = HttpServletSupport.getLanguageRange(request);
         final List<LanguageRange> outList = new ArrayList<>(1+fromBrowser.size());
 
-        outList.add(new LanguageRange(RequestContextUtils.getLocale(request).getLanguage()));
+        final Locale locale =  RequestContextUtils.getLocale(request);
+        if (locale == null) {
+            LOG.error("Spring returned a null locale");
+        } else {
+            try {
+                outList.add(new LanguageRange(locale.getLanguage()));
+            } catch (final Throwable t) {
+                LOG.error("Could not create LanguageRange for {}, Ignoring", locale, t);
+            }
+        }
         outList.addAll(fromBrowser);
         return List.copyOf(outList);        
     }

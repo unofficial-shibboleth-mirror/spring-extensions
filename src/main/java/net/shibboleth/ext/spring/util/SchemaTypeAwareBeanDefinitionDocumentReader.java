@@ -25,6 +25,7 @@ import org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader
 import org.springframework.beans.factory.xml.XmlReaderContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -43,6 +44,9 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
      * 
      * This override prevents the default behavior from kicking in if the original resource location
      * is directly usable by the installed {@link ResourceLoader}.
+     * 
+     * <p>This is needed because Spring's internal behavior around imports unfortunately ignores the
+     * whole ResourceLoader hook. Arguably a bug.</p>
      */
     @Override
     protected void importBeanDefinitionResource(final Element ele) {
@@ -55,6 +59,13 @@ public class SchemaTypeAwareBeanDefinitionDocumentReader extends DefaultBeanDefi
         // Resolve system properties: e.g. "${user.dir}"
         location = getReaderContext().getEnvironment().resolveRequiredPlaceholders(location);
 
+        // Check for wildcard syntax we don't handle, JSE-51.
+        if (location.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
+            logger.debug("Wildcard classpath syntax, delegating to default behavior");
+            super.importBeanDefinitionResource(ele);
+            return;
+        }
+        
         final Set<Resource> actualResources = new LinkedHashSet<>(4);
 
         final Resource r = getReaderContext().getResourceLoader().getResource(location);

@@ -18,7 +18,9 @@
 package net.shibboleth.ext.spring.util;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.xml.DelegatingEntityResolver;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  * An extension to the standard {@link XmlBeanDefinitionReader} that defaults some settings.
@@ -41,5 +43,15 @@ public class SchemaTypeAwareXMLBeanDefinitionReader extends XmlBeanDefinitionRea
         setDocumentReaderClass(SchemaTypeAwareBeanDefinitionDocumentReader.class);
 
         setValidationMode(VALIDATION_XSD);
+
+        // This installs the appropriate XML EntityResolver with our version if needed.
+        final ResourceLoader resourceLoader = getResourceLoader();
+        if (resourceLoader != null) {
+            setEntityResolver(new LocalOnlyResourceEntityResolver(resourceLoader));
+        }
+        else {
+            setEntityResolver(new DelegatingEntityResolver(getBeanClassLoader()));
+        }
     }
+
 }

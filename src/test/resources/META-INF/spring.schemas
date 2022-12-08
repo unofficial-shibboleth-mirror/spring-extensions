@@ -1,1 +1,3 @@
 urn\:mace\:shibboleth\:2.0\:naturestudy = schema/nature-study.xsd
+
+http\://shibboleth.net/schema/canary.xsd = schema/canary.xsd

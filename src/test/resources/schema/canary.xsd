@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:ns="urn:mace:shibboleth:2.0:canary"
+        xmlns:afp="urn:mace:shibboleth:2.0:afp"
+        targetNamespace="urn:mace:shibboleth:2.0:canary"
+        elementFormDefault="qualified">
+
+    <import namespace="urn:mace:shibboleth:2.0:afp" schemaLocation="http://shibboleth.net/schema/idp/shibboleth-afp.xsd"/>
+
+    <element name="OurElement">
+        <complexType>
+            <sequence>
+                <element ref="afp:AttributeFilterPolicy" minOccurs="0" />
+            </sequence>
+        </complexType>
+    </element>
+    
+</schema>
